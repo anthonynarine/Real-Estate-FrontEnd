@@ -1,24 +1,17 @@
+import { Box, Typography } from "@mui/material";
 import React from "react";
-import {
-  Button, Typography, AppBar, Toolbar, CssBaseline,
-} from "@mui/material";
-
+import ny1 from "../assets/ny1.jpg"
 
 
 function Home() {
   return (
-    <React.Fragment>
-      {/* <CssBaseline />
-      <AppBar position="static">
-        <Toolbar>
-            <Button sx={{marginLeft: ""}} color="inherit">Oracle </Button>
-            <Button sx={{marginLeft: "auto"}} color="inherit">Listings</Button>
-            <Button sx={{marginLeft: "auto"}} color="inherit">Agencies</Button>
-            <Button sx={{marginRight: "auto"}}  color="inherit">Login</Button>
-            <Button sx={{marginRight: "auto"}} color="inherit">Add Property</Button>
-        </Toolbar>
-      </AppBar> */}
-    </React.Fragment>
+   <Box width="100%" height="100vh" >
+    <img src={ny1} alt="city" width={"100%"} height="100%" />
+    <Typography sx={{position: "absolute", top: "0px" }}>
+    Find your next home in the big apple
+    </Typography>
+
+   </Box>
   );
 }
 

@@ -7,8 +7,9 @@ import "./App.css";
 
 //pages
 import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Agencies from "./pages/AddProperty";
 import Listings from "./pages/Listings";
+import AddProperty from "./pages/AddProperty";
 
 
 
@@ -18,8 +19,9 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/add-property" element={<AddProperty />} />
         <Route path="/listings" element={<Listings />} />
+        <Route path="/agencies" element={<Agencies  />} />
       </Routes>
     </StyledEngineProvider>
   );

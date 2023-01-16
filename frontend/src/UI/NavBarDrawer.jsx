@@ -29,7 +29,7 @@ const NavBarDrawer = () => {
         <List>
           {
             drawerTabs.map((tab, index)=>(
-          <ListItemButton key={index} >
+          <ListItemButton key={index} onClick={drawerCloseHandler} >
             <ListItemIcon>
               <ListItemText>{tab}</ListItemText>
             </ListItemIcon>
