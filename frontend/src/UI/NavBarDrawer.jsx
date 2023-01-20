@@ -34,7 +34,6 @@ const NavBarDrawer = () => {
               <ListItemText>{tab}</ListItemText>
             </ListItemIcon>
           </ListItemButton>
-
             ))
           }
         </List>

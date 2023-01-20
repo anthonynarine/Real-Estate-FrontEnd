@@ -1,63 +1,54 @@
-import React from "react";
+import {React, useState } from "react";
 
 //MUI
-import { AppBar, Grid, Typography } from "@mui/material";
-
-// get latitude and longitude https://www.latlong.net/
+import { AppBar, Grid, Typography, Button, useStepContext } from "@mui/material";
 //react leaflet (note Popup and Marker is NOTE part of link from site.)
 import { MapContainer, TileLayer, Popup, Marker } from "react-leaflet";
+import { Icon } from "leaflet"
+
+//Map Icons
+import houseIconPng from "../assets/mapIcons/house.png"
+import apartmentIconPng from "../assets/mapIcons/apartment.png"
+import officeIconPng from "../assets/mapIcons/office.png"
+
+//assets
+import interior1 from "../assets/apartmentInterior/image1.png"
+import { useActionData } from "react-router-dom";
+import { handleBreakpoints } from "@mui/system";
+
 
 function Listings() {
+
+  const houseIcon = new Icon({
+    iconUrl: houseIconPng,
+    iconSize: [40,40],
+  });
+  const apartmentIcon = new Icon({
+    iconUrl: apartmentIconPng,
+    iconSize: [40,40],
+  });
+  const officeIcon = new Icon({
+    iconUrl: officeIconPng,
+    iconSize: [40,40],
+  });
+
+  //state used to manage dynamically adding listing on map (see el below)
+  const [latitude, setLatitude] = useState(40.6664183397467)
+  const [longitude, setLongitude] = useState(-73.9893293763079)
+
+  const handleClickgoEast = () => {
+    setLongitude();
+    setLongitude();
+  };
+
+
+
+  
   return (
     <Grid container>
       <Grid item xs={4}>
-        <Typography>
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout. The point of
-          using Lorem Ipsum is that it has a more-or-less normal distribution of
-          letters, as opposed to using 'Content here, content here', making it
-          look like readable English. Many desktop publishing packages and web
-          page editors now use Lorem Ipsum as their default model text, and a
-          search for 'lorem ipsum' will uncover many web sites still in their
-          infancy. Various versions have evolved over the years, sometimes by
-          accident, sometimes on purpose (injected humour and the likeIt is a
-          long established fact that a reader will be distracted by the readable
-          content of a page when looking at its layout. The point of using Lorem
-          Ipsum is that it has a more-or-less normal distribution of letters, as
-          opposed to using 'Content here, content here', making it look like
-          readable English. Many desktop publishing packages and web page
-          editors now use Lorem Ipsum as their default model text, and a search
-          for 'lorem ipsum' will uncover many web sites still in their infancy.
-          Various versions have evolved over the years, sometimes by accident,
-          sometimes on purpose (injected humour and the likeIt is a long
-          established fact that a reader will be distracted by the readable
-          content of a page when looking at its layout. The point of using Lorem
-          Ipsum is that it has a more-or-less normal distribution of letters, as
-          opposed to using 'Content here, content here', making it look like
-          readable English. Many desktop publishing packages and web page
-          editors now use Lorem Ipsum as their default model text, and a search
-          for 'lorem ipsum' will uncover many web sites still in their infancy.
-          Various versions have evolved over the years, sometimes by accident,
-          sometimes on purpose (injected humour and the likeIt is a long
-          established fact that a reader will be distracted by the readable
-          content of a page when looking at its layout. The point of using Lorem
-          Ipsum is that it has a more-or-less normal distribution of letters, as
-          opposed to using 'Content here, content here', making it look like
-          readable English. Many desktop publishing packages and web page
-          editors now use Lorem Ipsum as their default model text, and a search
-          for 'lorem ipsum' will uncover many web sites still in their infancy.
-          Various versions have evolved over the years, sometimes by accident,
-          sometimes on purpose (injected humour and the likeIt is a long
-          established fact that a reader will be distracted by the readable
-          content of a page when looking at its layout. The point of using Lorem
-          Ipsum is that it has a more-or-less normal distribution of letters, as
-          opposed to using 'Content here, content here', making it look like
-          readable English. Many desktop publishing packages and web page
-          editors now use Lorem Ipsum as their default model text, and a search
-          for 'lorem ipsum' will uncover many web sites still in their infancy.
-          Various versions have evolved over the years, sometimes by accident,
-          sometimes on purpose (injected humour and the like
-        </Typography>
+        <Button onClick={handleClickgoEast}>Go East</Button>
+
       </Grid>
       <Grid item xs={8}>
         <AppBar position="sticky">
@@ -72,9 +63,12 @@ function Listings() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <Marker position={[40.6664183397467, -73.9893293763079]}>
+              <Marker icon={houseIcon}  position={[latitude, longitude]}>
                 <Popup>
-                  A pretty CSS3 popup. <br /> Easily customizable.
+                  <Typography varient="h5">A title</Typography>
+                  <img style={{ height: "10rem", width: "14rem"}} src={interior1} alt="listing interior" />
+                  <Typography varient="body1">DJ poconos house</Typography>
+                  <Button variant="contained" fullWidth>Agency page </Button>
                 </Popup>
               </Marker>
             </MapContainer>

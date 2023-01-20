@@ -13,7 +13,7 @@ import NavBarDrawer from "./NavBarDrawer";
 import { Link } from "react-router-dom";
 
 //array of tabs used in navbar
-const navBarTabs = ["Home","Agencies", "Listings"];
+const navBarTabs = ["Home", "Agencies", "Listings"];
 
 //make sure to set this useState value to false or it will get mad and throw and error.
 function NavBar({ tabs }) {
@@ -30,16 +30,13 @@ function NavBar({ tabs }) {
     setValue(value);
   };
 
-
-
-
-
   return (
     <>
       <AppBar
         sx={{
           backgroundImage:
-            "radial-gradient(circle, rgba(81,70,89,0.936186974789916) 0%, rgba(158,135,163,1) 0%, rgba(121,179,191,1) 100%);", position:"sticky"
+            "radial-gradient(circle, rgba(81,70,89,0.936186974789916) 0%, rgba(158,135,163,1) 0%, rgba(121,179,191,1) 100%);",
+          position: "sticky",
         }}
       >
         <Toolbar>
@@ -68,9 +65,12 @@ function NavBar({ tabs }) {
                 onChange={handleChange}
               >
                 {navBarTabs.map((tab, index) => (
-                  <Tab 
-                  LinkComponent={Link} to={`/${tab === "Home" ? "" : tab}`}
-                   key={index} label={tab} />
+                  <Tab
+                    LinkComponent={Link}
+                    to={`/${tab === "Home" ? "" : tab}`}
+                    key={index}
+                    label={tab}
+                  />
                 ))}
               </Tabs>
               <Button
