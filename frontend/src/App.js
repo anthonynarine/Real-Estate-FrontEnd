@@ -10,7 +10,7 @@ import Home from "./pages/Home";
 import Agencies from "./pages/AddProperty";
 import Listings from "./pages/Listings";
 import AddProperty from "./pages/AddProperty";
-
+import ErrorPage from "./pages/ErrorPage";
 
 
 function App() {
@@ -22,6 +22,8 @@ function App() {
         <Route path="/add-property" element={<AddProperty />} />
         <Route path="/listings" element={<Listings />} />
         <Route path="/agencies" element={<Agencies  />} />
+        {/* ERROR PAGE SHOULD BE LAST ROUTE */}
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </StyledEngineProvider>
   );

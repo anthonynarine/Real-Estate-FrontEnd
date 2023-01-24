@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import ny1 from "../assets/ny1.jpg"
+import ny1 from "../assets/backgroundImages/ny1.jpg"
 
 
 function Home() {
