@@ -5,8 +5,7 @@ import axios from "axios";
 import myListings from "../assets/data/DummyData";
 
 //MUI
-import {
-  AppBar,  Grid,  Typography,  Button, } from "@mui/material";
+import { AppBar, Grid, Typography, Button, Card, CardHeader, CardMedia, CardContent } from "@mui/material";
 //react leaflet (note Popup and Marker is NOTE part of link from site.)
 import { MapContainer, TileLayer, Popup, Marker } from "react-leaflet";
 import { Icon } from "leaflet";
@@ -15,11 +14,10 @@ import { Icon } from "leaflet";
 import houseIconPng from "../assets/mapIcons/house.png";
 import apartmentIconPng from "../assets/mapIcons/apartment.png";
 import officeIconPng from "../assets/mapIcons/office.png";
-import parkingIconPng from "../assets/mapIcons/parking.png"
+import parkingIconPng from "../assets/mapIcons/parking.png";
 
 //assets
 import interior1 from "../assets/apartmentInterior/image1.png";
-
 
 function Listings() {
   const houseIcon = new Icon({
@@ -43,22 +41,51 @@ function Listings() {
   const [latitude, setLatitude] = useState(40.6664183397467);
   const [longitude, setLongitude] = useState(-73.9893293763079);
 
-  const handleClickgoEast = () => {
-    setLongitude();
-    setLongitude();
-  };
-
-  
-
   return (
     <Grid container>
       <Grid item xs={4}>
-        <Button onClick={handleClickgoEast}>Go East</Button>
+  {/* START OF LISTING CARD DISPLAY */}
+        {myListings.map((listing)=>{
+          return (
+            <Card  key={listing.id}>
+          <CardHeader
+            // action={
+            //   <IconButton aria-label="settings">
+            //     <MoreVertIcon />
+            //   </IconButton>
+            // }
+  // DISPLAY CARD TITLE 
+            title={listing.title}
+          />
+          <CardMedia
+  // DISPLAY CARD IMAGE
+            component="img"
+            image={listing.picture1}
+            alt={listing.title}
+          />
+          <CardContent>
+  {/* Display Card Body */}
+            <Typography variant="body2">
+              {listing.description.substring(0, 200)}...
+            </Typography>
+          </CardContent>
+          {/* <CardActions disableSpacing>
+            <IconButton aria-label="add to favorites">
+              <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="share">
+              <ShareIcon />
+            </IconButton>
+          </CardActions> */}
+        </Card>
+          )
+        })}
       </Grid>
+  {/* END OF LISTING CARD DISPLAY  */}
       <Grid item xs={8}>
         <AppBar position="sticky">
           <div style={{ height: "100vh" }}>
-            {/* Start - code from react-leaflet docs. */}
+  {/* Start - code from react-leaflet docs. */}
             <MapContainer
               center={[40.65311, -73.944022]}
               zoom={12}
@@ -69,20 +96,19 @@ function Listings() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               {myListings.map((listing) => {
-                function IconDisplay(){
-                  if(listing.listing_type === "House"){
+                function IconDisplay() {
+                  if (listing.listing_type === "House") {
                     return houseIcon;
-                  }
-                  else if(listing.listing_type === "Appartment"){
+                  } else if (listing.listing_type === "Appartment") {
                     return apartmentIcon;
-                  }
-                  else if(listing.listing_type === "Parking Space"){
+                  } else if (listing.listing_type === "Parking Space") {
                     return parkingIcon;
                   }
-                };
+                }
                 return (
-                  <Marker key={listing.id}
-                  icon={IconDisplay()}
+                  <Marker
+                    key={listing.id}
+                    icon={IconDisplay()}
                     position={[
                       listing.location.coordinates[0],
                       listing.location.coordinates[1],
@@ -90,7 +116,6 @@ function Listings() {
                   ></Marker>
                 );
               })}
-
               <Marker icon={houseIcon} position={[latitude, longitude]}>
                 <Popup>
                   <Typography varient="h5">A title</Typography>
@@ -106,7 +131,7 @@ function Listings() {
                 </Popup>
               </Marker>
             </MapContainer>
-            {/* END code from react-leaflet docs */}
+  {/* END code from react-leaflet docs */}
           </div>
         </AppBar>
       </Grid>
