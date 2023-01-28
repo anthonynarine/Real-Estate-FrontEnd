@@ -1,13 +1,34 @@
 import { React, useState, useEffect } from "react";
-import axios from "axios";
+import axios, { Axios } from "axios";
 
 //dummy data
 import myListings from "../assets/data/DummyData";
 
+//shapes
+import polyOne from "../shapes/polyLine";
+import polygonOne from "../shapes/polygon";
+
 //MUI
-import { AppBar, Grid, Typography, Button, Card, CardHeader, CardMedia, CardContent } from "@mui/material";
+import {
+  AppBar,
+  Grid,
+  Typography,
+  Button,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CircularProgress,
+} from "@mui/material";
 //react leaflet (note Popup and Marker is NOTE part of link from site.)
-import { MapContainer, TileLayer, Popup, Marker } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Popup,
+  Marker,
+  Polyline,
+  Polygon,
+} from "react-leaflet";
 import { Icon } from "leaflet";
 
 //Map Icons
@@ -19,6 +40,37 @@ import parkingIconPng from "../assets/mapIcons/parking.png";
 //assets
 import interior1 from "../assets/apartmentInterior/image1.png";
 
+// SYTLING FUNCTIONALITY START
+const cardSytles = {
+  card: {
+    margin: "0.5rem",
+    border: "1px  solid cream",
+    position: "relative",
+    background: "#AAD3DF",
+    color: "#070102",
+  },
+  imageStyles: {
+    paddingRight: "1rem",
+    paddingLeft: "1rem",
+    height: "20rem",
+    width: "30rem",
+  },
+  price: {
+    position: "absolute",
+    backgroundColor: "green",
+    zIndex: "1000",
+    color: "white",
+    top: "100px",
+    left: "20px",
+    padding: "5px",
+  },
+  container: {
+    backgroundColor: "#9D88A4",
+  },
+};
+// SYTLING FUNCTIONALITY END
+
+//MAP ICONS START
 function Listings() {
   const houseIcon = new Icon({
     iconUrl: houseIconPng,
@@ -36,40 +88,99 @@ function Listings() {
     iconUrl: parkingIconPng,
     iconSize: [40, 40],
   });
+  //MAP ICONS END
 
   //state used to manage dynamically adding listing on map (see el below)
   const [latitude, setLatitude] = useState(40.6664183397467);
   const [longitude, setLongitude] = useState(-73.9893293763079);
 
+  //DATA FETCHING FROM BACK END WITH CLEAN UP FUNCTIONALITY AND TOKEN GENERATION START.
+  const [allListings, setAllListings] = useState([]);
+  const [dataIsLoading, setDataIsLoading] = useState(true);
+
+  useEffect(() => {
+    //this will generate a token that can be attached to this request. 
+    const source = axios.CancelToken.source();
+    const getAllListings = async () => {
+      try {
+        let response = await axios.get("http://127.0.0.1:8000/api/listings/", {cancelToken: source.token});
+        // console.log("DATA ARRAY:", response.data)
+        setAllListings(response.data);
+        setDataIsLoading(false)
+      } catch (error) {
+        console.log(error.response);
+      }
+    };
+    getAllListings();
+    //CLEAN UP FUNCTION WITH TOKEN CANCEL START
+    return() => {
+      source.cancel();
+    };
+    //CLEAN UP FUNCTION WITH TOKEN CANCEL END
+  }, []);
+
+  if (dataIsLoading === false) {
+    console.log("DATA:", allListings[0].location);
+  }
+
+  if (dataIsLoading === true) {
+    return (
+      <Grid container justifyContent="center" alignItems="center" style={{height: "85vh"}}>
+        <CircularProgress />
+      </Grid>
+    );
+    // to better see this loding animation comment out setDataIsLoading above
+  }
+  //DATA FETCHING FROM BACK END WITH CLEAN UP FUNCTIONALITY AND TOKEN GENERATION END.
+
   return (
-    <Grid container>
+    <Grid container sx={cardSytles.container}>
       <Grid item xs={4}>
-  {/* START OF LISTING CARD DISPLAY */}
-        {myListings.map((listing)=>{
+        {/* START OF LISTING CARD DISPLAY */}
+        {allListings.map((listing) => {
           return (
-            <Card  key={listing.id}>
-          <CardHeader
-            // action={
-            //   <IconButton aria-label="settings">
-            //     <MoreVertIcon />
-            //   </IconButton>
-            // }
-  // DISPLAY CARD TITLE 
-            title={listing.title}
-          />
-          <CardMedia
-  // DISPLAY CARD IMAGE
-            component="img"
-            image={listing.picture1}
-            alt={listing.title}
-          />
-          <CardContent>
-  {/* Display Card Body */}
-            <Typography variant="body2">
-              {listing.description.substring(0, 200)}...
-            </Typography>
-          </CardContent>
-          {/* <CardActions disableSpacing>
+            <Card key={listing.id} sx={cardSytles.card}>
+              <CardHeader
+                // action={
+                //   <IconButton aria-label="settings">
+                //     <MoreVertIcon />
+                //   </IconButton>
+                // }
+                // DISPLAY CARD TITLE
+                title={listing.title}
+              />
+              <CardMedia
+                // DISPLAY CARD IMAGE
+                component="img"
+                image={listing.picture1}
+                alt={listing.title}
+              />
+              <CardContent>
+                {/* Display Card Body */}
+                <Typography variant="body2">
+                  {listing.description.substring(0, 200)}...
+                </Typography>
+                {/* START CODE BLOCK FOR COMMOA IN  PRICE AND RENTAL VS SALE LOGIC */}
+              </CardContent>
+              {listing.property_status === "Sale" ? (
+                <Typography sx={cardSytles.price}>
+                  {listing.listing_type}: $
+                  {listing.price
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                </Typography>
+              ) : (
+                <Typography sx={cardSytles.price}>
+                  {listing.listing_type}: $
+                  {listing.price
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                  / {listing.rental_frequency}
+                </Typography>
+              )}
+              {/* END CODE BLOCK FOR COMMOA IN  PRICE AND RENTAL VS SALE LOGIC */}
+
+              {/* <CardActions disableSpacing>
             <IconButton aria-label="add to favorites">
               <FavoriteIcon />
             </IconButton>
@@ -77,15 +188,15 @@ function Listings() {
               <ShareIcon />
             </IconButton>
           </CardActions> */}
-        </Card>
-          )
+            </Card>
+          );
         })}
       </Grid>
-  {/* END OF LISTING CARD DISPLAY  */}
-      <Grid item xs={8}>
+      {/* END OF LISTING CARD DISPLAY  */}
+      <Grid item xs={8} sx={{ marginTop: "0.5rem" }}>
         <AppBar position="sticky">
           <div style={{ height: "100vh" }}>
-  {/* Start - code from react-leaflet docs. */}
+            {/* Start - code from react-leaflet docs. */}
             <MapContainer
               center={[40.65311, -73.944022]}
               zoom={12}
@@ -95,7 +206,17 @@ function Listings() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              {myListings.map((listing) => {
+              {/* NOTES ON POLYLINE BELOW */}
+              <Polyline positions={polyOne} weight={10} />
+              <Polygon
+                positions={polygonOne}
+                color="green"
+                fillColor="green"
+                fillOpacity={0.9}
+                opacity={0}
+              />
+              {/* MAP ICON AND POPUP RENDER START */}
+              {allListings.map((listing) => {
                 function IconDisplay() {
                   if (listing.listing_type === "House") {
                     return houseIcon;
@@ -113,10 +234,26 @@ function Listings() {
                       listing.location.coordinates[0],
                       listing.location.coordinates[1],
                     ]}
-                  ></Marker>
+                  >
+                    <Popup>
+                      <Typography varient="h5">{listing.title}</Typography>
+                      <img
+                        style={{ height: "10rem", width: "14rem" }}
+                        src={listing.picture1}
+                        alt="listing interior"
+                      />
+                      <Typography varient="body1">
+                        {listing.description.substring(0, 150)}...
+                      </Typography>
+                      <Button variant="contained" fullWidth>
+                        Details{" "}
+                      </Button>
+                    </Popup>
+                  </Marker>
                 );
               })}
-              <Marker icon={houseIcon} position={[latitude, longitude]}>
+              {/* MAP ICON AND POPUP RENDER END */}
+              {/* <Marker icon={houseIcon} position={[latitude, longitude]}>
                 <Popup>
                   <Typography varient="h5">A title</Typography>
                   <img
@@ -129,9 +266,9 @@ function Listings() {
                     Agency page{" "}
                   </Button>
                 </Popup>
-              </Marker>
+              </Marker> */}
             </MapContainer>
-  {/* END code from react-leaflet docs */}
+            {/* END code from react-leaflet docs */}
           </div>
         </AppBar>
       </Grid>
@@ -140,3 +277,13 @@ function Listings() {
 }
 
 export default Listings;
+
+// .toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+// This code to tell react to add a , to ever 1000th - see above Typrography element.
+
+
+//                                  Clan up function        
+// line 16, 29-40 the clean up funtionality will only render data after is has finished loading to avoid errors.  
+// CLEAN UP FUNCTION WILL RUN WHEN THE COMPONENT IS UNMOUNTED CANCELING THE TOKEN WHICH WILL CANCEL THE AXIOS REQUEST. (SEE LECTURE 52)
+// The token is requested on the get request as show above and cancled as shown in the return statement after the function call 
+// The token is stored in the variable source (see below use effect call)

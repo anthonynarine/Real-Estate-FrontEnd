@@ -11,7 +11,7 @@ import Agencies from "./components/pages/AddProperty";
 import Listings from "./components/pages/Listings";
 import AddProperty from "./components/pages/AddProperty";
 import Error from "./components/pages/Error";
-import Testing from "./components/pages/Testing";
+import Testing from "./components/Testing/Testing";
 
 
 function App() {
