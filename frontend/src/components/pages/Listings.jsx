@@ -1,34 +1,14 @@
 import { React, useState, useEffect } from "react";
 import axios, { Axios } from "axios";
 
-//dummy data
-import myListings from "../assets/data/DummyData";
-
 //shapes
 import polyOne from "../shapes/polyLine";
 import polygonOne from "../shapes/polygon";
 
 //MUI
-import {
-  AppBar,
-  Grid,
-  Typography,
-  Button,
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CircularProgress,
-} from "@mui/material";
+import {AppBar,Grid,Typography,Button,Card,CardHeader,CardMedia,CardContent,CircularProgress,} from "@mui/material";
 //react leaflet (note Popup and Marker is NOTE part of link from site.)
-import {
-  MapContainer,
-  TileLayer,
-  Popup,
-  Marker,
-  Polyline,
-  Polygon,
-} from "react-leaflet";
+import {MapContainer,TileLayer,Popup,Marker,Polyline,Polygon,} from "react-leaflet";
 import { Icon } from "leaflet";
 
 //Map Icons
@@ -36,9 +16,6 @@ import houseIconPng from "../assets/mapIcons/house.png";
 import apartmentIconPng from "../assets/mapIcons/apartment.png";
 import officeIconPng from "../assets/mapIcons/office.png";
 import parkingIconPng from "../assets/mapIcons/parking.png";
-
-//assets
-import interior1 from "../assets/apartmentInterior/image1.png";
 
 // SYTLING FUNCTIONALITY START
 const cardSytles = {
@@ -90,10 +67,6 @@ function Listings() {
   });
   //MAP ICONS END
 
-  //state used to manage dynamically adding listing on map (see el below)
-  const [latitude, setLatitude] = useState(40.6664183397467);
-  const [longitude, setLongitude] = useState(-73.9893293763079);
-
   //DATA FETCHING FROM BACK END WITH CLEAN UP FUNCTIONALITY AND TOKEN GENERATION START.
   const [allListings, setAllListings] = useState([]);
   const [dataIsLoading, setDataIsLoading] = useState(true);
@@ -133,6 +106,7 @@ function Listings() {
   }
   //DATA FETCHING FROM BACK END WITH CLEAN UP FUNCTIONALITY AND TOKEN GENERATION END.
 
+  
   return (
     <Grid container sx={cardSytles.container}>
       <Grid item xs={4}>
@@ -207,14 +181,14 @@ function Listings() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               {/* NOTES ON POLYLINE BELOW */}
-              <Polyline positions={polyOne} weight={10} />
+              {/* <Polyline positions={polyOne} weight={10} />
               <Polygon
                 positions={polygonOne}
                 color="green"
                 fillColor="green"
                 fillOpacity={0.9}
                 opacity={0}
-              />
+              /> */}
               {/* MAP ICON AND POPUP RENDER START */}
               {allListings.map((listing) => {
                 function IconDisplay() {
@@ -253,20 +227,6 @@ function Listings() {
                 );
               })}
               {/* MAP ICON AND POPUP RENDER END */}
-              {/* <Marker icon={houseIcon} position={[latitude, longitude]}>
-                <Popup>
-                  <Typography varient="h5">A title</Typography>
-                  <img
-                    style={{ height: "10rem", width: "14rem" }}
-                    src={interior1}
-                    alt="listing interior"
-                  />
-                  <Typography varient="body1">DJ poconos house</Typography>
-                  <Button variant="contained" fullWidth>
-                    Agency page{" "}
-                  </Button>
-                </Popup>
-              </Marker> */}
             </MapContainer>
             {/* END code from react-leaflet docs */}
           </div>

@@ -1,0 +1,6 @@
+
+
+React willl not be able to display images because
+the general development server dosen't serve media 
+files by default. This issue will be handled on 
+the django side. 
