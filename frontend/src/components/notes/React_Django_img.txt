@@ -1,0 +1,47 @@
+
+
+React willl not be able to display images because
+the general development server dosen't serve media 
+files by default. This issue will be handled on 
+the django side. 
+
+The static files of the application must be served  
+this is located in the django admin panel. 
+
+
+below is the django setup
+# Serving files (images) uploaded by a user during development
+
+    #imports    
+from django.conf import settings
+from django.conf.urls.static import static
+
+    add this code after the urlspatterns array
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    as shown below
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api/listings/", listings_views.ListingList.as_view()),   
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+We also need to serve the static files of the application since the front end is 
+handled by react. 
+
+         in setting.py file 
+
+STATIC_URL = "static/"
+# ADDED -> STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+add this code after the urlspatterns array
++ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+as shown below
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api/listings/", listings_views.ListingList.as_view()),   
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #ADDED-> + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

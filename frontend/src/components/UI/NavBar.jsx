@@ -1,10 +1,20 @@
 import { React, useState, useEffect } from "react";
-import { AppBar,Button,Toolbar,Typography,useMediaQuery,useTheme,} from "@mui/material";
+import {
+  AppBar,
+  Button,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Tabs, Tab } from "@mui/material";
 import VillaIcon from "@mui/icons-material/Villa";
 import NavBarDrawer from "./NavBarDrawer";
 import { Link } from "react-router-dom";
-import axios from "axios";
+
+//icons
+import { Add, VpnKey } from "@mui/icons-material"
+
 
 //array of tabs used in navbar
 const navBarTabs = ["Home", "Agencies", "Listings"];
@@ -68,14 +78,19 @@ function NavBar({ tabs }) {
                 ))}
               </Tabs>
               <Button
-                sx={{ marginLeft: "auto", background: "rgba(158,135,163,1)" }}
+                sx={{ marginLeft: "auto", background: "rgba(158,135,163,1)", color: "blueGrey" }}
                 variant="contained"
+                startIcon={<Add/>}
+
               >
                 Add Property
               </Button>
               <Button
+                LinkComponent={Link}
+                to="/login"
                 sx={{ marginLeft: 1.5, background: "rgba(158,135,163,1)" }}
                 variant="contained"
+                startIcon={<VpnKey/>}
               >
                 Login
               </Button>
