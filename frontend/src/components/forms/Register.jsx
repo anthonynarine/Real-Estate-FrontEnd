@@ -1,11 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {Avatar, Grid, Paper, Typography, TextField, Button,} from "@mui/material";
 
 //icons
 import { AddCircleSharp } from "@mui/icons-material";
 import { Container } from "@mui/system";
 
+
+
 function Register() {
+
+  //PAGE NAVIGATION BEGIN\\
+const navigate = useNavigate();
+
+
   //REGISTER FORM STYLE START\\
   const paperStyle = {
     padding: "30px 20px",
@@ -28,6 +36,7 @@ function Register() {
       bacgroundColor: "green",
     },
   };
+    //REGISTER FORM STYLE END\\
 
   return (
     <Container>
@@ -37,9 +46,9 @@ function Register() {
             <Avatar sx={avatarStyle}>
               <AddCircleSharp />
             </Avatar>
-            <h1 sx={headerStyle}>Register</h1>
+            <h1 sx={headerStyle}>Register below.</h1>
             <Typography variant="caption">
-              Complete from to create an account{" "}
+              Complete the form below to create an account.
             </Typography>
           </Grid>
           <form>
@@ -88,14 +97,18 @@ function Register() {
               Submit
             </Button>
             <Button
-              type="submit"
+              type="error"
               margin="normal"
               variant="small"
               color="primary"
               fullWidth
             >
-              Already have an account?...{" "}
-              <span style={{ cursor: "pointer", color: "green" }}>Sign In</span>
+              <Typography variant="overline">
+                Already have an account?...{" "}
+                <span onClick={()=>navigate("/login")} style={{ cursor: "pointer", color: "purple" }}>
+                  Sign In
+                </span>
+              </Typography>
             </Button>
           </form>
         </Paper>
@@ -105,4 +118,3 @@ function Register() {
 }
 
 export default Register;
-

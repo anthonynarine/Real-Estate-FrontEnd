@@ -1,11 +1,24 @@
 import React from "react";
-import {Avatar, Grid, Paper, Typography, TextField, Button,} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import {
+  Avatar,
+  Grid,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 
 //icons
-import { AddCircleSharp } from "@mui/icons-material";
+import AddHomeIcon from '@mui/icons-material/AddHome';
 import { Container } from "@mui/system";
 
 function Login() {
+
+//PAGE NAVIGATION \\
+const navigate = useNavigate();
+
+
   //LOGIN FORM STYLE START\\
   const paperStyle = {
     padding: "30px 20px",
@@ -28,6 +41,7 @@ function Login() {
       bacgroundColor: "green",
     },
   };
+  //LOGIN FORM STYLE END\\
 
   return (
     <Container>
@@ -35,9 +49,9 @@ function Login() {
         <Paper elevation={20} sx={paperStyle}>
           <Grid align="center" marginTop="rem">
             <Avatar sx={avatarStyle}>
-              <AddCircleSharp />
+              <AddHomeIcon />
             </Avatar>
-            <h1 sx={headerStyle}>log in.</h1>
+            <h1 sx={headerStyle}>Log in.</h1>
             <Typography variant="caption">
               Enter your user name and password to log on.
             </Typography>
@@ -78,8 +92,12 @@ function Login() {
               color="primary"
               fullWidth
             >
-              Already have an account?...{" "}
-              <span style={{ cursor: "pointer", color: "green" }}>Sign In</span>
+              <Typography variant="overline" >
+                Don't have an account?...{" "}
+                <span onClick={()=>navigate("/register")} style={{ cursor: "pointer", color: "purple" }}>
+                  Sign Up
+                </span>
+              </Typography>
             </Button>
           </form>
         </Paper>
@@ -89,4 +107,3 @@ function Login() {
 }
 
 export default Login;
-
