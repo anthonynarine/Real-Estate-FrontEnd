@@ -1,0 +1,47 @@
+
+The post request will require the URL and DATA we are sending.
+
+               1. URL setup (make sure to see djoser docs)
+djoser documentation for current url and setup for post request
+https://djoser.readthedocs.io/en/latest/base_endpoints.html
+
+    Default URL: /users/
+
+the base url is taken from django projects settings url patterns. 
+api-auth-djoser as per the djoser docs add /users/
+
+    "api-auth-djoser/users/" this is now preceeded by http://localhost:8000
+
+    http://localhost:8000/"api-auth-djoser/users/"
+
+
+
+               2. DATA setup (make sure to see djoser docs)
+
+                This functionality will be added to this project. 
+     re_password is only required if USER_CREATE_PASSWORD_RETYPE is True
+
+        data will be an object with key value pairs
+                  {
+          username: "value",
+          email: "value",
+          password: "value",
+          re_password: "value",
+        },
+
+    NOTE djoser require that the key for a password confirmation 
+         must be re_password (see docs post request)
+
+         3. Adding password confirmarion to project settings.py files 
+            djoser settings page will provide necessary code.  
+            
+        DJOSER = {
+            "USER_CREATE_PASSWORD_RETYPE" : True,
+            "SEND_ACTIVATION_EMAIL": False,
+        }
+            
+            The above 2 key value pairs were taken from 
+            https://djoser.readthedocs.io/en/latest/settings.html#user-create-password-retype
+
+            go through docs for more security options
+

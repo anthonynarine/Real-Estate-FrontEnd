@@ -1,5 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+
+//icons
+import AddHomeIcon from "@mui/icons-material/AddHome";
+import { Container } from "@mui/system";
+
 import {
   Avatar,
   Grid,
@@ -9,15 +14,12 @@ import {
   Button,
 } from "@mui/material";
 
-//icons
-import AddHomeIcon from '@mui/icons-material/AddHome';
-import { Container } from "@mui/system";
+// ALL IMPORTS GO ABOVE THIS LINE \\
 
+//  MAIN FUNCTION START \\
 function Login() {
-
-//PAGE NAVIGATION \\
-const navigate = useNavigate();
-
+  //PAGE NAVIGATION \\
+  const navigate = useNavigate();
 
   //LOGIN FORM STYLE START\\
   const paperStyle = {
@@ -31,7 +33,7 @@ const navigate = useNavigate();
   const avatarStyle = {
     backgroundColor: "#79B2BE",
   };
-  const registerBtn = {
+  const loginBtn = {
     backgroundColor: "#79B2BE",
     color: "white",
     width: "15rem",
@@ -76,14 +78,14 @@ const navigate = useNavigate();
             />
 
             <Button
-              sx={registerBtn}
+              sx={loginBtn}
               type="submit"
               margin="normal"
               variant="contained"
               color="primary"
               fullWidth
             >
-              Submit
+              <Typography variant="subtitle1">submit</Typography>
             </Button>
             <Button
               type="submit"
@@ -92,9 +94,12 @@ const navigate = useNavigate();
               color="primary"
               fullWidth
             >
-              <Typography variant="overline" >
+              <Typography variant="overline">
                 Don't have an account?...{" "}
-                <span onClick={()=>navigate("/register")} style={{ cursor: "pointer", color: "purple" }}>
+                <span
+                  onClick={() => navigate("/register")}
+                  style={{ cursor: "pointer", color: "purple" }}
+                >
                   Sign Up
                 </span>
               </Typography>
@@ -107,3 +112,6 @@ const navigate = useNavigate();
 }
 
 export default Login;
+
+
+// MAIN FUNCTION ENDS \\

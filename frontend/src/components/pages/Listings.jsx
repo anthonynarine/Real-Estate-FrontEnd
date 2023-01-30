@@ -1,9 +1,9 @@
 import { React, useState, useEffect } from "react";
-import axios, { Axios } from "axios";
+import axios from "axios";
 
 //shapes
-import polyOne from "../shapes/polyLine";
-import polygonOne from "../shapes/polygon";
+// import polyOne from "../shapes/polyLine";
+// import polygonOne from "../shapes/polygon";
 
 //MUI
 import {AppBar,Grid,Typography,Button,Card,CardHeader,CardMedia,CardContent,CircularProgress,} from "@mui/material";
@@ -76,7 +76,7 @@ function Listings() {
     const source = axios.CancelToken.source();
     const getAllListings = async () => {
       try {
-        let response = await axios.get("http://127.0.0.1:8000/api/listings/", {cancelToken: source.token});
+        let response = await axios.get("http://localhost:8000/api/listings/", {cancelToken: source.token});
         // console.log("DATA ARRAY:", response.data)
         setAllListings(response.data);
         setDataIsLoading(false)
