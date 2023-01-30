@@ -59,6 +59,18 @@ function Register() {
   const [sendRequest, setSendRequest] = useState(false);
   //see notes below on this state and it's functionality
 
+  //state to manage form values
+  const [usernameValue, setUsernameValue] = useState("");
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const [password2Value, setPassword2Value] = useState("");
+
+  useEffect(()=> {
+    console.log(password2Value)
+  }, [password2Value]);
+  //this code was used to test the state in the username section of the form.
+
+
   useEffect(() => {
     if (sendRequest){
       
@@ -69,10 +81,10 @@ function Register() {
           const response = await axios.post(
             "http://127.0.0.1:8000/api-auth-djoser/users/",
             {
-              username: "testinguser",
-              email: "testing@mail.com",
-              password: "mypass123",
-              re_password: "mypass123",
+              username: usernameValue,
+              email: emailValue,
+              password: passwordValue,
+              re_password: password2Value,
               //re_password is a djoser key requirement if confirm password = true (see docs)
             },
             {
@@ -118,6 +130,9 @@ function Register() {
               variant="outlined"
               fullWidth
               placeholder="Enter your username"
+ // the value prop will catch the values from the form field this must be taken from state           
+              value={usernameValue}
+              onChange = {(e)=>setUsernameValue(e.target.value)}           
             />
             <TextField
               margin="normal"
@@ -126,6 +141,8 @@ function Register() {
               variant="outlined"
               fullWidth
               placeholder="E-mail Address"
+              value={emailValue}
+              onChange = {(e)=>setEmailValue(e.target.value)} 
             />
             <TextField
               type="password"
@@ -135,7 +152,9 @@ function Register() {
               variant="outlined"
               fullWidth
               placeholder="Enter Pasword"
-            />
+              value={passwordValue}
+              onChange = {(e)=>setPasswordValue(e.target.value)} 
+              />
             <TextField
               type="password"
               margin="normal"
@@ -144,6 +163,8 @@ function Register() {
               variant="outlined"
               fullWidth
               placeholder="Confirm Password"
+              value={password2Value}
+              onChange = {(e)=>setPassword2Value(e.target.value)} 
             />
             <Button
               sx={registerBtn}
