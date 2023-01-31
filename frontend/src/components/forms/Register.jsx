@@ -1,5 +1,5 @@
 import { useImmerReducer } from "use-immer"
-import { React, useEffect, useState } from "react";
+import { React, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -106,7 +106,9 @@ function Register() {
               cancelToken: source.token,
             }
           );
+          navigate("/")
           console.log(response);
+// navigation set here will redirect the user to the home page if successfull           
         } catch (error) {
           console.log(error.response);
         }
@@ -118,6 +120,7 @@ function Register() {
       };
       //CLEAN UP FUNCTION WITH TOKEN CANCEL END
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.sendRequest]);
   // The code inside this useEffect will run only when sendRequest is true.
   // it is currently set as false in state. As shown on the form onSubmit
