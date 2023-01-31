@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { React, useReducer } from 'react';
+import { Routes, Route, } from "react-router-dom";
 import { StyledEngineProvider } from "@mui/material/styles";
 
 //UI components
@@ -13,10 +14,10 @@ import Agencies from "./components/pages/AddProperty";
 import Listings from "./components/pages/Listings";
 import AddProperty from "./components/pages/AddProperty";
 import Error from "./components/pages/Error";
-import Testing from "./components/Testing/Testing";
+
 
 //testing delete when done
-// import RegisterForm from "./components/forms/RegisterForm";
+import TestinguseReducer from "./components/testing/userReducerTesting";
 
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
         <Route path="/add-property" element={<AddProperty />} />
         <Route path="/listings" element={<Listings />} />
         <Route path="/agencies" element={<Agencies  />} />
-        <Route path="/testing" element={<Testing  />} />
+        <Route path="/testing" element={<TestinguseReducer  />} />
         {/* ERROR PAGE SHOULD BE LAST ROUTE */}
         <Route path="*" element={<Error />} />
       </Routes>

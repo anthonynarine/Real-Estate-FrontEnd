@@ -1,6 +1,8 @@
+import { useImmerReducer } from "use-immer"
 import { React, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 
 //icons
 import { AddCircleSharp } from "@mui/icons-material";
@@ -40,40 +42,53 @@ function Register() {
     width: "15rem",
     fontSize: "1rem",
     marginLeft: "5rem",
-    "&:hover": {
-      bacgroundColor: "green",
-    },
   };
   //REGISTER FORM STYLE END\\
 
+//START STATE MANAGEMENT WITH IMMERREDUCER START \\
+  const initialState = {
+    usernameValue: "",
+    emailValue: "",
+    passwordValue: "",
+    password2Value: "",
+    sendRequest: 0    
+  };
+
+  function ReducerFunction(draft, action){
+    // eslint-disable-next-line default-case
+    switch (action.type){
+      case "catchUsernameChange":
+        draft.usernameValue = action.usernameChosen
+        break;
+      case "catchEmailChange":
+        draft.emailValue = action.emailChosen
+        break;
+      case "catchPasswordChange":
+        draft.passwordValue = action.passwordChosen
+        break;
+      case "catchPassword2Change":
+        draft.password2Value = action.password2Chosen
+        break;
+      case "changeSendRequest":
+        draft.sendRequest = draft.sendRequest + 1
+        break;
+    }
+  };
   //FORM SUBMIT HANDLE FUNCTIONALITY START\\
   function FormSubmit(event) {
     event.preventDefault();
     console.log("The form has been submitted");
-    setSendRequest(!sendRequest);
+    dispatch({type: "changeSendRequest"});
     //onSubmit sendRequst changes to the opposite of what it courrently is
   }
   //FORM SUBMIT HANDLE FUNCTIONALITY END\\
 
-  //       Post FORM REQUEST START     \\
-  const [sendRequest, setSendRequest] = useState(false);
-  //see notes below on this state and it's functionality
 
-  //state to manage form values
-  const [usernameValue, setUsernameValue] = useState("");
-  const [emailValue, setEmailValue] = useState("");
-  const [passwordValue, setPasswordValue] = useState("");
-  const [password2Value, setPassword2Value] = useState("");
-
-  useEffect(()=> {
-    console.log(password2Value)
-  }, [password2Value]);
-  //this code was used to test the state in the username section of the form.
-
+  const [ state, dispatch ] = useImmerReducer(ReducerFunction, initialState)
+  //START STATE MANAGEMENT WITH IMMERREDUCER START \\
 
   useEffect(() => {
-    if (sendRequest){
-      
+    if (state.sendRequest){      
       //this will generate a token that can be attached to this request.
       const source = axios.CancelToken.source();
       const SignUp = async () => {
@@ -81,10 +96,10 @@ function Register() {
           const response = await axios.post(
             "http://127.0.0.1:8000/api-auth-djoser/users/",
             {
-              username: usernameValue,
-              email: emailValue,
-              password: passwordValue,
-              re_password: password2Value,
+              username: state.usernameValue,
+              email: state.emailValue,
+              password: state.passwordValue,
+              re_password: state.password2Value,
               //re_password is a djoser key requirement if confirm password = true (see docs)
             },
             {
@@ -103,7 +118,7 @@ function Register() {
       };
       //CLEAN UP FUNCTION WITH TOKEN CANCEL END
     }
-  }, [sendRequest]);
+  }, [state.sendRequest]);
   // The code inside this useEffect will run only when sendRequest is true.
   // it is currently set as false in state. As shown on the form onSubmit
   //handler that state will be changed to True on the submit button click
@@ -112,7 +127,7 @@ function Register() {
   return (
     <Container>
       <Grid justifyContent="center">
-        <Paper elevation={20} sx={paperStyle}>
+        <Paper elevation={19} sx={paperStyle}>
           <Grid align="center" marginTop="rem">
             <Avatar sx={avatarStyle}>
               <AddCircleSharp />
@@ -131,8 +146,9 @@ function Register() {
               fullWidth
               placeholder="Enter your username"
  // the value prop will catch the values from the form field this must be taken from state           
-              value={usernameValue}
-              onChange = {(e)=>setUsernameValue(e.target.value)}           
+              value={state.usernameValue}
+              onChange = {(e)=>dispatch({type: "catchUsernameChange", usernameChosen: e.target.value})} 
+ //here dispatch will collect the user input and store it's value in the usernameChosen variable with this event handler.         
             />
             <TextField
               margin="normal"
@@ -141,8 +157,8 @@ function Register() {
               variant="outlined"
               fullWidth
               placeholder="E-mail Address"
-              value={emailValue}
-              onChange = {(e)=>setEmailValue(e.target.value)} 
+              value={state.emailValue}
+              onChange = {(e)=>dispatch({type: "catchEmailChange", emailChosen: e.target.value})} 
             />
             <TextField
               type="password"
@@ -152,8 +168,8 @@ function Register() {
               variant="outlined"
               fullWidth
               placeholder="Enter Pasword"
-              value={passwordValue}
-              onChange = {(e)=>setPasswordValue(e.target.value)} 
+              value={state.passwordValue}
+              onChange = {(e)=>dispatch({type: "catchPasswordChange", passwordChosen: e.target.value})}
               />
             <TextField
               type="password"
@@ -163,8 +179,8 @@ function Register() {
               variant="outlined"
               fullWidth
               placeholder="Confirm Password"
-              value={password2Value}
-              onChange = {(e)=>setPassword2Value(e.target.value)} 
+              value={state.password2Value}
+              onChange = {(e)=>dispatch({type: "catchPassword2Change", password2Chosen: e.target.value})}
             />
             <Button
               sx={registerBtn}
@@ -202,6 +218,8 @@ function Register() {
 
 export default Register;
 
+
+
 //  MAIN FUNCTION END \\
 
 //event.preventDefault();
@@ -223,3 +241,23 @@ export default Register;
 // //  and an if conditional is added to the useEfect hook to check for
 // // sendRquest. without this everytime the page loads a request will
 // //be sent to the backend.
+
+
+
+  ///////////OLD STATE MANAGEMENT REPLACED BY immerReducer/////
+  
+  // //       Post FORM REQUEST START     \\
+  // const [sendRequest, setSendRequest] = useState(false);
+  // //see notes below on this state and it's functionality
+  
+  // //state to manage form values
+  // const [usernameValue, setUsernameValue] = useState("");
+  // const [emailValue, setEmailValue] = useState("");
+  // const [passwordValue, setPasswordValue] = useState("");
+  // const [password2Value, setPassword2Value] = useState("");
+  
+  // useEffect(()=> {
+    //   console.log(password2Value)
+    // }, [password2Value]);
+    //this code was used to test the state in the username section of the form.
+    ///////////OLD STATE MANAGEMENT REPLACED BY immerReducer/////

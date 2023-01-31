@@ -1,7 +1,10 @@
 import { React, useEffect, useState } from "react";
 import { Button, Toolbar, Typography } from "@mui/material";
 
-const Testing = () => {
+
+// useEffect testing start 
+
+const TestinguseReducer = () => {
   const [count, setCount] = useState(0);
 
   // useEffect(() => {}, []);
@@ -42,9 +45,10 @@ const Testing = () => {
   );
 };
 
-export default Testing;
+export default TestinguseReducer;
 
 //  useEffect
 // use effect takes in two arguments the 1st first is a function
 // the 2nd is the change we are watching most of the time we
 // watch for a change in state.
+
