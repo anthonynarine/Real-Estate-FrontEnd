@@ -21,14 +21,12 @@ import {
 
 //  MAIN FUNCTION START \\
 function Register() {
-  //PAGE NAVIGATION BEGIN\\
-  const navigate = useNavigate();
-
+  
   //REGISTER FORM STYLE START\\
   const paperStyle = {
     padding: "30px 20px",
     width: 400,
-    margin: "20px auto",
+    margin: "60px auto",
   };
   const headerStyle = {
     margin: 0,
@@ -44,6 +42,8 @@ function Register() {
     marginLeft: "5rem",
   };
   //REGISTER FORM STYLE END\\
+  
+  const navigate = useNavigate();
 
 //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
@@ -74,8 +74,12 @@ function Register() {
         break;
     }
   };
+  const [ state, dispatch ] = useImmerReducer(ReducerFunction, initialState)
+  //START STATE MANAGEMENT WITH IMMERREDUCER END \\
+
+
   //FORM SUBMIT HANDLE FUNCTIONALITY START\\
-  function FormSubmit(event) {
+  function FormSubmitHandler(event) {
     event.preventDefault();
     console.log("The form has been submitted");
     dispatch({type: "changeSendRequest"});
@@ -84,8 +88,6 @@ function Register() {
   //FORM SUBMIT HANDLE FUNCTIONALITY END\\
 
 
-  const [ state, dispatch ] = useImmerReducer(ReducerFunction, initialState)
-  //START STATE MANAGEMENT WITH IMMERREDUCER START \\
 
   useEffect(() => {
     if (state.sendRequest){      
@@ -140,7 +142,7 @@ function Register() {
               Complete the form below to create an account.
             </Typography>
           </Grid>
-          <form onSubmit={FormSubmit}>
+          <form onSubmit={FormSubmitHandler}>
             <TextField
               margin="normal"
               id="username"
@@ -226,7 +228,7 @@ export default Register;
 //  MAIN FUNCTION END \\
 
 //event.preventDefault();
-// The FormSubmit handle function above was called with the event
+// The FormSubmitHandler handle function above was called with the event
 // along with >> event.preventDefault();  << syntax to prevent
 // default browser behavior (browser will add all form fields to the
 //   onsubmint. There will be no url to handle it). so we prevent

@@ -1,5 +1,7 @@
-import React from "react";
+import { React, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import { useImmerReducer } from "use-immer";
+import axios from "axios";
 
 //icons
 import AddHomeIcon from "@mui/icons-material/AddHome";
@@ -18,14 +20,11 @@ import {
 
 //  MAIN FUNCTION START \\
 function Login() {
-  //PAGE NAVIGATION \\
-  const navigate = useNavigate();
-
   //LOGIN FORM STYLE START\\
   const paperStyle = {
     padding: "30px 20px",
     width: 400,
-    margin: "20px auto",
+    margin: "60px auto",
   };
   const headerStyle = {
     margin: 0,
@@ -45,6 +44,74 @@ function Login() {
   };
   //LOGIN FORM STYLE END\\
 
+  //START STATE MANAGEMENT WITH IMMERREDUCER START \\
+
+  const initialState = {
+    usernameValue: "",
+    passwordValue: "",
+    sendRequest: 0    
+  };
+
+  function ReducerFunction(draft, action){
+    // eslint-disable-next-line default-case
+    switch (action.type){
+      case "catchUsernameChange":
+        draft.usernameValue = action.usernameChosen
+        break;
+      case "catchPasswordChange":
+        draft.passwordValue = action.passwordChosen
+        break;
+      case "changeSendRequest":
+        draft.sendRequest = draft.sendRequest + 1
+        break;
+    }
+  };
+  const [ state, dispatch ] = useImmerReducer(ReducerFunction, initialState)
+  //START STATE MANAGEMENT WITH IMMERREDUCER END \\
+
+  const navigate = useNavigate();
+
+  function FormSubmitHandler(event) {
+    event.preventDefault();
+    console.log("The form has been submitted");
+    dispatch({type: "changeSendRequest"});
+  };
+
+  useEffect(() => {
+    if (state.sendRequest){      
+      //this will generate a token that can be attached to this request.
+      const source = axios.CancelToken.source();
+      const LogIn = async () => {
+        try {
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api-auth-djoser/token/login/",
+            {
+              username: state.usernameValue,
+              password: state.passwordValue,
+              //re_password is a djoser key requirement if confirm password = true (see docs)
+            },
+            {
+              cancelToken: source.token,
+            }
+          );
+          // navigate("/")
+          console.log(response);
+// navigation set here will redirect the user to the home page if successfull           
+        } catch (error) {
+          console.log(error.response);
+        }
+      };
+      LogIn();
+      //CLEAN UP FUNCTION WITH TOKEN CANCEL START
+      return () => {
+        source.cancel();
+      };
+      //CLEAN UP FUNCTION WITH TOKEN CANCEL END
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.sendRequest]);
+
+
   return (
     <Container>
       <Grid justifyContent="center">
@@ -58,14 +125,16 @@ function Login() {
               Enter your user name and password to log on.
             </Typography>
           </Grid>
-          <form>
+          <form onSubmit={FormSubmitHandler}>
             <TextField
               margin="normal"
-              id="email"
-              label="Email"
+              id="username"
+              label="Username"
               variant="outlined"
               fullWidth
-              placeholder="E-mail Address"
+              placeholder="Username"
+              value={state.usernameValue}
+              onChange = {(e)=>dispatch({type: "catchUsernameChange", usernameChosen: e.target.value})}
             />
             <TextField
               type="password"
@@ -75,8 +144,9 @@ function Login() {
               variant="outlined"
               fullWidth
               placeholder="Enter Pasword"
+              value={state.passwordValue}
+              onChange = {(e)=>dispatch({type: "catchPasswordChange", passwordChosen: e.target.value})}
             />
-
             <Button
               sx={loginBtn}
               type="submit"
@@ -100,7 +170,7 @@ function Login() {
                   onClick={() => navigate("/register")}
                   style={{ cursor: "pointer", color: "purple" }}
                 >
-                  Sign Up
+                  Sign up
                 </span>
               </Typography>
             </Button>
@@ -112,6 +182,5 @@ function Login() {
 }
 
 export default Login;
-
 
 // MAIN FUNCTION ENDS \\

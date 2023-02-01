@@ -23,10 +23,10 @@ api-auth-djoser as per the djoser docs add /users/
 
         data will be an object with key value pairs
                   {
-          username: "value",
-          email: "value",
-          password: "value",
-          re_password: "value",
+          username: "usernameValue",
+          email: "emailValue",
+          password: "passwordValue",
+          re_password: "password2Value",
         },
 
     NOTE djoser require that the key for a password confirmation 

@@ -1,0 +1,9 @@
+
+
+1. Visti djoser docs to obtain login url 
+https://djoser.readthedocs.io/en/latest/token_endpoints.html
+
+2. Token endpoints
+
+/token/login/  -  is the current url for token auth. 
+3.add to base url.
