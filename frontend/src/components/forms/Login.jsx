@@ -64,6 +64,9 @@ function Login() {
       case "changeSendRequest":
         draft.sendRequest = draft.sendRequest + 1
         break;
+      case "catchToke":
+        draft.token = action.tokenValue
+        break;
     }
   };
   const [ state, dispatch ] = useImmerReducer(ReducerFunction, initialState)
@@ -78,7 +81,8 @@ function Login() {
   };
 
   useEffect(() => {
-    if (state.sendRequest){      
+    //when we have an actual value for the token then the request will be sent
+    if (state.token !== ""){      
       //this will generate a token that can be attached to this request.
       const source = axios.CancelToken.source();
       const LogIn = async () => {
@@ -96,7 +100,7 @@ function Login() {
           );
           // navigate("/")
           console.log(response);
-// navigation set here will redirect the user to the home page if successfull           
+          dispatch({type: "catchToken", tokenValue: response.data.auth_token})
         } catch (error) {
           console.log(error.response);
         }
