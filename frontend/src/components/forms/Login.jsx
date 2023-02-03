@@ -1,4 +1,4 @@
-import { React, useEffect} from "react";
+import { React, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useImmerReducer } from "use-immer";
 import axios from "axios";
@@ -16,10 +16,19 @@ import {
   Button,
 } from "@mui/material";
 
+// Context
+import DispatchContex from "../contex/DispatchContex";
+import StateContex from "../contex/StateContex";
+// see app.js for state being brought in by this import via context.
+
 // ALL IMPORTS GO ABOVE THIS LINE \\
 
 //  MAIN FUNCTION START \\
 function Login() {
+  const GlobalDispatch = useContext(DispatchContex);
+  const GlobalState = useContext(StateContex);
+  // see app.js for state being brought in by this import via context.
+
   //LOGIN FORM STYLE START\\
   const paperStyle = {
     padding: "30px 20px",
@@ -49,27 +58,28 @@ function Login() {
   const initialState = {
     usernameValue: "",
     passwordValue: "",
-    sendRequest: 0    
+    sendRequest: 0,
+    token: "",
   };
 
-  function ReducerFunction(draft, action){
+  function ReducerFunction(draft, action) {
     // eslint-disable-next-line default-case
-    switch (action.type){
+    switch (action.type) {
       case "catchUsernameChange":
-        draft.usernameValue = action.usernameChosen
+        draft.usernameValue = action.usernameChosen;
         break;
       case "catchPasswordChange":
-        draft.passwordValue = action.passwordChosen
+        draft.passwordValue = action.passwordChosen;
         break;
       case "changeSendRequest":
-        draft.sendRequest = draft.sendRequest + 1
+        draft.sendRequest = draft.sendRequest + 1;
         break;
-      case "catchToke":
-        draft.token = action.tokenValue
+      case "catchToken":
+        draft.token = action.tokenValue;
         break;
     }
-  };
-  const [ state, dispatch ] = useImmerReducer(ReducerFunction, initialState)
+  }
+  const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
   //START STATE MANAGEMENT WITH IMMERREDUCER END \\
 
   const navigate = useNavigate();
@@ -77,12 +87,13 @@ function Login() {
   function FormSubmitHandler(event) {
     event.preventDefault();
     console.log("The form has been submitted");
-    dispatch({type: "changeSendRequest"});
-  };
+    dispatch({ type: "changeSendRequest" });
+  }
 
+  // when the user successfully signs in a token is given in this request
   useEffect(() => {
     //when we have an actual value for the token then the request will be sent
-    if (state.token !== ""){      
+    if (state.sendRequest) {
       //this will generate a token that can be attached to this request.
       const source = axios.CancelToken.source();
       const LogIn = async () => {
@@ -98,9 +109,18 @@ function Login() {
               cancelToken: source.token,
             }
           );
-          // navigate("/")
           console.log(response);
-          dispatch({type: "catchToken", tokenValue: response.data.auth_token})
+          dispatch({
+            type: "catchToken",
+            tokenValue: response.data.auth_token,
+          });
+          //to pass data from this child compt to the parent app comp we use Global dispatch.
+          //the dispatch type must be added to the reducer function.
+          GlobalDispatch({
+            type: "catchToken",
+            tokenValue: response.data.auth_token,
+          });
+          // navigate("/")
         } catch (error) {
           console.log(error.response);
         }
@@ -112,9 +132,47 @@ function Login() {
       };
       //CLEAN UP FUNCTION WITH TOKEN CANCEL END
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.sendRequest]);
 
+  //this second useEffect hook will get the users information with the token attatched
+  //The token come from the above useEffect request.
+  useEffect(() => {
+    // if we have an actual value for state.token only then  this useEffect will send out this request
+    if (state.token !== "") {
+      const source = axios.CancelToken.source();
+      const GetUserInfo = async () => {
+        try {
+          const response = await axios.get(
+            "http://127.0.0.1:8000/api-auth-djoser/users/me/",
+            {
+              headers: { Authorization: "Token ".concat(state.token) },
+              //a space is required between "Token " and the closing quote
+            },
+            {
+              cancelToken: source.token,
+            }
+          );
+          console.log(response);
+          //these cases must be added to our Reducer function in app.js in order to be used here
+          GlobalDispatch({
+            type: "catchUserInfo",
+            usernameInfo: response.data.username,
+            emailInfo: response.data.email,
+            IdInfo: response.data.id,
+          });
+          navigate("/")
+        } catch (error) {
+          console.log(error.response);
+        }
+      };
+      GetUserInfo();
+      return () => {
+        source.cancel();
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.token]);
 
   return (
     <Container>
@@ -138,7 +196,12 @@ function Login() {
               fullWidth
               placeholder="Username"
               value={state.usernameValue}
-              onChange = {(e)=>dispatch({type: "catchUsernameChange", usernameChosen: e.target.value})}
+              onChange={(e) =>
+                dispatch({
+                  type: "catchUsernameChange",
+                  usernameChosen: e.target.value,
+                })
+              }
             />
             <TextField
               type="password"
@@ -149,7 +212,12 @@ function Login() {
               fullWidth
               placeholder="Enter Pasword"
               value={state.passwordValue}
-              onChange = {(e)=>dispatch({type: "catchPasswordChange", passwordChosen: e.target.value})}
+              onChange={(e) =>
+                dispatch({
+                  type: "catchPasswordChange",
+                  passwordChosen: e.target.value,
+                })
+              }
             />
             <Button
               sx={loginBtn}
@@ -179,6 +247,15 @@ function Login() {
               </Typography>
             </Button>
           </form>
+          {/* testing passing data from a child comp to parent via context provider (see lecture 64 pt 1 15:30) */}
+          {/* {GlobalState.globalMessage}
+          {GlobalState.userToken}
+          <br />
+          {GlobalState.userUsername}
+          <br />
+          {GlobalState.userEmail}
+          <br />
+          {GlobalState.userId} */}
         </Paper>
       </Grid>
     </Container>

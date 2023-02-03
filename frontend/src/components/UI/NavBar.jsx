@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useContext } from "react";
 import {
   AppBar,
   Button,
@@ -12,9 +12,11 @@ import VillaIcon from "@mui/icons-material/Villa";
 import NavBarDrawer from "./NavBarDrawer";
 import { Link } from "react-router-dom";
 
-//icons
-import { Add, VpnKey } from "@mui/icons-material"
+// context
+import StateContex from "../contex/StateContex";
 
+//icons
+import { Add, VpnKey } from "@mui/icons-material";
 
 //array of tabs used in navbar
 const navBarTabs = ["Home", "Agencies", "Listings"];
@@ -22,6 +24,8 @@ const navBarTabs = ["Home", "Agencies", "Listings"];
 //make sure to set this useState value to false or it will get mad and throw and error.
 function NavBar({ tabs }) {
   const [value, setValue] = useState(false);
+
+  const GlobalState = useContext(StateContex);
 
   //this code block will handle smaller screens
   const theme = useTheme();
@@ -78,22 +82,41 @@ function NavBar({ tabs }) {
                 ))}
               </Tabs>
               <Button
-                sx={{ marginLeft: "auto", background: "rgba(158,135,163,1)", color: "blueGrey" }}
+                sx={{
+                  marginLeft: "auto",
+                  background: "rgba(158,135,163,1)",
+                  color: "blueGrey",
+                }}
                 variant="contained"
-                startIcon={<Add/>}
-
+                startIcon={<Add />}
               >
                 Add Property
               </Button>
-              <Button
-                LinkComponent={Link}
-                to="/login"
-                sx={{ marginLeft: 1.5, background: "rgba(158,135,163,1)" }}
-                variant="contained"
-                startIcon={<VpnKey/>}
-              >
-                Login
-              </Button>
+              {/* Button will be conditionally render to show user name if logged in
+               or the login button if not. this is done by using GlobalState and the
+               ternery statement that checks if the userUsername state value is empty.
+                 */}
+              {GlobalState.userUsername !== "" ? (
+                <Button
+                  LinkComponent={Link}
+                  to="/login"
+                  sx={{ marginLeft: 1.5, background: "rgba(158,135,163,1)" }}
+                  variant="contained"
+                  startIcon={<VpnKey />}
+                >
+                  {GlobalState.userUsername}
+                </Button>
+              ) : (
+                <Button
+                  LinkComponent={Link}
+                  to="/login"
+                  sx={{ marginLeft: 1.5, background: "rgba(158,135,163,1)" }}
+                  variant="contained"
+                  startIcon={<VpnKey />}
+                >
+                  Login
+                </Button>
+              )}
             </>
           )}
         </Toolbar>
@@ -103,3 +126,11 @@ function NavBar({ tabs }) {
 }
 
 export default NavBar;
+
+//Ternary operator  refresher\\
+// The conditional (ternary) operator is the only JavaScript
+//  operator that takes three operands: a condition followed
+//  by a question mark (?), then an expression to execute if
+//  the condition is truthy followed by a colon (:), and finally
+//  the expression to execute if the condition is falsy. This
+//  operator is frequently used as an alternative to an if...else statement.

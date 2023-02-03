@@ -1,0 +1,12 @@
+
+1. context is used when we want to make data available to all children components.
+
+2. The provider component comes with every context object and is what allows us 
+    to pass the data down. see app.js for use case. 
+
+3. context.Provider comes with a value property which we will give the data 
+    we want to pass down in this case it's dispatch. (see app.js) 
+
+
+4. the above 3 steps are followed for state.  making the state and dispatch objects
+    available to all children components of the app component. 
