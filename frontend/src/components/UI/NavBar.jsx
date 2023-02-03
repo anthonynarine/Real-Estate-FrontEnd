@@ -96,7 +96,7 @@ function NavBar({ tabs }) {
                or the login button if not. this is done by using GlobalState and the
                ternery statement that checks if the userUsername state value is empty.
                  */}
-              {GlobalState.userUsername !== "" ? (
+              {GlobalState.userUsername ? (
                 <Button
                   LinkComponent={Link}
                   to="/login"

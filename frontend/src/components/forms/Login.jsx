@@ -156,7 +156,7 @@ function Login() {
           console.log(response);
           //these cases must be added to our Reducer function in app.js in order to be used here
           GlobalDispatch({
-            type: "catchUserInfo",
+            type: "userSignsIn",
             usernameInfo: response.data.username,
             emailInfo: response.data.email,
             IdInfo: response.data.id,
