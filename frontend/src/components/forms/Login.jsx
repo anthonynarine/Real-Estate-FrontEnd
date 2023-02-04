@@ -84,6 +84,7 @@ function Login() {
 
   const navigate = useNavigate();
 
+
   function FormSubmitHandler(event) {
     event.preventDefault();
     console.log("The form has been submitted");

@@ -2,7 +2,6 @@
 import { React, useEffect } from "react";
 import { useImmerReducer } from "use-immer";
 import { Routes, Route } from "react-router-dom";
-import { StyledEngineProvider } from "@mui/material/styles";
 
 //UI components
 import NavBar from "./components/ui/NavBar";
@@ -36,6 +35,7 @@ function App() {
     userId: localStorage.getItem("theUserId"),
     userToken: localStorage.getItem("theUserToken"),
     userIsLoggedIn: localStorage.getItem("theUserUsername") ? true : false,
+    // does the user name exist ? if that's the case userIsLogged in is true otherwise it's false. 
   };
 
   function ReducerFunction(draft, action) {
@@ -59,9 +59,9 @@ function App() {
   useEffect(()=>{
     if(state.userIsLoggedIn){
       localStorage.setItem("theUserUserName", state.userUsername)
-      localStorage.setItem("theUserEmail", state.userUsername)
-      localStorage.setItem("theUserId", state.userUsername)
-      localStorage.setItem("theUserToken", state.userUsername)
+      localStorage.setItem("theUserEmail", state.userEmail)
+      localStorage.setItem("theUserId", state.userId)
+      localStorage.setItem("theUserToken", state.userToken)
     }
 
   }, [state.userIsLoggedIn])
@@ -69,7 +69,6 @@ function App() {
   return (
     <StateContex.Provider value={state}>
       <DispatchContex.Provider value={dispatch}>
-        <StyledEngineProvider injectFirst>
           <NavBar />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -82,7 +81,6 @@ function App() {
             {/* ERROR PAGE SHOULD BE LAST ROUTE */}
             <Route path="*" element={<Error />} />
           </Routes>
-        </StyledEngineProvider>
       </DispatchContex.Provider>
     </StateContex.Provider>
   );
