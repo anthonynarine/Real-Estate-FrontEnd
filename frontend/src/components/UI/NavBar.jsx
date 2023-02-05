@@ -12,13 +12,14 @@ import {
 import { Tabs, Tab } from "@mui/material";
 import VillaIcon from "@mui/icons-material/Villa";
 import NavBarDrawer from "./NavBarDrawer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // context
 import StateContex from "../contex/StateContex";
+import DispatchContex from "../contex/DispatchContex";
 
 //icons
-import { Add, KeyboardDoubleArrowDown, Tune } from "@mui/icons-material";
+import { Add, KeyboardDoubleArrowDown } from "@mui/icons-material";
 import axios from "axios";
 
 //array of tabs used in navbar
@@ -28,7 +29,10 @@ const navBarTabs = ["Home", "Agencies", "Listings"];
 function NavBar({ tabs }) {
   const [value, setValue] = useState(false);
 
+  const navigate = useNavigate();
+
   const GlobalState = useContext(StateContex);
+  const GlobalDispatch = useContext(DispatchContex);
 
   //this code block will handle smaller screens
   const theme = useTheme();
@@ -42,25 +46,28 @@ function NavBar({ tabs }) {
   };
 
   const [anchorElm, setAnchorElm] = useState(null);
-  const [open, setOpen] = useState(false);
-  const handleClose = () => {
-    setAnchorElm(null);
-    setOpen(false);
-  };
+  const open = Boolean(anchorElm)
   const handleClick = (event) => {
     setAnchorElm(event.currentTarget);
-    setOpen(true);
+  };
+  const handleClose = () => {
+    setAnchorElm(null);
   };
 
   async function handleLogout(event) {
-    setAnchorElm(event.currentTarget);
-    setOpen(false);
-    const response = await axios.post(
-      "http://127.0.0.1:8000/api-auth-djoser/token/logout/",
-      GlobalState.userToken,
-      { headers: { Authorization: "Token ".concat(GlobalState.userToken) } }
-    );
-    console.log(response)
+    setAnchorElm(null);
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api-auth-djoser/token/logout/",
+        GlobalState.userToken,
+        { headers: { Authorization: "Token ".concat(GlobalState.userToken) } }
+      );
+      console.log(response);
+      GlobalDispatch({ type: "logout" });
+      navigate("/");
+    } catch (error) {
+      console.log(error.response);
+    }
   }
 
   return (
@@ -144,9 +151,9 @@ function NavBar({ tabs }) {
                   Login
                 </Button>
               )}
-              <Menu anchorEl={anchorElm} open={open} onClose={handleLogout}>
+              <Menu id="basic-button" anchorEl={anchorElm} open={open} onClose={handleClose}>
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </>
           )}
