@@ -6,6 +6,8 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Tabs, Tab } from "@mui/material";
 import VillaIcon from "@mui/icons-material/Villa";
@@ -16,7 +18,7 @@ import { Link } from "react-router-dom";
 import StateContex from "../contex/StateContex";
 
 //icons
-import { Add, VpnKey } from "@mui/icons-material";
+import { Add, KeyboardDoubleArrowDown, Tune } from "@mui/icons-material";
 
 //array of tabs used in navbar
 const navBarTabs = ["Home", "Agencies", "Listings"];
@@ -26,6 +28,7 @@ function NavBar({ tabs }) {
   const [value, setValue] = useState(false);
 
   const GlobalState = useContext(StateContex);
+  
 
   //this code block will handle smaller screens
   const theme = useTheme();
@@ -37,6 +40,19 @@ function NavBar({ tabs }) {
   const handleChange = (event, value) => {
     setValue(value);
   };
+
+
+  const [anchorElm, setAnchorElm] = useState(null);
+  const [open, setOpen] = useState(false)
+  const handleClose = ()=> {
+    setAnchorElm(null)
+    setOpen(false)
+  };
+  const handleClick = (event)=> {
+    setAnchorElm(event.currentTarget)
+    setOpen(true)
+  }
+
 
   return (
     <>
@@ -102,7 +118,9 @@ function NavBar({ tabs }) {
                   to="/login"
                   sx={{ marginLeft: 1.5, background: "rgba(158,135,163,1)" }}
                   variant="contained"
-                  startIcon={<VpnKey />}
+                  startIcon={<KeyboardDoubleArrowDown />}
+                  onClick={handleClick}
+                  id="options"
                 >
                   {GlobalState.userUsername}
                 </Button>
@@ -112,11 +130,15 @@ function NavBar({ tabs }) {
                   to="/login"
                   sx={{ marginLeft: 1.5, background: "rgba(158,135,163,1)" }}
                   variant="contained"
-                  startIcon={<VpnKey />}
+                  startIcon={<KeyboardDoubleArrowDown />}
                 >
                   Login
                 </Button>
               )}
+              <Menu anchorEl={anchorElm} open={open} onClose={handleClose} >
+                <MenuItem onClick={handleClose} >Profile</MenuItem>
+                <MenuItem onClick={handleClose} >Logout</MenuItem>
+              </Menu>
             </>
           )}
         </Toolbar>
