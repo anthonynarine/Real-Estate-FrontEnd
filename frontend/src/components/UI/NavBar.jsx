@@ -25,6 +25,50 @@ import axios from "axios";
 //array of tabs used in navbar
 const navBarTabs = ["Home", "Agencies", "Listings"];
 
+
+//NAVBAR STYLES START\\
+const NavBarStyles = {
+  loginBtn:{
+    backgroundColor: "#9E87A3",
+    color: "#22ffe9",
+    width: "7rem",
+    fontSize: ".9rem",
+    marginLeft: 1.5,
+    borderRadius: "8px",
+    "&:hover": {
+      backgroundColor: "#79B2BE"
+    }
+  },
+  addPropertyBtn:{
+    backgroundColor: "#9E87A3",
+    color: "#22ffe9",
+    width: "12rem",
+    fontSize: ".9rem",
+    marginLeft: "auto",
+    borderRadius: "8px",
+    "&:hover": {
+      backgroundColor: "#79B2BE"
+    }  
+  },
+  dropDownMenuItem1: {
+    width: "7rem",
+    borderRadius: "15px",
+    backgroundColor: "white",
+    color: "#22ffe9",
+    marginBottom: ".25rem",
+    "&:hover": {
+      backgroundColor: "#9E87A3"
+    }
+
+    
+  }
+}
+//NAVBAR STYLES END\\
+
+
+
+
+
 //make sure to set this useState value to false or it will get mad and throw and error.
 function NavBar({ tabs }) {
   const [value, setValue] = useState(false);
@@ -46,7 +90,7 @@ function NavBar({ tabs }) {
   };
 
   const [anchorElm, setAnchorElm] = useState(null);
-  const open = Boolean(anchorElm)
+  const open = Boolean(anchorElm);
   const handleClick = (event) => {
     setAnchorElm(event.currentTarget);
   };
@@ -54,21 +98,28 @@ function NavBar({ tabs }) {
     setAnchorElm(null);
   };
 
+  // LOGOUT REQUEST WITH TO DELETE USER INFO FROM LOCAL STORAGE START
   async function handleLogout(event) {
     setAnchorElm(null);
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api-auth-djoser/token/logout/",
-        GlobalState.userToken,
-        { headers: { Authorization: "Token ".concat(GlobalState.userToken) } }
-      );
-      console.log(response);
-      GlobalDispatch({ type: "logout" });
-      navigate("/");
-    } catch (error) {
-      console.log(error.response);
+
+    const confirmLogout = window.confirm("Are you sure you want to log off?");
+    if (confirmLogout) {
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api-auth-djoser/token/logout/",
+          GlobalState.userToken,
+          { headers: { Authorization: "Token ".concat(GlobalState.userToken) } }
+        );
+        console.log(response);
+        GlobalDispatch({ type: "logout" });
+        navigate("/");
+      } catch (error) {
+        console.log(error.response);
+      }
     }
   }
+
+  // LOGOUT REQUEST WITH TO DELETE USER INFO FROM LOCAL STORAGE END
 
   return (
     <>
@@ -114,15 +165,11 @@ function NavBar({ tabs }) {
                 ))}
               </Tabs>
               <Button
-                sx={{
-                  marginLeft: "auto",
-                  background: "rgba(158,135,163,1)",
-                  color: "blueGrey",
-                }}
+                sx={NavBarStyles.addPropertyBtn}
                 variant="contained"
                 startIcon={<Add />}
               >
-                Add Property
+                <Typography varient="h1" >Add Property</Typography>
               </Button>
               {/* Button will be conditionally render to show user name if logged in
                or the login button if not. this is done by using GlobalState and the
@@ -132,7 +179,7 @@ function NavBar({ tabs }) {
                 <Button
                   LinkComponent={Link}
                   to="/login"
-                  sx={{ marginLeft: 1.5, background: "rgba(158,135,163,1)" }}
+                  sx={NavBarStyles.loginBtn}
                   variant="contained"
                   startIcon={<KeyboardDoubleArrowDown />}
                   onClick={handleClick}
@@ -144,17 +191,26 @@ function NavBar({ tabs }) {
                 <Button
                   LinkComponent={Link}
                   to="/login"
-                  sx={{ marginLeft: 1.5, background: "rgba(158,135,163,1)" }}
+                  sx={NavBarStyles.loginBtn}
                   variant="contained"
                   startIcon={<KeyboardDoubleArrowDown />}
                 >
-                  Login
+                  <Typography>Login</Typography>
                 </Button>
               )}
-              <Menu id="basic-button" anchorEl={anchorElm} open={open} onClose={handleClose}>
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+
+              <Menu
+                id="basic-button"
+                anchorEl={anchorElm}
+                open={open}
+                onClose={handleClose}
+                
+                variant="selectedMenu"
+              >
+                <MenuItem sx={NavBarStyles.dropDownMenuItem1} onClick={handleClose}>Profile</MenuItem>
+                <MenuItem sx={NavBarStyles.dropDownMenuItem1} onClick={handleLogout}>Logout</MenuItem>
               </Menu>
+    
             </>
           )}
         </Toolbar>
