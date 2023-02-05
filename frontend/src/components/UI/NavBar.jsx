@@ -19,6 +19,7 @@ import StateContex from "../contex/StateContex";
 
 //icons
 import { Add, KeyboardDoubleArrowDown, Tune } from "@mui/icons-material";
+import axios from "axios";
 
 //array of tabs used in navbar
 const navBarTabs = ["Home", "Agencies", "Listings"];
@@ -28,7 +29,6 @@ function NavBar({ tabs }) {
   const [value, setValue] = useState(false);
 
   const GlobalState = useContext(StateContex);
-  
 
   //this code block will handle smaller screens
   const theme = useTheme();
@@ -41,18 +41,27 @@ function NavBar({ tabs }) {
     setValue(value);
   };
 
-
   const [anchorElm, setAnchorElm] = useState(null);
-  const [open, setOpen] = useState(false)
-  const handleClose = ()=> {
-    setAnchorElm(null)
-    setOpen(false)
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setAnchorElm(null);
+    setOpen(false);
   };
-  const handleClick = (event)=> {
-    setAnchorElm(event.currentTarget)
-    setOpen(true)
-  }
+  const handleClick = (event) => {
+    setAnchorElm(event.currentTarget);
+    setOpen(true);
+  };
 
+  async function handleLogout(event) {
+    setAnchorElm(event.currentTarget);
+    setOpen(false);
+    const response = await axios.post(
+      "http://127.0.0.1:8000/api-auth-djoser/token/logout/",
+      GlobalState.userToken,
+      { headers: { Authorization: "Token ".concat(GlobalState.userToken) } }
+    );
+    console.log(response)
+  }
 
   return (
     <>
@@ -135,9 +144,9 @@ function NavBar({ tabs }) {
                   Login
                 </Button>
               )}
-              <Menu anchorEl={anchorElm} open={open} onClose={handleClose} >
-                <MenuItem onClick={handleClose} >Profile</MenuItem>
-                <MenuItem onClick={handleClose} >Logout</MenuItem>
+              <Menu anchorEl={anchorElm} open={open} onClose={handleLogout}>
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>Logout</MenuItem>
               </Menu>
             </>
           )}
