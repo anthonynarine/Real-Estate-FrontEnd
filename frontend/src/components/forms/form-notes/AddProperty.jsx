@@ -21,14 +21,40 @@ import {
   FormControlLabel,
 } from "@mui/material";
 
+// REACT LEAFLET \\
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+
 // ALL IMPORTS GO ABOVE THIS LINE \\
+
+const areaOptions = [
+  {
+    value: "",
+    label: "",
+  },
+  {
+    value: "Brooklyn",
+    label: "Brooklyn",
+  },
+  {
+    value: "Queens",
+    label: "Queens",
+  },
+  {
+    value: "Bronx",
+    label: "Bronx",
+  },
+  {
+    value: "Manhattan",
+    label: "Manhattan",
+  },
+  {
+    value: "Statin Island",
+    label: "Statin Island",
+  },
+];
+
 function AddProperty() {
   //REGISTER FORM STYLE START\\
-  const paperStyle = {
-    padding: "30px 70px",
-    width: 400,
-    margin: "60px auto",
-  };
   const headerStyle = {
     margin: 0,
   };
@@ -42,13 +68,30 @@ function AddProperty() {
       color: "white",
       width: "15rem",
       fontSize: "1rem",
-      marginLeft: "5rem",
+      marginLeft: "10",
+      marginRight: "10rem",
       marginBottom: ".5rem",
       borderRadius: "8px",
       "&:hover": {
         backgroundColor: "#22ffe9",
         color: "#f638dc",
       },
+    },
+  };
+
+  const FormContainerStyles = {
+    container: {
+      width: "75%",
+      marginLeft: "auto",
+      marginRight: "auto",
+      marginTop: "3rem",
+      border: "3px solid black",
+      padding: "3rem",
+    },
+    itemContainer: {
+      marginTop: "rem",
+      marginLeft: "2rem",
+      marginRight: "2rem"
     },
   };
 
@@ -213,9 +256,8 @@ function AddProperty() {
   }, [state.sendRequest]);
 
   return (
-    <Container>
-      <Grid justifyContent="center">
-        <Paper elevation={19} sx={paperStyle}>
+    <Grid Container  sx={FormContainerStyles.container}>
+          <form onSubmit={FormSubmitHandler}>
           <Grid align="center" marginTop="rem">
             <Avatar sx={avatarStyle}>
               <AddCircleSharp />
@@ -225,106 +267,77 @@ function AddProperty() {
               Complete the form below to create a new listing.
             </Typography>
           </Grid>
-          <form onSubmit={FormSubmitHandler}>
-            <FormControl>
-              <FormGroup row>
-                <TextField
-                  margin="normal"
-                  id="title"
-                  label="Title"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="Enter the title of your listing"
-                  // the value prop will catch the values from the form field this must be taken from state
-                  value={state.titleValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchTitleChange",
-                      titleChosen: e.target.value,
-                    })
-                  }
-                  //here dispatch will collect the user input and store it's value in the titleChosen variable with this event handler.
-                />
-              </FormGroup>
-            </FormControl>
-            <FormControl>
-              <FormGroup row>
-                <TextField
-                  margin="normal"
-                  id="listingType"
-                  label="Listing Type"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="Enter Typye of listing"
-                  value={state.listingTypeValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchlistingTypeChange",
-                      listingTypeChosen: e.target.value,
-                    })
-                  }
-                />
-              </FormGroup>
-            </FormControl>
-            <FormControl>
-              <FormGroup row>
-                <TextField
-                  margin="normal"
-                  id="description"
-                  label="Description"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="Describe you Listing"
-                  value={state.descriptionValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchDescriptionChange",
-                      listingTypeChosen: e.target.value,
-                    })
-                  }
-                />
-              </FormGroup>
-            </FormControl>
-            <FormControl>
-              <FormGroup row>
-                <TextField
-                  margin="normal"
-                  id="area"
-                  label="Area"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="Borough"
-                  value={state.areaValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchAreaChange",
-                      areaChosen: e.target.value,
-                    })
-                  }
-                />
-              </FormGroup>
-            </FormControl>
-            <FormControl>
-              <FormGroup row>
-                <TextField
-                  margin="normal"
-                  id="propertyStatus"
-                  label="Property Status"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="Rental or Sale"
-                  value={state.propertyStatusValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchPropertyStatusChange",
-                      propertyStatusChosen: e.target.value,
-                    })
-                  }
-                />
-              </FormGroup>
-            </FormControl>
-            <FormControl>
-              <FormGroup row>
+            <Grid item sx={FormContainerStyles.itemContainer} spacing={2}>
+                  <TextField
+                    margin="normal"
+                    id="title"
+                    label="Title"
+                    variant="outlined"
+                    fullWidth
+                    placeholder="Enter the title of your listing"
+                    // the value prop will catch the values from the form field this must be taken from state
+                    value={state.titleValue}
+                    onChange={(e) =>
+                      dispatch({
+                        type: "catchTitleChange",
+                        titleChosen: e.target.value,
+                      })
+                    }
+                    //here dispatch will collect the user input and store it's value in the titleChosen variable with this event handler.
+                  />
+            </Grid>
+            <Grid item sx={FormContainerStyles.itemContainer}>
+                  <TextField
+                    margin="normal"
+                    id="listingType"
+                    label="Listing Type"
+                    variant="outlined"
+                    fullWidth
+                    placeholder="Enter Typye of listing"
+                    value={state.listingTypeValue}
+                    onChange={(e) =>
+                      dispatch({
+                        type: "catchlistingTypeChange",
+                        listingTypeChosen: e.target.value,
+                      })
+                    }
+                  />
+            </Grid>
+            <Grid item sx={FormContainerStyles.itemContainer}>
+                  <TextField
+                    margin="normal"
+                    id="description"
+                    label="Description"
+                    variant="outlined"
+                    fullWidth
+                    placeholder="Describe you Listing"
+                    value={state.descriptionValue}
+                    onChange={(e) =>
+                      dispatch({
+                        type: "catchDescriptionChange",
+                        listingTypeChosen: e.target.value,
+                      })
+                    }
+                  />
+            </Grid>
+            <Grid item sx={FormContainerStyles.itemContainer}>
+                  <TextField
+                    margin="normal"
+                    id="propertyStatus"
+                    label="Property Status"
+                    variant="outlined"
+                    fullWidth
+                    placeholder="Rental or Sale"
+                    value={state.propertyStatusValue}
+                    onChange={(e) =>
+                      dispatch({
+                        type: "catchPropertyStatusChange",
+                        propertyStatusChosen: e.target.value,
+                      })
+                    }
+                  />
+            </Grid>
+            <Grid item sx={FormContainerStyles.itemContainer}>
                 <TextField
                   margin="normal"
                   id="price"
@@ -340,10 +353,8 @@ function AddProperty() {
                     })
                   }
                 />
-              </FormGroup>
-            </FormControl>
-            <FormControl>
-              <FormGroup row>
+            </Grid>
+            <Grid item sx={FormContainerStyles.itemContainer}>
                 <TextField
                   margin="normal"
                   id="rentalFrequence"
@@ -359,10 +370,8 @@ function AddProperty() {
                     })
                   }
                 />
-              </FormGroup>
-            </FormControl>
-            <FormControl>
-              <FormGroup row>
+            </Grid>
+            <Grid item sx={FormContainerStyles.itemContainer}>
                 <TextField
                   margin="normal"
                   id="rooms"
@@ -378,9 +387,8 @@ function AddProperty() {
                     })
                   }
                 />
-              </FormGroup>
-            </FormControl>
-{/* CHECK BOX FUNCTIONALITY START             */}
+            </Grid>
+            {/* CHECK BOX FUNCTIONALITY START             */}
             <FormGroup>
               <FormControlLabel
                 control={
@@ -397,7 +405,7 @@ function AddProperty() {
                 label="Furnished"
               />
             </FormGroup>
-{/* CHECK BOX FUNCTIONALITY END             */}
+            {/* CHECK BOX FUNCTIONALITY END             */}
             <FormGroup>
               <FormControlLabel
                 control={
@@ -406,7 +414,7 @@ function AddProperty() {
                     onChange={(e) =>
                       dispatch({
                         type: "catchPoolChange",
-                        furnishedChosen: e.target.checked,
+                        poolChosen: e.target.checked,
                       })
                     }
                   />
@@ -446,7 +454,49 @@ function AddProperty() {
                 label="Parking"
               />
             </FormGroup>
-            <Stack>
+            <FormControl>
+ 
+              <FormGroup>
+                <TextField
+                  margin="normal"
+                  id="area"
+                  label="Area"
+                  variant="outlined"
+                  fullWidth
+                  placeholder="Borough"
+                  value={state.areaValue}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "catchAreaChange",
+                      areaChosen: e.target.value,
+                    })
+                  }
+                  select
+                  SelectProps={{
+                    native: true,
+                  }}
+                >
+                  {areaOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+              </FormGroup>
+            </FormControl>
+            <Grid item container sx={{ height: "70rem" }}>
+              <MapContainer
+                center={[40.65311, -73.944022]}
+                zoom={12}
+                scrollWheelZoom={true}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+              </MapContainer>
+            </Grid>
+            <Stack >
               <Button
                 sx={formBtnStyles.registerBtn}
                 type="submit"
@@ -469,9 +519,8 @@ function AddProperty() {
               </Button>
             </Stack>
           </form>
-        </Paper>
-      </Grid>
-    </Container>
+
+    </Grid>
   );
 }
 
