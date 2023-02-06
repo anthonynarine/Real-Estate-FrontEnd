@@ -1,27 +1,18 @@
-import { useImmerReducer } from "use-immer"
+import { useImmerReducer } from "use-immer";
 import { React, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 
 //icons
 import { AddCircleSharp } from "@mui/icons-material";
 import { Container } from "@mui/system";
 
-import {
-  Avatar,
-  Grid,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Avatar,Grid,Paper,Typography,TextField,Button,} from "@mui/material";
 
 // ALL IMPORTS GO ABOVE THIS LINE \\
 
 //  MAIN FUNCTION START \\
 function Register() {
-  
   //REGISTER FORM STYLE START\\
   const paperStyle = {
     padding: "30px 20px",
@@ -42,55 +33,52 @@ function Register() {
     marginLeft: "5rem",
   };
   //REGISTER FORM STYLE END\\
-  
+
   const navigate = useNavigate();
 
-//START STATE MANAGEMENT WITH IMMERREDUCER START \\
+  //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
     usernameValue: "",
     emailValue: "",
     passwordValue: "",
     password2Value: "",
-    sendRequest: 0    
+    sendRequest: 0,
   };
 
-  function ReducerFunction(draft, action){
+  function ReducerFunction(draft, action) {
     // eslint-disable-next-line default-case
-    switch (action.type){
+    switch (action.type) {
       case "catchUsernameChange":
-        draft.usernameValue = action.usernameChosen
+        draft.usernameValue = action.usernameChosen;
         break;
       case "catchEmailChange":
-        draft.emailValue = action.emailChosen
+        draft.emailValue = action.emailChosen;
         break;
       case "catchPasswordChange":
-        draft.passwordValue = action.passwordChosen
+        draft.passwordValue = action.passwordChosen;
         break;
       case "catchPassword2Change":
-        draft.password2Value = action.password2Chosen
+        draft.password2Value = action.password2Chosen;
         break;
       case "changeSendRequest":
-        draft.sendRequest = draft.sendRequest + 1
+        draft.sendRequest = draft.sendRequest + 1;
         break;
     }
-  };
-  const [ state, dispatch ] = useImmerReducer(ReducerFunction, initialState)
+  }
+  const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
   //START STATE MANAGEMENT WITH IMMERREDUCER END \\
-
 
   //FORM SUBMIT HANDLE FUNCTIONALITY START\\
   function FormSubmitHandler(event) {
     event.preventDefault();
     console.log("The form has been submitted");
-    dispatch({type: "changeSendRequest"});
+    dispatch({ type: "changeSendRequest" });
     //onSubmit sendRequst changes to the opposite of what it courrently is
   }
   //FORM SUBMIT HANDLE FUNCTIONALITY END\\
 
-
-
   useEffect(() => {
-    if (state.sendRequest){      
+    if (state.sendRequest) {
       //this will generate a token that can be attached to this request.
       const source = axios.CancelToken.source();
       const SignUp = async () => {
@@ -108,9 +96,9 @@ function Register() {
               cancelToken: source.token,
             }
           );
-          navigate("/")
+          navigate("/");
           console.log(response);
-// navigation set here will redirect the user to the home page if successfull           
+          // navigation set here will redirect the user to the home page if successfull
         } catch (error) {
           console.log(error.response);
         }
@@ -122,7 +110,7 @@ function Register() {
       };
       //CLEAN UP FUNCTION WITH TOKEN CANCEL END
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.sendRequest]);
   // The code inside this useEffect will run only when sendRequest is true.
   // it is currently set as false in state. As shown on the form onSubmit
@@ -150,10 +138,15 @@ function Register() {
               variant="outlined"
               fullWidth
               placeholder="Enter your username"
- // the value prop will catch the values from the form field this must be taken from state           
+              // the value prop will catch the values from the form field this must be taken from state
               value={state.usernameValue}
-              onChange = {(e)=>dispatch({type: "catchUsernameChange", usernameChosen: e.target.value})} 
- //here dispatch will collect the user input and store it's value in the usernameChosen variable with this event handler.         
+              onChange={(e) =>
+                dispatch({
+                  type: "catchUsernameChange",
+                  usernameChosen: e.target.value,
+                })
+              }
+              //here dispatch will collect the user input and store it's value in the usernameChosen variable with this event handler.
             />
             <TextField
               margin="normal"
@@ -163,7 +156,12 @@ function Register() {
               fullWidth
               placeholder="E-mail Address"
               value={state.emailValue}
-              onChange = {(e)=>dispatch({type: "catchEmailChange", emailChosen: e.target.value})} 
+              onChange={(e) =>
+                dispatch({
+                  type: "catchEmailChange",
+                  emailChosen: e.target.value,
+                })
+              }
             />
             <TextField
               type="password"
@@ -174,8 +172,13 @@ function Register() {
               fullWidth
               placeholder="Enter Pasword"
               value={state.passwordValue}
-              onChange = {(e)=>dispatch({type: "catchPasswordChange", passwordChosen: e.target.value})}
-              />
+              onChange={(e) =>
+                dispatch({
+                  type: "catchPasswordChange",
+                  passwordChosen: e.target.value,
+                })
+              }
+            />
             <TextField
               type="password"
               margin="normal"
@@ -185,7 +188,12 @@ function Register() {
               fullWidth
               placeholder="Confirm Password"
               value={state.password2Value}
-              onChange = {(e)=>dispatch({type: "catchPassword2Change", password2Chosen: e.target.value})}
+              onChange={(e) =>
+                dispatch({
+                  type: "catchPassword2Change",
+                  password2Chosen: e.target.value,
+                })
+              }
             />
             <Button
               sx={registerBtn}
@@ -223,8 +231,6 @@ function Register() {
 
 export default Register;
 
-
-
 //  MAIN FUNCTION END \\
 
 //event.preventDefault();
@@ -233,8 +239,6 @@ export default Register;
 // default browser behavior (browser will add all form fields to the
 //   onsubmint. There will be no url to handle it). so we prevent
 //   this default action with event.preventDefault();
-
-
 
 //      sendRequest & if conditional notes
 // The useEffect hook sends a request to the BackupOutlined whenever
@@ -247,22 +251,20 @@ export default Register;
 // // sendRquest. without this everytime the page loads a request will
 // //be sent to the backend.
 
+///////////OLD STATE MANAGEMENT REPLACED BY immerReducer/////
 
+// //       Post FORM REQUEST START     \\
+// const [sendRequest, setSendRequest] = useState(false);
+// //see notes below on this state and it's functionality
 
-  ///////////OLD STATE MANAGEMENT REPLACED BY immerReducer/////
-  
-  // //       Post FORM REQUEST START     \\
-  // const [sendRequest, setSendRequest] = useState(false);
-  // //see notes below on this state and it's functionality
-  
-  // //state to manage form values
-  // const [usernameValue, setUsernameValue] = useState("");
-  // const [emailValue, setEmailValue] = useState("");
-  // const [passwordValue, setPasswordValue] = useState("");
-  // const [password2Value, setPassword2Value] = useState("");
-  
-  // useEffect(()=> {
-    //   console.log(password2Value)
-    // }, [password2Value]);
-    //this code was used to test the state in the username section of the form.
-    ///////////OLD STATE MANAGEMENT REPLACED BY immerReducer/////
+// //state to manage form values
+// const [usernameValue, setUsernameValue] = useState("");
+// const [emailValue, setEmailValue] = useState("");
+// const [passwordValue, setPasswordValue] = useState("");
+// const [password2Value, setPassword2Value] = useState("");
+
+// useEffect(()=> {
+//   console.log(password2Value)
+// }, [password2Value]);
+//this code was used to test the state in the username section of the form.
+///////////OLD STATE MANAGEMENT REPLACED BY immerReducer/////

@@ -11,9 +11,9 @@ import "./App.css";
 import Home from "./components/pages/Home";
 import Login from "./components/forms/Login";
 import Register from "./components/forms/Register";
-import Agencies from "./components/pages/AddProperty";
+import Agencies from "./components/forms/form-notes/AddProperty";
 import Listings from "./components/pages/Listings";
-import AddProperty from "./components/pages/AddProperty";
+import AddProperty from "./components/forms/form-notes/AddProperty";
 import Error from "./components/pages/Error";
 
 //testing delete when done
@@ -88,7 +88,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/add-property" element={<AddProperty />} />
+            <Route path="/addproperty" element={<AddProperty />} />
             <Route path="/listings" element={<Listings />} />
             <Route path="/agencies" element={<Agencies />} />
             <Route path="/testing" element={<TestinguseReducer />} />

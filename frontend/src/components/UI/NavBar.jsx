@@ -1,14 +1,5 @@
 import { React, useState, useContext } from "react";
-import {
-  AppBar,
-  Button,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-  useTheme,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { AppBar,Button,Toolbar,Typography,useMediaQuery,useTheme,Menu,MenuItem,} from "@mui/material";
 import { Tabs, Tab } from "@mui/material";
 import VillaIcon from "@mui/icons-material/Villa";
 import NavBarDrawer from "./NavBarDrawer";
@@ -19,36 +10,37 @@ import StateContex from "../contex/StateContex";
 import DispatchContex from "../contex/DispatchContex";
 
 //icons
-import { Add, KeyboardDoubleArrowDown } from "@mui/icons-material";
+import { KeyboardDoubleArrowDown, Home } from "@mui/icons-material";
 import axios from "axios";
 
 //array of tabs used in navbar
 const navBarTabs = ["Home", "Agencies", "Listings"];
 
-
 //NAVBAR STYLES START\\
 const NavBarStyles = {
-  loginBtn:{
-    backgroundColor: "#9E87A3",
+  loginBtn: {
+    backgroundColor: "#79B2BE",
     color: "#22ffe9",
     width: "7rem",
     fontSize: ".9rem",
     marginLeft: 1.5,
     borderRadius: "8px",
     "&:hover": {
-      backgroundColor: "#79B2BE"
-    }
+      backgroundColor: "#22ffe9",
+      color: "#f638dc",
+    },
   },
-  addPropertyBtn:{
-    backgroundColor: "#9E87A3",
+  addPropertyBtn: {
+    backgroundColor: "#79B2BE",
     color: "#22ffe9",
     width: "12rem",
     fontSize: ".9rem",
     marginLeft: "auto",
     borderRadius: "8px",
     "&:hover": {
-      backgroundColor: "#79B2BE"
-    }  
+      backgroundColor: "#22ffe9",
+      color: "#f638dc",
+    },
   },
   dropDownMenuItem1: {
     width: "7rem",
@@ -57,17 +49,11 @@ const NavBarStyles = {
     color: "#22ffe9",
     marginBottom: ".25rem",
     "&:hover": {
-      backgroundColor: "#9E87A3"
-    }
-
-    
-  }
-}
+      backgroundColor: "#9E87A3",
+    },
+  },
+};
 //NAVBAR STYLES END\\
-
-
-
-
 
 //make sure to set this useState value to false or it will get mad and throw and error.
 function NavBar({ tabs }) {
@@ -165,11 +151,13 @@ function NavBar({ tabs }) {
                 ))}
               </Tabs>
               <Button
+                LinkComponent={Link}
+                to="/addproperty"
                 sx={NavBarStyles.addPropertyBtn}
                 variant="contained"
-                startIcon={<Add />}
+                startIcon={<Home />}
               >
-                <Typography varient="h1" >Add Property</Typography>
+                <Typography varient="h1">Add Property</Typography>
               </Button>
               {/* Button will be conditionally render to show user name if logged in
                or the login button if not. this is done by using GlobalState and the
@@ -204,13 +192,21 @@ function NavBar({ tabs }) {
                 anchorEl={anchorElm}
                 open={open}
                 onClose={handleClose}
-                
                 variant="selectedMenu"
               >
-                <MenuItem sx={NavBarStyles.dropDownMenuItem1} onClick={handleClose}>Profile</MenuItem>
-                <MenuItem sx={NavBarStyles.dropDownMenuItem1} onClick={handleLogout}>Logout</MenuItem>
+                <MenuItem
+                  sx={NavBarStyles.dropDownMenuItem1}
+                  onClick={handleClose}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  sx={NavBarStyles.dropDownMenuItem1}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </MenuItem>
               </Menu>
-    
             </>
           )}
         </Toolbar>
