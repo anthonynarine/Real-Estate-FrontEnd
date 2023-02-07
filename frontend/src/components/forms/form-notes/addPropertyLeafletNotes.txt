@@ -26,6 +26,9 @@ onClick={()=>console.log(state.mapInstance.flyTo([40.79081987542505, -73.9531398
     () => ({
       dragend() {
         const marker = markerRef.current
+        console.log(marker.getLatLng()); //display lat and lng coordinates 
+        dispatch({type: "catchLatitudeChange", latitudeChosen: marker.getLagLng().lat})
+        dispatch({type: "catchLongitudeChange", longitudeChosen: marker.getLagLng().lng})
       },
     }),
     [],
@@ -56,3 +59,12 @@ onClick={()=>console.log(state.mapInstance.flyTo([40.79081987542505, -73.9531398
   Catching the lat and long values after user drags the marker
   https://leafletjs.com/reference.html#marker   see marker methods
 
+  we will achieve this by calling dispatch
+  the state is currently stored in our initialState array as lat and long
+  this must be stored in an object as such.  Leaflet expects it to be 
+  stored that way.  See console.log in display for how this is displayed on 
+  marker movements. 
+
+
+  Adding a marker based on borough selected.
+  create new case in reducer function 

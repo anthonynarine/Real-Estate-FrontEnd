@@ -143,7 +143,10 @@ function AddProperty() {
     mapInstance: null,
     //the markerPosition objece will need to be labeled as show below/
     //lat for latitude and lng for longitude.THIS IS WHAT LEAFLET EXPECTS
-    markerPosition: { lat: "40.65311", lng: "-73.944022"},
+    markerPosition: { 
+      lat: "40.65311",
+      lng: "-73.944022"
+    },
   };
 
   function ReducerFunction(draft, action) {
@@ -232,6 +235,14 @@ function AddProperty() {
       case "getMap":
         draft.mapInstance = action.mapData;
         break;
+
+      case "changeMarkerPosition":
+        draft.markerPosition.lat = action.changeLatitude;
+        draft.markerPosition.lng = action.changelongitude;
+//code below will change the lat and lng values when a different borough is selected.
+        draft.latitudeValue = ""
+        draft.longitudeValue =""
+        break;
     }
   }
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
@@ -249,14 +260,20 @@ function AddProperty() {
   useEffect(() => {
     if (state.areaValue === "Queens") {
       state.mapInstance.setView([40.728918328545674, -73.7947734809174], 12);
+      //CALLING DISPATCH HERE WILL ALLOW THE MARKER TO SHOW UP AT THE LOCATION OF EACH BOROUGH
+      dispatch({type: "changeMarkerPosition", changeLatitude: 40.728918328545674, changelongitude:-73.7947734809174})
     } else if (state.areaValue === "Brooklyn") {
       state.mapInstance.setView([40.67802815856073, -73.94497138770943], 12);
+      dispatch({type: "changeMarkerPosition", changeLatitude: 40.67802815856073, changelongitude:-73.944971387709434})
     } else if (state.areaValue === "Manhattan") {
       state.mapInstance.setView([40.78297723250647, -73.97299614618669], 12);
+      dispatch({type: "changeMarkerPosition", changeLatitude: 40.78297723250647, changelongitude:-73.97299614618669})
     } else if (state.areaValue === "Bronx") {
       state.mapInstance.setView([40.851822844384564, -73.88683657178883], 12);
+      dispatch({type: "changeMarkerPosition", changeLatitude: 40.851822844384564, changelongitude:-73.88683657178883})
     } else if (state.areaValue === "Statin Island") {
       state.mapInstance.setView([40.584233704376764, -74.15788838492944], 12);
+      dispatch({type: "changeMarkerPosition", changeLatitude: 40.584233704376764, changelongitude:-74.15788838492944})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.areaValue]);
@@ -268,10 +285,18 @@ function AddProperty() {
       dragend() {
         const marker = markerRef.current
         console.log(marker.getLatLng());
+        dispatch({type: "catchLatitudeChange", latitudeChosen: marker.getLatLng().lat})
+        dispatch({type: "catchLongitudeChange",longitudeChosen: marker.getLatLng().lng})
       },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
+
+  useEffect(()=>{
+    console.log(state.latitudeValue, state.longitudeValue)
+  },[state.latitudeValue, state.longitudeValue]);
+  // will watch for changes in latitude and longitude Values
 
 
   //FORM SUBMIT HANDLE FUNCTIONALITY START\\
@@ -429,7 +454,6 @@ function AddProperty() {
               />
             </FormGroup>
           </Grid>
-
           <Grid item sx={styling.gridItemCheckbox}>
             <FormGroup>
               <FormControlLabel
@@ -498,18 +522,17 @@ function AddProperty() {
             </FormGroup>
           </FormControl>
         </Grid>
-        <Grid item sx={styling.mapContainer} container spacing={6}>
+        <Grid item sx={styling.mapContainer} container rowSpacing={0}>
           {/* MAP              */}
           <MapContainer
             center={[40.65311, -73.944022]}
-            zoom={12}
+            zoom={14}
             scrollWheelZoom={true}
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-
             <MyMapComponent />
             {/* {zipCodeDisplay polygon functionality to be a future addition} */}
             <Marker
