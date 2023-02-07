@@ -9,11 +9,11 @@ import "./App.css";
 
 //pages
 import Home from "./components/pages/Home";
-import Login from "./components/forms/Login";
-import Register from "./components/forms/Register";
-import Agencies from "./components/forms/form-notes/AddProperty";
+import Login from "./components/forms/forms/Login"
+import Register from "./components/forms/forms/Register";
+import AddProperty from "./components/forms/forms/AddProperty";
+// import Agencies from "./components/forms/form-notes/AddProperty";
 import Listings from "./components/pages/Listings";
-import AddProperty from "./components/forms/form-notes/AddProperty";
 import Error from "./components/pages/Error";
 
 //testing delete when done
@@ -90,7 +90,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/addproperty" element={<AddProperty />} />
             <Route path="/listings" element={<Listings />} />
-            <Route path="/agencies" element={<Agencies />} />
+            {/* <Route path="/agencies" element={<Agencies />} /> */}
             <Route path="/testing" element={<TestinguseReducer />} />
             {/* ERROR PAGE SHOULD BE LAST ROUTE */}
             <Route path="*" element={<Error />} />

@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 
 // Context
-import DispatchContex from "../contex/DispatchContex";
-import StateContex from "../contex/StateContex";
+import DispatchContex from "../../contex/DispatchContex";
+import StateContex from "../../contex/StateContex";
 // see app.js for state being brought in by this import via context.
 
 // ALL IMPORTS GO ABOVE THIS LINE \\
