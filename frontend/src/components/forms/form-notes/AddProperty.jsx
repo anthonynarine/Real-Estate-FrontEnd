@@ -1,14 +1,12 @@
 import { useImmerReducer } from "use-immer";
-import { React, useEffect } from "react";
+import { React, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 //icons
 import { AddCircleSharp } from "@mui/icons-material";
-import { Container } from "@mui/system";
 
 import {
-  Avatar,
   Grid,
   Paper,
   Typography,
@@ -22,7 +20,7 @@ import {
 } from "@mui/material";
 
 // REACT LEAFLET \\
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
 // ALL IMPORTS GO ABOVE THIS LINE \\
 
@@ -58,18 +56,17 @@ function AddProperty() {
   const headerStyle = {
     margin: 0,
   };
-  const avatarStyle = {
-    backgroundColor: "#79B2BE",
-  };
 
   const formBtnStyles = {
     registerBtn: {
       backgroundColor: "#79B2BE",
+      justifyContent: "center",
       color: "white",
-      width: "15rem",
+      width: "60rem",
       fontSize: "1rem",
-      marginLeft: "10",
-      marginRight: "10rem",
+      marginTop: "2rem",
+      marginLeft: "8rem",
+      marginRight: "rem",
       marginBottom: ".5rem",
       borderRadius: "8px",
       "&:hover": {
@@ -79,19 +76,41 @@ function AddProperty() {
     },
   };
 
-  const FormContainerStyles = {
+  const styling = {
     container: {
-      width: "75%",
+      width: "90%",
+      justifyContent: "auto",
+      backgroundColor: "white",
+      border: "3px solid",
+      borderColor: "#79B2BE",
+      margin: "auto",
+      marginTop: "1rem",
+    },
+    gridItem: {
+      width: "47%",
+      marginBottom: "0rem",
+      marginLeft: "1.3rem",
+    },
+    gridItemArea: {
+      marginLeft: "4rem",
+    },
+    gridItemCheckbox: {
+      width: "15%",
+      marginBottom: "1rem",
+      marginRight: "6rem",
+    },
+    checkboxContainer: {
+      width: "90%",
+      justifyContent: "center",
+      marginLeft: "4rem",
+    },
+    mapContainer: {
+      width: "90%",
+      height: "75rem",
+      marginTop: "1rem",
       marginLeft: "auto",
       marginRight: "auto",
-      marginTop: "3rem",
-      border: "3px solid black",
-      padding: "3rem",
-    },
-    itemContainer: {
-      marginTop: "rem",
-      marginLeft: "2rem",
-      marginRight: "2rem"
+      marginBottom: "6rem",
     },
   };
 
@@ -121,6 +140,10 @@ function AddProperty() {
     picture3Value: "",
     picture4Value: "",
     picture5Value: "",
+    mapInstance: null,
+    //the markerPosition objece will need to be labeled as show below/
+    //lat for latitude and lng for longitude.THIS IS WHAT LEAFLET EXPECTS
+    markerPosition: { lat: "40.65311", lng: "-73.944022"},
   };
 
   function ReducerFunction(draft, action) {
@@ -205,10 +228,51 @@ function AddProperty() {
       case "catchPicture5Change":
         draft.picture5Value = action.picture5Chosen;
         break;
+
+      case "getMap":
+        draft.mapInstance = action.mapData;
+        break;
     }
   }
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
   //START STATE MANAGEMENT WITH IMMERREDUCER END \\
+
+  //   HOOK PROVIDING LEAFLET MAP INSTANCE IN ANY DECEDANT OF MAPCONTAINER (SEE LEAFLET DOCS)
+  //   dispatch added
+  function MyMapComponent() {
+    const map = useMap();
+    dispatch({ type: "getMap", mapData: map });
+    return null;
+  }
+
+  // USE EFFECT TO CHANGE THE MAP VIEW DEPENDING ON CHOSEN BOROUGH
+  useEffect(() => {
+    if (state.areaValue === "Queens") {
+      state.mapInstance.setView([40.728918328545674, -73.7947734809174], 12);
+    } else if (state.areaValue === "Brooklyn") {
+      state.mapInstance.setView([40.67802815856073, -73.94497138770943], 12);
+    } else if (state.areaValue === "Manhattan") {
+      state.mapInstance.setView([40.78297723250647, -73.97299614618669], 12);
+    } else if (state.areaValue === "Bronx") {
+      state.mapInstance.setView([40.851822844384564, -73.88683657178883], 12);
+    } else if (state.areaValue === "Statin Island") {
+      state.mapInstance.setView([40.584233704376764, -74.15788838492944], 12);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.areaValue]);
+
+  //DRAGABLE MARKER FUNCTIONALITY\\
+  const markerRef = useRef(null)
+  const eventHandlers = useMemo(
+    () => ({
+      dragend() {
+        const marker = markerRef.current
+        console.log(marker.getLatLng());
+      },
+    }),
+    [],
+  )
+
 
   //FORM SUBMIT HANDLE FUNCTIONALITY START\\
   function FormSubmitHandler(event) {
@@ -219,176 +283,117 @@ function AddProperty() {
   }
   //FORM SUBMIT HANDLE FUNCTIONALITY END\\
 
-  useEffect(() => {
-    if (state.sendRequest) {
-      //this will generate a token that can be attached to this request.
-      const source = axios.CancelToken.source();
-      const SignUp = async () => {
-        try {
-          const response = await axios.post(
-            "http://127.0.0.1:8000/api-auth-djoser/users/",
-            {
-              username: state.usernameValue,
-              email: state.emailValue,
-              password: state.passwordValue,
-              re_password: state.password2Value,
-              //re_password is a djoser key requirement if confirm password = true (see docs)
-            },
-            {
-              cancelToken: source.token,
-            }
-          );
-          navigate("/");
-          console.log(response);
-          // navigation set here will redirect the user to the home page if successfull
-        } catch (error) {
-          console.log(error.response);
-        }
-      };
-      SignUp();
-      //CLEAN UP FUNCTION WITH TOKEN CANCEL START
-      return () => {
-        source.cancel();
-      };
-      //CLEAN UP FUNCTION WITH TOKEN CANCEL END
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.sendRequest]);
-
   return (
-    <Grid Container  sx={FormContainerStyles.container}>
-          <form onSubmit={FormSubmitHandler}>
-          <Grid align="center" marginTop="rem">
-            <Avatar sx={avatarStyle}>
-              <AddCircleSharp />
-            </Avatar>
-            <h1 sx={headerStyle}>Add a property</h1>
-            <Typography variant="caption">
-              Complete the form below to create a new listing.
-            </Typography>
-          </Grid>
-            <Grid item sx={FormContainerStyles.itemContainer} spacing={2}>
-                  <TextField
-                    margin="normal"
-                    id="title"
-                    label="Title"
-                    variant="outlined"
-                    fullWidth
-                    placeholder="Enter the title of your listing"
-                    // the value prop will catch the values from the form field this must be taken from state
-                    value={state.titleValue}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "catchTitleChange",
-                        titleChosen: e.target.value,
-                      })
-                    }
-                    //here dispatch will collect the user input and store it's value in the titleChosen variable with this event handler.
-                  />
-            </Grid>
-            <Grid item sx={FormContainerStyles.itemContainer}>
-                  <TextField
-                    margin="normal"
-                    id="listingType"
-                    label="Listing Type"
-                    variant="outlined"
-                    fullWidth
-                    placeholder="Enter Typye of listing"
-                    value={state.listingTypeValue}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "catchlistingTypeChange",
-                        listingTypeChosen: e.target.value,
-                      })
-                    }
-                  />
-            </Grid>
-            <Grid item sx={FormContainerStyles.itemContainer}>
-                  <TextField
-                    margin="normal"
-                    id="description"
-                    label="Description"
-                    variant="outlined"
-                    fullWidth
-                    placeholder="Describe you Listing"
-                    value={state.descriptionValue}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "catchDescriptionChange",
-                        listingTypeChosen: e.target.value,
-                      })
-                    }
-                  />
-            </Grid>
-            <Grid item sx={FormContainerStyles.itemContainer}>
-                  <TextField
-                    margin="normal"
-                    id="propertyStatus"
-                    label="Property Status"
-                    variant="outlined"
-                    fullWidth
-                    placeholder="Rental or Sale"
-                    value={state.propertyStatusValue}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "catchPropertyStatusChange",
-                        propertyStatusChosen: e.target.value,
-                      })
-                    }
-                  />
-            </Grid>
-            <Grid item sx={FormContainerStyles.itemContainer}>
-                <TextField
-                  margin="normal"
-                  id="price"
-                  label="Price"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="Amount"
-                  value={state.priceValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchPriceChange",
-                      priceChosen: e.target.value,
-                    })
-                  }
-                />
-            </Grid>
-            <Grid item sx={FormContainerStyles.itemContainer}>
-                <TextField
-                  margin="normal"
-                  id="rentalFrequence"
-                  label="Rental Frequence"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="Month Week Day Hour"
-                  value={state.rentalFequencyValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchRentalFrequencyChange",
-                      rentalFrequencyChosen: e.target.value,
-                    })
-                  }
-                />
-            </Grid>
-            <Grid item sx={FormContainerStyles.itemContainer}>
-                <TextField
-                  margin="normal"
-                  id="rooms"
-                  label="Rooms"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="Amount of Rooms"
-                  value={state.roomsValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchRoomsChange",
-                      roomsChosen: e.target.value,
-                    })
-                  }
-                />
-            </Grid>
-            {/* CHECK BOX FUNCTIONALITY START             */}
+    <form onSubmit={FormSubmitHandler}>
+      <Grid align="center" marginTop="rem">
+        <h1 sx={headerStyle}>Add a property</h1>
+      </Grid>
+      <Grid sx={styling.container} container rowSpacing={2} margin={2}>
+        <Grid item sx={styling.gridItem}>
+          <TextField
+            margin="normal"
+            id="listingType"
+            label="Listing Type"
+            variant="outlined"
+            fullWidth
+            placeholder="Enter Typye of listing"
+            value={state.listingTypeValue}
+            onChange={(e) =>
+              dispatch({
+                type: "catchlistingTypeChange",
+                listingTypeChosen: e.target.value,
+              })
+            }
+          />
+        </Grid>
+        <Grid item sx={styling.gridItem}>
+          <TextField
+            margin="normal"
+            id="description"
+            label="Description"
+            variant="outlined"
+            fullWidth
+            placeholder="Describe you Listing"
+            value={state.descriptionValue}
+            onChange={(e) =>
+              dispatch({
+                type: "catchDescriptionChange",
+                listingTypeChosen: e.target.value,
+              })
+            }
+          />
+        </Grid>
+        <Grid item sx={styling.gridItem}>
+          <TextField
+            margin="normal"
+            id="propertyStatus"
+            label="Property Status"
+            variant="outlined"
+            fullWidth
+            placeholder="Rental or Sale"
+            value={state.propertyStatusValue}
+            onChange={(e) =>
+              dispatch({
+                type: "catchPropertyStatusChange",
+                propertyStatusChosen: e.target.value,
+              })
+            }
+          />
+        </Grid>
+        <Grid item sx={styling.gridItem}>
+          <TextField
+            margin="normal"
+            id="price"
+            label="Price"
+            variant="outlined"
+            fullWidth
+            placeholder="Amount"
+            value={state.priceValue}
+            onChange={(e) =>
+              dispatch({
+                type: "catchPriceChange",
+                priceChosen: e.target.value,
+              })
+            }
+          />
+        </Grid>
+        <Grid item sx={styling.gridItem}>
+          <TextField
+            margin="normal"
+            id="rentalFrequence"
+            label="Rental Frequence"
+            variant="outlined"
+            fullWidth
+            placeholder="Month Week Day Hour"
+            value={state.rentalFequencyValue}
+            onChange={(e) =>
+              dispatch({
+                type: "catchRentalFrequencyChange",
+                rentalFrequencyChosen: e.target.value,
+              })
+            }
+          />
+        </Grid>
+        <Grid item sx={styling.gridItem}>
+          <TextField
+            margin="normal"
+            id="rooms"
+            label="Rooms"
+            variant="outlined"
+            fullWidth
+            placeholder="Amount of Rooms"
+            value={state.roomsValue}
+            onChange={(e) =>
+              dispatch({
+                type: "catchRoomsChange",
+                roomsChosen: e.target.value,
+              })
+            }
+          />
+        </Grid>
+        {/* CHECK BOX FUNCTIONALITY START             */}
+        <Grid sx={styling.checkboxContainer} container spacing={2} margin={2}>
+          <Grid item sx={styling.gridItemCheckbox}>
             <FormGroup>
               <FormControlLabel
                 control={
@@ -405,7 +410,8 @@ function AddProperty() {
                 label="Furnished"
               />
             </FormGroup>
-            {/* CHECK BOX FUNCTIONALITY END             */}
+          </Grid>
+          <Grid item sx={styling.gridItemCheckbox}>
             <FormGroup>
               <FormControlLabel
                 control={
@@ -422,6 +428,9 @@ function AddProperty() {
                 label="Pool"
               />
             </FormGroup>
+          </Grid>
+
+          <Grid item sx={styling.gridItemCheckbox}>
             <FormGroup>
               <FormControlLabel
                 control={
@@ -438,6 +447,8 @@ function AddProperty() {
                 label="Elevator"
               />
             </FormGroup>
+          </Grid>
+          <Grid item sx={styling.gridItemCheckbox}>
             <FormGroup>
               <FormControlLabel
                 control={
@@ -454,73 +465,88 @@ function AddProperty() {
                 label="Parking"
               />
             </FormGroup>
-            <FormControl>
- 
-              <FormGroup>
-                <TextField
-                  margin="normal"
-                  id="area"
-                  label="Area"
-                  variant="outlined"
-                  fullWidth
-                  placeholder="Borough"
-                  value={state.areaValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchAreaChange",
-                      areaChosen: e.target.value,
-                    })
-                  }
-                  select
-                  SelectProps={{
-                    native: true,
-                  }}
-                >
-                  {areaOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
-              </FormGroup>
-            </FormControl>
-            <Grid item container sx={{ height: "70rem" }}>
-              <MapContainer
-                center={[40.65311, -73.944022]}
-                zoom={12}
-                scrollWheelZoom={true}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-              </MapContainer>
-            </Grid>
-            <Stack >
-              <Button
-                sx={formBtnStyles.registerBtn}
-                type="submit"
+          </Grid>
+        </Grid>
+        {/* CHECK BOX RENDER END             */}
+        <Grid item sx={styling.gridItemArea}>
+          <FormControl>
+            <FormGroup>
+              <TextField
                 margin="normal"
-                variant="contained"
-                color="primary"
-                fullWidth
+                id="area"
+                label="Area"
+                variant="standard"
+                placeholder="Borough"
+                value={state.areaValue}
+                onChange={(e) =>
+                  dispatch({
+                    type: "catchAreaChange",
+                    areaChosen: e.target.value,
+                  })
+                }
+                select
+                SelectProps={{
+                  native: true,
+                }}
               >
-                <Typography variant="subtitle1">Submit</Typography>
-              </Button>
-              <Button
-                sx={formBtnStyles.registerBtn}
-                type="submit"
-                margin="normal"
-                variant="contained"
-                color="primary"
-                fullWidth
-              >
-                <Typography variant="subtitle1">Clear</Typography>
-              </Button>
-            </Stack>
-          </form>
+                {areaOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </FormGroup>
+          </FormControl>
+        </Grid>
+        <Grid item sx={styling.mapContainer} container spacing={6}>
+          {/* MAP              */}
+          <MapContainer
+            center={[40.65311, -73.944022]}
+            zoom={12}
+            scrollWheelZoom={true}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
 
-    </Grid>
+            <MyMapComponent />
+            {/* {zipCodeDisplay polygon functionality to be a future addition} */}
+            <Marker
+              draggable
+              eventHandlers={eventHandlers}
+              position={state.markerPosition}
+              ref={markerRef}
+            ></Marker>
+          </MapContainer>
+          <Stack>
+            <Button
+              fullWidth
+              sx={formBtnStyles.registerBtn}
+              type="submit"
+              margin="normal"
+              variant="contained"
+              color="primary"
+            >
+              <Typography variant="subtitle1">Submit</Typography>
+            </Button>
+            <Button
+              sx={formBtnStyles.registerBtn}
+              type="submit"
+              margin="normal"
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                console.log(
+                  state.mapInstance.flyTo(
+                    [40.79081987542505, -73.95313983253074],15 ))}
+            >
+              <Typography variant="subtitle1">Test</Typography>
+            </Button>
+          </Stack>
+        </Grid>
+      </Grid>
+    </form>
   );
 }
 

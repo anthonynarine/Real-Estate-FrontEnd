@@ -1,0 +1,58 @@
+https://react-leaflet.js.org/docs/api-map/  (see lecture 70)
+
+
+  function MyMapComponent(){
+    const map = useMap()
+    dispatch({type: "getMap", mapData: map});
+    return null;
+  }
+
+
+function is called in a self closing tag in the map container
+
+map method from leaflet docs
+
+button with on onClick handler to trigger function
+onClick={()=>console.log(state.mapInstance.setView([40.79081987542505, -73.95313983253074], 15))}
+onClick={()=>console.log(state.mapInstance.flyTo([40.79081987542505, -73.95313983253074], 15))}
+
+
+
+  DRAGABLE MARKER SET UP
+  SETUP TAKEN FROM LEAFLET Docs
+
+    const markerRef = useRef(null)
+  const eventHandlers = useMemo(
+    () => ({
+      dragend() {
+        const marker = markerRef.current
+      },
+    }),
+    [],
+  )
+
+  <Marker
+    draggable
+    eventHandlers={eventHandlers}
+    position={state.markerPosition}
+    ref={markerRef}
+  ></Marker>
+
+  This code block's goal is to do something when the user is done dragging the marker on the map
+  Little markers have an event for that called >>> dragend.
+  This is achieved in the event handlers function which useses the useMemo hook
+  The useMemo hook takes 2 arguments a function and a dependencies array. the function is
+  arrow function, inside we call the dragend event which is an event for the markers in leaflet
+  this is fired when the user stops dragging the marker. So the marker is an object with 
+  properties  and methods in order to have acces to the marker currently on the map The
+  useRef hook is used. when we have access to the marker we have access to it's properties
+  and methods. in order to have acces to it. the marker is refrenced with the ref attribute
+  that comes with the useRef hook ref={markerRef} then at the top it is stored in the markerRef
+  variable const markerRef = useRef(null) (initially set to null). MarkerRef.current is the 
+  marker currently on the map
+
+
+
+  Catching the lat and long values after user drags the marker
+  https://leafletjs.com/reference.html#marker   see marker methods
+
