@@ -12,6 +12,7 @@ import Home from "./components/pages/Home";
 import Login from "./components/forms/forms/Login"
 import Register from "./components/forms/forms/Register";
 import AddProperty from "./components/forms/forms/AddProperty";
+// import AddPropertyOLD from "./components/forms/re-worked-components/AddPropertyOLD";
 // import Agencies from "./components/forms/form-notes/AddProperty";
 import Listings from "./components/pages/Listings";
 import Error from "./components/pages/Error";
@@ -89,6 +90,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/addproperty" element={<AddProperty />} />
+            {/* <Route path="/addpropertyold" element={<AddPropertyOLD />} /> */}
             <Route path="/listings" element={<Listings />} />
             {/* <Route path="/agencies" element={<Agencies />} /> */}
             <Route path="/testing" element={<TestinguseReducer />} />

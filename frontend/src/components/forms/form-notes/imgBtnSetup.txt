@@ -1,0 +1,20 @@
+ <Button
+              component="label"
+              sx={formBtnStyles.registerBtn}
+              margin="normal"
+              variant="contained"
+              color="primary"
+            >
+              Upload images 5 max
+              <input
+                type="file"
+                hidden
+                multip
+                accept="image/png, image/jig, image/jpeg"
+              />
+</Button>
+
+
+
+inital state must be created. See initial state (uploadedPictures) list for this component in 
+AddProperty component for this example. 
