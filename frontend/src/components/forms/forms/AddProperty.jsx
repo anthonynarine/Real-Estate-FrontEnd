@@ -15,7 +15,6 @@ import {
 
 // REACT LEAFLET \\
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import { borderBottom } from "@mui/system";
 
 // ALL IMPORTS GO ABOVE THIS LINE \\
 
@@ -43,6 +42,69 @@ const areaOptions = [
   {
     value: "Statin Island",
     label: "Statin Island",
+  },
+];
+
+const listingTypeOptions = [
+  {
+    value: "",
+    label: "",
+  },
+  {
+    value: "Apartment",
+    label: "Apartment",
+  },
+  {
+    value: "House",
+    label: "House",
+  },
+  {
+    value: "Office",
+    label: "Office",
+  },
+  {
+    value: "Commercial Space",
+    label: "Commercial Space",
+  },
+  {
+    value: "Parking Space",
+    label: "Parking Space",
+  },
+];
+const rentalFrequenceOption = [
+  {
+    value: "",
+    label: "",
+  },
+  {
+    value: "Month",
+    label: "Month",
+  },
+  {
+    value: "Week",
+    label: "Week",
+  },
+  {
+    value: "Day",
+    label: "Day",
+  },
+  {
+    value: "Hour",
+    label: "Hour",
+  },
+];
+const propertyStatusOption = [
+  {
+    value: "",
+    label: "",
+  },
+  {
+    value: "Sale",
+    label: "Sale",
+  },
+  {
+    value: "Rent",
+    label: "Rent",
   },
 ];
 
@@ -92,32 +154,33 @@ function AddProperty() {
   //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
     titleValue: "",
+    typeOfListingValue: "",
     listingTypeValue: "",
     descriptionValue: "",
     areaValue: "",
-    latitudeValue: "",
-    longitudeValue: "",
     propertyStatusValue: "",
     priceValue: "",
-    rentalFequencyValue: "",
+    rentalFrequencyValue: "",
     roomsValue: "",
     furnishedValue: false,
     poolValue: false,
     elevatorValue: false,
     parkingValue: false,
-    datePostedValue: false,
+    latitudeValue: "",
+    longitudeValue: "",
     picture1Value: "",
     picture2Value: "",
     picture3Value: "",
     picture4Value: "",
     picture5Value: "",
     mapInstance: null,
-    //the markerPosition objece will need to be labeled as show below/
+    //the markerPosition objecet will need to be labeled as show below/
     //lat for latitude and lng for longitude.THIS IS WHAT LEAFLET EXPECTS
     markerPosition: {
       lat: "40.65311",
       lng: "-73.944022",
     },
+    //used to store uploaded images
     uploadedPictures: [],
   };
 
@@ -125,10 +188,16 @@ function AddProperty() {
     // eslint-disable-next-line default-case
     switch (action.type) {
       case "catchTitleChange":
-        draft.usernameValue = action.usernameChosen;
+        draft.titleValue = action.titleChosen;
         break;
+      // case "catchTypeOfListingChange":
+      //   draft.typeOfListingValue = action.typeOfListingChosen;
+      //   break;
       case "catchListingTypeChange":
-        draft.listingtypeValue = action.listingTypeChosen;
+        draft.listingTypeValue = action.listingTypeChosen;
+        break;
+      case "catchPropertyStatusChange":
+        draft.propertyStatusValue = action.propertyStatusChosen;
         break;
       case "catchDescriptionChange":
         draft.descriptionValue = action.descriptionChosen;
@@ -142,17 +211,14 @@ function AddProperty() {
       case "catchLongitudeChange":
         draft.longitudeValue = action.longitudeChosen;
         break;
-      case "catchPropertyStatusChange":
-        draft.propertyStatusValue = action.propertyStatusChosen;
-        break;
       case "catchPriceChange":
         draft.priceValue = action.priceChosen;
         break;
       case "catchRentalFrequencyChange":
-        draft.rentalFrequenceValue = action.rentalFrequencyChosen;
+        draft.rentalFrequencyValue = action.rentalFrequencyChosen;
         break;
       case "catchRoomsChange":
-        draft.roomseValue = action.roomsChosen;
+        draft.roomsValue = action.roomsChosen;
         break;
       case "catchFurnishedChange":
         draft.furnishedValue = action.furnishedChosen;
@@ -165,9 +231,6 @@ function AddProperty() {
         break;
       case "catchParkingChange":
         draft.parkingValue = action.parkingChosen;
-        break;
-      case "catchDatePostedChange":
-        draft.datePostedValue = action.datePostedChosen;
         break;
       case "catchPicture1Change":
         draft.picture1Value = action.picture1Chosen;
@@ -195,7 +258,7 @@ function AddProperty() {
         draft.longitudeValue = "";
         break;
       case "catchUploadedPictures":
-        draft.uploadImages = action.imagesChosen;
+        draft.uploadedPictures = action.picturesChosen;
         break;
     }
   }
@@ -286,43 +349,38 @@ function AddProperty() {
         picture1Chosen: state.uploadedPictures[0],
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.uploadedPictures[0]]);
   useEffect(() => {
     if (state.uploadedPictures[1]) {
       dispatch({
         type: "catchPicture2change",
-        picture1Chosen: state.uploadedPictures[1],
+        picture2Chosen: state.uploadedPictures[1],
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.uploadedPictures[1]]);
   useEffect(() => {
     if (state.uploadedPictures[2]) {
       dispatch({
         type: "catchPicture3change",
-        picture2Chosen: state.uploadedPictures[2],
+        picture3Chosen: state.uploadedPictures[2],
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.uploadedPictures[2]]);
   useEffect(() => {
     if (state.uploadedPictures[3]) {
       dispatch({
         type: "catchPicture4change",
-        picture2Chosen: state.uploadedPictures[2],
+        picture4Chosen: state.uploadedPictures[3],
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.uploadedPictures[3]]);
   useEffect(() => {
     if (state.uploadedPictures[4]) {
       dispatch({
         type: "catchPicture5change",
-        picture2Chosen: state.uploadedPictures[4],
+        picture5Chosen: state.uploadedPictures[4],
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.uploadedPictures[4]]);
   //Image upload set of useEffect end//
 
@@ -338,6 +396,7 @@ function AddProperty() {
   return (
     <Grid
       sx={styling.mainContainermainContainer}
+      item
       container
       direction="row"
       justifyContent="center"
@@ -358,19 +417,20 @@ function AddProperty() {
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
+  {/* FOR SOME REASON THIS TEXTFILD WILL NOT WORK If STATE  NAME IS TITLE THIS WAS CHANGED TO NAME */}
             <Grid item xs={6}>
               <TextField
                 margin="normal"
-                id="listingType"
-                label="Listing Type"
+                id="title"
+                label="Title"
                 variant="outlined"
                 fullWidth
-                placeholder="Enter Typye of listing"
-                value={state.listingTypeValue}
+                placeholder="Title"
+                value={state.titleValue}
                 onChange={(e) =>
                   dispatch({
-                    type: "catchlistingTypeChange",
-                    listingTypeChosen: e.target.value,
+                    type: "catchTitleChange",
+                    titleChosen: e.target.value,
                   })
                 }
               />
@@ -378,19 +438,26 @@ function AddProperty() {
             <Grid item xs={6}>
               <TextField
                 margin="normal"
-                id="description"
-                label="Description"
+                id="listingType"
+                label="Listing Type"
                 variant="outlined"
                 fullWidth
-                placeholder="Describe you Listing"
-                value={state.descriptionValue}
+                select
+                SelectProps={{ native: true }}
+                value={state.listingTypeValue}
                 onChange={(e) =>
                   dispatch({
-                    type: "catchDescriptionChange",
+                    type: "catchListingTypeChange",
                     listingTypeChosen: e.target.value,
                   })
                 }
-              />
+              >
+                {listingTypeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
             </Grid>
             <Grid item xs={6}>
               <TextField
@@ -407,7 +474,15 @@ function AddProperty() {
                     propertyStatusChosen: e.target.value,
                   })
                 }
-              />
+                select
+                SelectProps={{ native: true }}
+              >
+                {propertyStatusOption.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
             </Grid>
             <Grid item xs={6}>
               <TextField
@@ -426,6 +501,7 @@ function AddProperty() {
                 }
               />
             </Grid>
+            {/* RENTAL FREQUENCY              */}
             <Grid item xs={6}>
               <TextField
                 margin="normal"
@@ -433,17 +509,25 @@ function AddProperty() {
                 label="Rental Frequence"
                 variant="outlined"
                 fullWidth
-                placeholder="Month Week Day Hour"
-                value={state.rentalFequencyValue}
+                value={state.rentalFrequencyValue}
                 onChange={(e) =>
                   dispatch({
                     type: "catchRentalFrequencyChange",
                     rentalFrequencyChosen: e.target.value,
                   })
                 }
-              />
+                select
+                SelectProps={{ native: true }}
+              >
+                {rentalFrequenceOption.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
             </Grid>
             <Grid item xs={6}>
+              {/* RENTAL FREQUENCY              */}
               <TextField
                 margin="normal"
                 id="rooms"
@@ -460,6 +544,28 @@ function AddProperty() {
                 }
               />
             </Grid>
+            {/* DESCRIPTION              */}
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                id="description"
+                label="Description"
+                variant="outlined"
+                multiline
+                rows={4}
+                fullWidth
+                placeholder="Description"
+                value={state.descriptionValue}
+                onChange={(e) =>
+                  dispatch({
+                    type: "catchDescriptionChange",
+                    descriptionChosen: e.target.value,
+                  })
+                }
+              />
+            </Grid>
+                      </Grid>
+            {/* DESCRIPTION              */}
             {/* CHECK BOX FUNCTIONALITY START             */}
             <Grid
               container
@@ -539,73 +645,70 @@ function AddProperty() {
                   />
                 </FormGroup>
               </Grid>
-              <Grid item></Grid>
-            </Grid>
-            {/* CHECK BOX FUNCTIONALITY START             */}
-            {/* AREA SELECTION CONTAINER START */}
-            {/* {zipCodeDisplay polygon functionality to be a future addition} */}
-            <Grid
-              container
-              direction="column"
-              justifyContent="flex-start"
-              alignItems="center"
-            >
-              <Grid item xs={6} sx={styling.areaContentGrid}>
-                <TextField
-                  id="area"
-                  label="Area"
-                  variant="outlined"
-                  fullWidth
-                  value={state.areaValue}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "catchAreaChange",
-                      areaChosen: e.target.value,
-                    })
-                  }
-                  select
-                  SelectProps={{ native: true }}
-                >
-                  {areaOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
             </Grid>
 
-            {/* Map container start */}
-
-            <Grid
-              container
-              direction="column"
-              justifyContent="center"
-              alignItems="center "
-            >
-              <Grid sx={styling.mapGrid} item display="flex">
-                <MapContainer
-                  center={[40.65311, -73.944022]}
-                  zoom={14}
-                  scrollWheelZoom={true}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <MyMapComponent />
-                  {/* {zipCodeDisplay polygon functionality to be a future addition} */}
-                  <Marker
-                    draggable
-                    eventHandlers={eventHandlers}
-                    position={state.markerPosition}
-                    ref={markerRef}
-                  ></Marker>
-                </MapContainer>
-              </Grid>
+          {/* CHECK BOX FUNCTIONALITY START             */}
+          {/* AREA SELECTION CONTAINER START */}
+          {/* {zipCodeDisplay polygon functionality to be a future addition} */}
+          <Grid
+            container
+            direction="column"
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+            <Grid item xs={6} sx={styling.areaContentGrid}>
+              <TextField
+                id="area"
+                label="Area"
+                variant="outlined"
+                fullWidth
+                value={state.areaValue}
+                onChange={(e) =>
+                  dispatch({
+                    type: "catchAreaChange",
+                    areaChosen: e.target.value,
+                  })
+                }
+                select
+                SelectProps={{ native: true }}
+              >
+                {areaOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
             </Grid>
-            {/* Map container end */}
           </Grid>
+          {/* Map container start */}
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center "
+          >
+            <Grid sx={styling.mapGrid} item display="flex">
+              <MapContainer
+                center={[40.65311, -73.944022]}
+                zoom={14}
+                scrollWheelZoom={true}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <MyMapComponent />
+                {/* {zipCodeDisplay polygon functionality to be a future addition} */}
+                <Marker
+                  draggable
+                  eventHandlers={eventHandlers}
+                  position={state.markerPosition}
+                  ref={markerRef}
+                ></Marker>
+              </MapContainer>
+            </Grid>
+          </Grid>
+          {/* Map container end */}
           <Grid
             container
             direction="column"
@@ -621,17 +724,19 @@ function AddProperty() {
                 color="primary"
               >
                 Upload images (5 max)
+                {/* self closing input tag for img uplaod */}
                 <input
                   onChange={(e) =>
                     dispatch({
                       type: "catchUploadedPictures",
-                      imagesChosen: e.target.files,
+                      picturesChosen: e.target.files,
                     })
                   }
                   type="file"
+                  // hides the choose files box
                   hidden
-                  multip
-                  accept="image/png, image/jig, image/jpeg"
+                  multiple
+                  accept="image/png, image/jif, image/jpeg image/svg"
                 />
               </Button>
             </Grid>
@@ -655,14 +760,14 @@ function AddProperty() {
               </Button>
             </Grid>
           </Grid>
-          <Grid
+          {/* FLY TOO FUNCTIONALITY */}
+          {/* <Grid
             container
             direction="column"
             justifyContent="center"
             alignContent="center"
           >
             <Grid item>
-
             <Button
               sx={styling.submitBtn}
               type="submit"
@@ -677,7 +782,45 @@ function AddProperty() {
               <Typography variant="subtitle1">fly To Work</Typography>
             </Button>
             </Grid>
-          </Grid>
+          </Grid> */}
+          {/* TEST BUTTON START */}
+          {/* <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignContent="center"
+          >
+            <Grid item>
+              <Button
+                sx={styling.submitBtn}
+                type="submit"
+                margin="normal"
+                variant="contained"
+                color="primary"
+                onClick={() => console.log(state.uploadedPictures)}
+              >
+                TEST
+              </Button>
+            </Grid>
+          </Grid> */}
+          {/* TEST BUTTON END */}
+
+          {/* // NOT ABLE TO GET THIS FUNCTIONALITY TO WORK AS YOU SEE LECTURES 71 // */}
+          {/* // NOT ABLE TO GET THIS FUNCTIONALITY TO WORK AS YOU SEE LECTURES 71 // */}
+          {/* THIS SHOULD RENDER THE IMAGE NAMES ONCE */}
+          {/* <Grid container direction="column" justifyContent="flex-star" aligItems="center"> */}
+          {/* <Grid item>
+                <ul> */}
+          {/* {state.picture1Value ? <li>{state.picture1Value.name}</li> : ""}
+                  {state.picture2Value ? <li>{state.picture2Value.name}</li> : ""}
+                  {state.picture3Value ? <li>{state.picture3Value.name}</li> : ""}
+                  {state.picture4Value ? <li>{state.picture4Value.name}</li> : ""}
+                  {state.picture5Value ? <li>{state.picture5Value.name}</li> : ""} */}
+          {/* we'll check if check if state.picture1Value exist and if that's the case we want do render 
+              an li element if no we want to render an empty string  */}
+          {/* </ul>
+                </Grid>
+              </Grid> */}
         </form>
       </Paper>
     </Grid>
