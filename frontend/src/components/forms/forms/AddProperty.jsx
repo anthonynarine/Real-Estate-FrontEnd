@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useImmerReducer } from "use-immer";
 import { useNavigate } from "react-router-dom";
-import { React, useEffect, useRef, useMemo } from "react";
+import { React, useEffect, useRef, useMemo, useContext } from "react";
+import axios from "axios";
 
 import {
   Grid,
@@ -13,8 +15,12 @@ import {
   FormControlLabel,
 } from "@mui/material";
 
+//Contexts
+import StateContext from "../../contex/StateContex";
+
 // REACT LEAFLET \\
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { BrightnessLow } from "@mui/icons-material";
 
 // ALL IMPORTS GO ABOVE THIS LINE \\
 
@@ -114,10 +120,11 @@ function AddProperty() {
     mainContainer: {
       positon: "absolute",
       border: "solid black",
+      height: "200rem",
     },
     paperStyle: {
-      padding: "30px 20px",
-      width: 1100,
+      padding: "30px 50px",
+      width: "75rem",
       margin: "50px auto",
       borderRadius: 5,
       backgroundColor: "#FDFDFD",
@@ -127,6 +134,16 @@ function AddProperty() {
       width: "60rem",
       paddingBottom: "20px",
       martinTop: "25px",
+      // border: "solid"
+    },
+    titleGrid: {
+      marginBottom: "8px",
+    },
+    numAndDescGrid: {
+      marginBottom: "20px",
+      marginTop: "px",
+      // border: 'solid',
+      marginLeft: ".25px",
     },
     submitBtn: {
       backgroundColor: "#79B2BE",
@@ -142,14 +159,15 @@ function AddProperty() {
       },
     },
     areaContentGrid: {
-      width: "20rem",
+      width: "30rem",
       marginBottom: "25px",
-      marginTop: "15px",
+      marginTop: "18px",
     },
   };
   //FORM STYLE END\\
 
   const navigate = useNavigate();
+  const GlobalState = useContext(StateContext);
 
   //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
@@ -182,6 +200,7 @@ function AddProperty() {
     },
     //used to store uploaded images
     uploadedPictures: [],
+    sendRequest: 0,
   };
 
   function ReducerFunction(draft, action) {
@@ -259,6 +278,9 @@ function AddProperty() {
         break;
       case "catchUploadedPictures":
         draft.uploadedPictures = action.picturesChosen;
+        break;
+      case "changeSendRequest":
+        draft.sendRequest = draft.sendRequest + 1;
         break;
     }
   }
@@ -384,6 +406,34 @@ function AddProperty() {
   }, [state.uploadedPictures[4]]);
   //Image upload set of useEffect end//
 
+  // Function will display price per period seleced called as props in Price Texfield //
+  function PriceDisplay() {
+    if (
+      state.propertyStatusValue === "Rent" &&
+      state.rentalFrequencyValue === "Hour"
+    ) {
+      return "Price per hour*";
+    }
+    if (
+      state.propertyStatusValue === "Rent" &&
+      state.rentalFrequencyValue === "Day"
+    ) {
+      return "Price per Day*";
+    } else if (
+      state.propertyStatusValue === "Rent" &&
+      state.rentalFrequencyValue === "Week"
+    ) {
+      return "Price per week*";
+    } else if (
+      state.propertyStatusValue === "Rent" &&
+      state.rentalFrequencyValue === "Month"
+    ) {
+      return "Price per Month*";
+    } else {
+      return "Price*";
+    }
+  }
+
   //FORM SUBMIT HANDLE FUNCTIONALITY START\\
   function FormSubmitHandler(event) {
     event.preventDefault();
@@ -391,7 +441,54 @@ function AddProperty() {
     dispatch({ type: "changeSendRequest" });
     //onSubmit sendRequst changes to the opposite of what it courrently is
   }
-  //FORM SUBMIT HANDLE FUNCTIONALITY END\\
+
+    //START OF POST REQUEST TO ADD A LISTING \\
+  useEffect(() => {
+    if (state.sendRequest) {
+      const AddProperty = async () => {
+        //The from data we are passing will be stored in the variable as show
+        //with the function call FormData() see MDN docs
+        const formData = new FormData();
+        formData.append("title", state.titleValue);
+        formData.append("description", state.descriptionValue);
+        formData.append("area", state.areaValue);
+        formData.append("listing_type", state.listingTypeValue);
+        formData.append("property_status", state.propertyStatusValue);
+        formData.append("price", state.priceValue);
+        formData.append("rental_frequencey;", state.rentalFrequencyValue);
+        formData.append("rooms;", state.roomsValue);
+        formData.append("furnished", state.furnishedValue);
+        formData.append("pool", state.poolValue);
+        formData.append("elevator", state.elevatorValue);
+        formData.append("parking", state.parkingValue);
+        formData.append("latitude", state.latitudeValue);
+        formData.append("longitude", state.longitudeValue);
+        formData.append("picture1", state.picture1Value);
+        formData.append("picture2", state.picture2Value);
+        formData.append("picture3", state.picture3Value);
+        formData.append("picture4", state.picture4Value);
+        formData.append("picture5", state.picture5Value);
+  // SENDING THE userId through FormData() returned a string and not integer 
+  // to this frild was passed in as a key:value pair BrightnessLow
+        // formData.append("seller", GlobalState.userID);
+        //since the sellers information is is passed from the parent App.js we need to set
+        //useContext + StateContex and GlobalState
+        try {
+          const response = await axios.post(
+            "http://127.0.0.1:8000/api/listings/create/",
+            formData, {seller: GlobalState.userID}   
+          );
+          console.log(response.data);
+          console.log(response.data.seller);
+        } catch (error) {
+          console.log(error.response);
+        }
+      };
+      AddProperty();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.sendRequest]);
+  //END OF POST REQUEST TO ADD A LISTING \\
 
   return (
     <Grid
@@ -413,18 +510,21 @@ function AddProperty() {
             Add Property
           </Grid>
           <Grid
+            sx={styling.titleGrid}
             container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            spacing={2}
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
           >
-  {/* FOR SOME REASON THIS TEXTFILD WILL NOT WORK If STATE  NAME IS TITLE THIS WAS CHANGED TO NAME */}
-            <Grid item xs={6}>
+            <Grid item xs={8}>
               <TextField
                 margin="normal"
                 id="title"
-                label="Title"
-                variant="outlined"
+                label="Title*"
+                variant="standard"
                 fullWidth
+                color="success"
                 placeholder="Title"
                 value={state.titleValue}
                 onChange={(e) =>
@@ -435,35 +535,17 @@ function AddProperty() {
                 }
               />
             </Grid>
-            <Grid item xs={6}>
-              <TextField
-                margin="normal"
-                id="listingType"
-                label="Listing Type"
-                variant="outlined"
-                fullWidth
-                select
-                SelectProps={{ native: true }}
-                value={state.listingTypeValue}
-                onChange={(e) =>
-                  dispatch({
-                    type: "catchListingTypeChange",
-                    listingTypeChosen: e.target.value,
-                  })
-                }
-              >
-                {listingTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
+          </Grid>
+          <Grid
+            container
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+          >
             <Grid item xs={6}>
               <TextField
                 margin="normal"
                 id="propertyStatus"
-                label="Property Status"
+                label="Property Status*"
                 variant="outlined"
                 fullWidth
                 placeholder="Rental or Sale"
@@ -487,8 +569,34 @@ function AddProperty() {
             <Grid item xs={6}>
               <TextField
                 margin="normal"
+                id="listingType"
+                label="Listing Type*"
+                variant="outlined"
+                fullWidth
+                select
+                SelectProps={{ native: true }}
+                value={state.listingTypeValue}
+                onChange={(e) =>
+                  dispatch({
+                    type: "catchListingTypeChange",
+                    listingTypeChosen: e.target.value,
+                  })
+                }
+              >
+                {listingTypeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                type="number"
+                margin="normal"
                 id="price"
-                label="Price"
+                //SETTING PRICE TO A FUNCTION
+                label={PriceDisplay()}
                 variant="outlined"
                 fullWidth
                 placeholder="Amount"
@@ -504,6 +612,9 @@ function AddProperty() {
             {/* RENTAL FREQUENCY              */}
             <Grid item xs={6}>
               <TextField
+                //disables the rental frequence field if sale is selected
+                //disabled prop applied to textfiled greys the field out
+                disabled={state.propertyStatusValue === "Sale" ? true : false}
                 margin="normal"
                 id="rentalFrequence"
                 label="Rental Frequence"
@@ -526,127 +637,143 @@ function AddProperty() {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={6}>
-              {/* RENTAL FREQUENCY              */}
-              <TextField
-                margin="normal"
-                id="rooms"
-                label="Rooms"
-                variant="outlined"
-                fullWidth
-                placeholder="Amount of Rooms"
-                value={state.roomsValue}
-                onChange={(e) =>
-                  dispatch({
-                    type: "catchRoomsChange",
-                    roomsChosen: e.target.value,
-                  })
-                }
-              />
-            </Grid>
-            {/* DESCRIPTION              */}
-            <Grid item xs={12}>
-              <TextField
-                margin="normal"
-                id="description"
-                label="Description"
-                variant="outlined"
-                multiline
-                rows={4}
-                fullWidth
-                placeholder="Description"
-                value={state.descriptionValue}
-                onChange={(e) =>
-                  dispatch({
-                    type: "catchDescriptionChange",
-                    descriptionChosen: e.target.value,
-                  })
-                }
-              />
-            </Grid>
-                      </Grid>
-            {/* DESCRIPTION              */}
-            {/* CHECK BOX FUNCTIONALITY START             */}
             <Grid
+              sx={styling.numAndDescGrid}
               container
-              direction="row"
-              justifyContent="space-evenly"
+              justifyContent="space-between"
+              spacing={4}
+              direction="row-reverse"
               alignItems="center"
             >
-              <Grid item>
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={state.furnishedValue}
-                        onChange={(e) =>
-                          dispatch({
-                            type: "catchFurnishedChange",
-                            furnishedChosen: e.target.checked,
-                          })
-                        }
-                      />
+              {/* This ternery condition will check if the listing type is Office and if that's the case
+    it the # of rooms filed willnot be renderd.           */}
+              {state.listingTypeValue === "Office" ? (
+                ""
+              ) : (
+                <Grid item xs={2}>
+                  <TextField
+                    type="number"
+                    color="success"
+                    margin="normal"
+                    id="rooms"
+                    label="Number of Rooms"
+                    variant="outlined"
+                    multiline
+                    rows={4}
+                    fullWidth
+                    placeholder="Number of Rooms"
+                    value={state.roomsValue}
+                    onChange={(e) =>
+                      dispatch({
+                        type: "catchRoomsChange",
+                        roomsChosen: e.target.value,
+                      })
                     }
-                    label="Furnished"
                   />
-                </FormGroup>
-              </Grid>
-              <Grid item>
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={state.poolValue}
-                        onChange={(e) =>
-                          dispatch({
-                            type: "catchPoolChange",
-                            poolChosen: e.target.checked,
-                          })
-                        }
-                      />
-                    }
-                    label="Pool"
-                  />
-                </FormGroup>
-              </Grid>
-              <Grid item>
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={state.elevatorValue}
-                        onChange={(e) =>
-                          dispatch({
-                            type: "catchElevatorChange",
-                            elevatorChosen: e.target.checked,
-                          })
-                        }
-                      />
-                    }
-                    label="Elevator"
-                  />
-                </FormGroup>
-              </Grid>
-              <Grid item>
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={state.parkingValue}
-                        onChange={(e) =>
-                          dispatch({
-                            type: "catchParkingChange",
-                            parkingChosen: e.target.checked,
-                          })
-                        }
-                      />
-                    }
-                    label="Parking"
-                  />
-                </FormGroup>
+                </Grid>
+              )}
+              <Grid item xs={10} justifyContent="center">
+                <TextField
+                  margin="normal"
+                  id="description"
+                  label="Description"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  fullWidth
+                  placeholder="Description"
+                  value={state.descriptionValue}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "catchDescriptionChange",
+                      descriptionChosen: e.target.value,
+                    })
+                  }
+                />
               </Grid>
             </Grid>
-
+          </Grid>
+          {/* DESCRIPTION              */}
+          {/* CHECK BOX FUNCTIONALITY START             */}
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-evenly"
+            alignItems="center"
+          >
+            <Grid item>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={state.furnishedValue}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "catchFurnishedChange",
+                          furnishedChosen: e.target.checked,
+                        })
+                      }
+                    />
+                  }
+                  label="Furnished"
+                />
+              </FormGroup>
+            </Grid>
+            <Grid item>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={state.poolValue}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "catchPoolChange",
+                          poolChosen: e.target.checked,
+                        })
+                      }
+                    />
+                  }
+                  label="Pool"
+                />
+              </FormGroup>
+            </Grid>
+            <Grid item>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={state.elevatorValue}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "catchElevatorChange",
+                          elevatorChosen: e.target.checked,
+                        })
+                      }
+                    />
+                  }
+                  label="Elevator"
+                />
+              </FormGroup>
+            </Grid>
+            <Grid item>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={state.parkingValue}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "catchParkingChange",
+                          parkingChosen: e.target.checked,
+                        })
+                      }
+                    />
+                  }
+                  label="Parking"
+                />
+              </FormGroup>
+            </Grid>
+          </Grid>
           {/* CHECK BOX FUNCTIONALITY START             */}
           {/* AREA SELECTION CONTAINER START */}
           {/* {zipCodeDisplay polygon functionality to be a future addition} */}
