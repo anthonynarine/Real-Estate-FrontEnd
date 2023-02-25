@@ -1,15 +1,20 @@
-import { React, useState, useEffect } from "react";
+/* eslint-disable default-case */
 import axios from "axios";
+import { useImmerReducer } from "use-immer";
+import { React, useState, useEffect } from "react";
 
 //shapes
 // import polyOne from "../shapes/polyLine";
 // import polygonOne from "../shapes/polygon";
 
 //MUI
-import {AppBar,Grid,Typography,Button,Card,CardHeader,CardMedia,CardContent,CircularProgress,} from "@mui/material";
+import {AppBar,Grid,Typography,Button,Card,CardHeader,CardMedia,CardContent,CircularProgress,IconButton} from "@mui/material";
 //react leaflet (note Popup and Marker is NOTE part of link from site.)
-import {MapContainer,TileLayer,Popup,Marker,Polyline,Polygon,} from "react-leaflet";
+import {MapContainer,TileLayer,Popup,Marker,Polyline,Polygon,useMap } from "react-leaflet";
 import { Icon } from "leaflet";
+
+// MUI icons
+import { Room } from "@mui/icons-material"
 
 //Map Icons
 import houseIconPng from "../assets/mapIcons/house.png";
@@ -49,6 +54,7 @@ const cardSytles = {
 
 //MAP ICONS START
 function Listings() {
+
   const houseIcon = new Icon({
     iconUrl: houseIconPng,
     iconSize: [40, 40],
@@ -66,6 +72,30 @@ function Listings() {
     iconSize: [40, 40],
   });
   //MAP ICONS END
+
+  
+  const initialState = {
+    mapInstance: null,
+  };
+
+  function ReducerFunction(draft, action) {
+    switch (action.type) {
+      case "getMap":
+        draft.mapInstance = action.mapData;
+        break;
+    }
+  };
+
+  const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
+  //START STATE MANAGEMENT WITH IMMERREDUCER END \\
+
+  //   HOOK PROVIDING LEAFLET MAP INSTANCE IN ANY DECEDANT OF MAPCONTAINER (SEE LEAFLET DOCS)
+  //   dispatch added
+  function MyMapComponent() {
+    const map = useMap();
+    dispatch({ type: "getMap", mapData: map });
+    return null;
+  }
 
   //DATA FETCHING FROM BACK END WITH CLEAN UP FUNCTIONALITY AND TOKEN GENERATION START.
   const [allListings, setAllListings] = useState([]);
@@ -115,11 +145,11 @@ function Listings() {
           return (
             <Card key={listing.id} sx={cardSytles.card}>
               <CardHeader
-                // action={
-                //   <IconButton aria-label="settings">
-                //     <MoreVertIcon />
-                //   </IconButton>
-                // }
+                action={
+                  <IconButton aria-label="settings" onClick={()=>state.mapInstance.flyTo([listing.latitude, listing.longitude],16)} >
+                    <Room />
+                  </IconButton>
+                }
                 // DISPLAY CARD TITLE
                 title={listing.title}
               />
@@ -152,7 +182,7 @@ function Listings() {
                   / {listing.rental_frequency}
                 </Typography>
               )}
-              {/* END CODE BLOCK FOR COMMOA IN  PRICE AND RENTAL VS SALE LOGIC */}
+              {/* END CODE BLOCK FOR COMMA IN PRICE AND RENTAL VS SALE LOGIC */}
 
               {/* <CardActions disableSpacing>
             <IconButton aria-label="add to favorites">
@@ -180,6 +210,9 @@ function Listings() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
+
+              <MyMapComponent />
+
               {/* NOTES ON POLYLINE BELOW */}
               {/* <Polyline positions={polyOne} weight={10} />
               <Polygon

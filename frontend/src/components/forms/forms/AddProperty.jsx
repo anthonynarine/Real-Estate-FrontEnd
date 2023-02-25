@@ -172,7 +172,7 @@ function AddProperty() {
   //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
     titleValue: "",
-    typeOfListingValue: "",
+    // typeOfListingValue: "",
     listingTypeValue: "",
     descriptionValue: "",
     areaValue: "",
@@ -201,6 +201,10 @@ function AddProperty() {
     //used to store uploaded images
     uploadedPictures: [],
     sendRequest: 0,
+    userProfile: {
+      agencyName: "",
+      phoneNumber: "",
+    },
   };
 
   function ReducerFunction(draft, action) {
@@ -281,6 +285,10 @@ function AddProperty() {
         break;
       case "changeSendRequest":
         draft.sendRequest = draft.sendRequest + 1;
+        break;
+      case "catchUserProfileInfo":
+        draft.userProfile.agencyName = action.profileObject.agency_name;
+        draft.userProfile.phoneNumber = action.profileObject.phone_number;
         break;
     }
   }
@@ -434,6 +442,27 @@ function AddProperty() {
     }
   }
 
+  // REQUEST TO GET PROFILE INFO//
+  // useEffect will run once when page loads
+  useEffect(() => {
+    async function GetProfileInfo() {
+      try {
+        // backticks w/ string inperpolation to grab the user's id from GlobalState
+        const response = await axios.get(
+          `http://localhost:8000/api/profiles/${GlobalState.userId}/`
+        );
+        console.log("DATA:", response.data);
+        dispatch({
+          type: "catchUserProfileInfo",
+          profileObject: response.data,
+        });
+      } catch (error) {
+        console.log(error.response);
+      }
+    }
+    GetProfileInfo();
+  }, []);
+
   //FORM SUBMIT HANDLE FUNCTIONALITY START\\
   function FormSubmitHandler(event) {
     event.preventDefault();
@@ -442,10 +471,10 @@ function AddProperty() {
     //onSubmit sendRequst changes to the opposite of what it courrently is
   }
 
-    //START OF POST REQUEST TO ADD A LISTING \\
+  //START OF POST REQUEST TO ADD A LISTING \\
   useEffect(() => {
     if (state.sendRequest) {
-      const AddProperty = async () => {
+      async function AddProperty() {
         //The from data we are passing will be stored in the variable as show
         //with the function call FormData() see MDN docs
         const formData = new FormData();
@@ -468,27 +497,88 @@ function AddProperty() {
         formData.append("picture3", state.picture3Value);
         formData.append("picture4", state.picture4Value);
         formData.append("picture5", state.picture5Value);
-  // SENDING THE userId through FormData() returned a string and not integer 
-  // to this frild was passed in as a key:value pair BrightnessLow
+        formData.append("seller", GlobalState.userid);
+        // SENDING THE userId through FormData() returned a string and not integer
+        // to this frild was passed in as a key:value pair BrightnessLow
         // formData.append("seller", GlobalState.userID);
         //since the sellers information is is passed from the parent App.js we need to set
         //useContext + StateContex and GlobalState
         try {
           const response = await axios.post(
             "http://127.0.0.1:8000/api/listings/create/",
-            formData, {seller: GlobalState.userID}   
+            formData
           );
           console.log(response.data);
-          console.log(response.data.seller);
+          navigate("/listings");
         } catch (error) {
           console.log(error.response);
         }
-      };
+      }
       AddProperty();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.sendRequest]);
   //END OF POST REQUEST TO ADD A LISTING \\
+
+  function SubmitButtonDisplay() {
+    if (
+      GlobalState.userIsLogged &&
+      state.userProfile.agencyName !== null &&
+      state.userProfile.agencyName !== "" &&
+      state.userProfile.phoneNumber !== null &&
+      state.userProfile !== ""
+    ) {
+      return (
+        <Button
+          fullWidth
+          sx={styling.submitBtn}
+          type="submit"
+          margin="normal"
+          variant="contained"
+          color="primary"
+        >
+          <Typography variant="subtitle1">Submit</Typography>
+        </Button>
+      );
+    } else if (
+      GlobalState.userIsLogged &&
+      (state.userProfile.agencyName === null ||
+        state.userProfile === "" ||
+        state.userProfile.phoneNumber === null ||
+        state.userProfile.phoneNumber === "")
+    ) {
+      return (
+        <Button
+          fullWidth
+          sx={styling.submitBtn}
+          margin="normal"
+          variant="outlined"
+          color="primary"
+          //onClick to link to profile page
+          onClick={() => navigate("/profile")}
+        >
+          <Typography variant="subtitle1">
+            Complete your profile to add your listing
+          </Typography>
+        </Button>
+      );
+      // if user is not logged in
+    } else if (!GlobalState.userIsLogged) {
+      return (
+        <Button
+          fullWidth
+          sx={styling.submitBtn}
+          margin="normal"
+          variant="contained"
+          color="primary"
+          //onClick to link to the signup page
+          onClick={() => navigate("/login")}
+        >
+          <Typography variant="subtitle1">Sign in to add a listing</Typography>
+        </Button>
+      );
+    }
+  }
 
   return (
     <Grid
@@ -616,8 +706,8 @@ function AddProperty() {
                 //disabled prop applied to textfiled greys the field out
                 disabled={state.propertyStatusValue === "Sale" ? true : false}
                 margin="normal"
-                id="rentalFrequence"
-                label="Rental Frequence"
+                id="rentalFrequency"
+                label="Rental Frequency"
                 variant="outlined"
                 fullWidth
                 value={state.rentalFrequencyValue}
@@ -875,16 +965,8 @@ function AddProperty() {
             alignContent="center"
           >
             <Grid item>
-              <Button
-                fullWidth
-                sx={styling.submitBtn}
-                type="submit"
-                margin="normal"
-                variant="contained"
-                color="primary"
-              >
-                <Typography variant="subtitle1">Submit</Typography>
-              </Button>
+              {/* conditional render of the submit button */}
+              {SubmitButtonDisplay()}
             </Grid>
           </Grid>
           {/* FLY TOO FUNCTIONALITY */}
@@ -911,7 +993,7 @@ function AddProperty() {
             </Grid>
           </Grid> */}
           {/* TEST BUTTON START */}
-          {/* <Grid
+          <Grid
             container
             direction="column"
             justifyContent="center"
@@ -929,7 +1011,7 @@ function AddProperty() {
                 TEST
               </Button>
             </Grid>
-          </Grid> */}
+          </Grid>
           {/* TEST BUTTON END */}
 
           {/* // NOT ABLE TO GET THIS FUNCTIONALITY TO WORK AS YOU SEE LECTURES 71 // */}
