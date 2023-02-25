@@ -11,11 +11,13 @@ import "./App.css";
 import Home from "./components/pages/Home";
 import Login from "./components/forms/forms/Login"
 import Register from "./components/forms/forms/Register";
+import Profile from "./components/pages/Profile";
 import AddProperty from "./components/forms/forms/AddProperty";
 import Test from "./components/forms/forms/Test";
 // import Agencies from "./components/forms/form-notes/AddProperty";
 import Listings from "./components/pages/Listings";
 import Error from "./components/pages/Error";
+
 
 //testing delete when done
 import TestinguseReducer from "./components/testing/userReducerTesting";
@@ -89,6 +91,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/addproperty" element={<AddProperty />} />
             <Route path="/test" element={<Test />} />
             <Route path="/listings" element={<Listings />} />

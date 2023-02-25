@@ -84,6 +84,12 @@ function NavBar({ tabs }) {
     setAnchorElm(null);
   };
 
+
+  function handleProfile(){
+    setAnchorElm(null);
+    navigate("/profile")
+  };
+
   // LOGOUT REQUEST WITH TO DELETE USER INFO FROM LOCAL STORAGE START
   async function handleLogout(event) {
     setAnchorElm(null);
@@ -104,7 +110,6 @@ function NavBar({ tabs }) {
       }
     }
   }
-
   // LOGOUT REQUEST WITH TO DELETE USER INFO FROM LOCAL STORAGE END
 
   return (
@@ -194,7 +199,7 @@ ternery statement that checks if the userUsername state value is empty.*/}
               >
                 <MenuItem
                   sx={NavBarStyles.dropDownMenuItem1}
-                  onClick={handleClose}
+                  onClick={handleProfile}
                 >
                   Profile
                 </MenuItem>
