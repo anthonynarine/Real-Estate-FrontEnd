@@ -455,6 +455,7 @@ function AddProperty() {
         dispatch({
           type: "catchUserProfileInfo",
           profileObject: response.data,
+          //value being caught 
         });
       } catch (error) {
         console.log(error.response);
@@ -522,11 +523,11 @@ function AddProperty() {
 
   function SubmitButtonDisplay() {
     if (
-      GlobalState.userIsLogged &&
+      GlobalState.userIsLoggedIn &&
       state.userProfile.agencyName !== null &&
       state.userProfile.agencyName !== "" &&
       state.userProfile.phoneNumber !== null &&
-      state.userProfile !== ""
+      state.userProfile.phoneNumber !== ""
     ) {
       return (
         <Button
@@ -541,9 +542,9 @@ function AddProperty() {
         </Button>
       );
     } else if (
-      GlobalState.userIsLogged &&
-      (state.userProfile.agencyName === null ||
-        state.userProfile === "" ||
+      GlobalState.userIsLoggedIn && (
+        state.userProfile.agencyName === null ||
+        state.userProfile.agencyName === "" ||
         state.userProfile.phoneNumber === null ||
         state.userProfile.phoneNumber === "")
     ) {
@@ -563,7 +564,7 @@ function AddProperty() {
         </Button>
       );
       // if user is not logged in
-    } else if (!GlobalState.userIsLogged) {
+    } else if (!GlobalState.userIsLoggedIn) {
       return (
         <Button
           fullWidth
@@ -965,7 +966,7 @@ function AddProperty() {
             alignContent="center"
           >
             <Grid item>
-              {/* conditional render of the submit button */}
+{/* conditional render of the submit button function above */}
               {SubmitButtonDisplay()}
             </Grid>
           </Grid>

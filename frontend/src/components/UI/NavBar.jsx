@@ -159,10 +159,9 @@ function NavBar({ tabs }) {
               >
                 <Typography varient="h1">Add Property</Typography>
               </Button>
-              {/* Button will be conditionally render to show user name if logged in
-               or the login button if not. this is done by using GlobalState and the
-               ternery statement that checks if the userUsername state value is empty.
-                 */}
+{/* Button will be conditionally render to show user name if logged in
+or the login button if not. this is done by using GlobalState and the
+ternery statement that checks if the userUsername state value is empty.*/}
               {GlobalState.userIsLoggedIn ? (
                 <Button
                   LinkComponent={Link}
@@ -186,7 +185,6 @@ function NavBar({ tabs }) {
                   <Typography>Login</Typography>
                 </Button>
               )}
-
               <Menu
                 id="basic-button"
                 anchorEl={anchorElm}
