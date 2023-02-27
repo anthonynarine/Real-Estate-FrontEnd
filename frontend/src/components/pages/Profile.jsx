@@ -184,8 +184,7 @@ const Profile = () => {
             variant="h6"
             sx={{ textAlign: "center", marginTop: ".5rem", color: "#141010" }}
           >
-            Welcome ~{" "}
-            {GlobalState.userUsername}
+            Welcome ~ {GlobalState.userUsername}
             Please complete the form below to complete your profile.
           </Typography>
         </Grid>
@@ -193,11 +192,12 @@ const Profile = () => {
     } else {
       return (
         <Grid container>
-          <Grid item>
-{/* Image currently not being displayed correctly */}
-            profile image ---- <img src="{state.userProfile.profile}" alt="profile img" />
+          <Grid item xs={8}>
+            {/* Image currently not being displayed correctly */}
+            profile image ----{" "}
+            <img style={{height: "10rem", width: "15"}} src={state.userProfile.profilePic} alt="profile p" />
           </Grid>
-          <Grid item>---Welcome ---- {GlobalState.userUsername}</Grid>
+          <Grid item>---Welcome ---- {GlobalState.userUsername} You have X properties</Grid>
         </Grid>
       );
     }
