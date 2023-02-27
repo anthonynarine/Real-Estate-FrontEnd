@@ -48,7 +48,7 @@ function Login() {
     fontSize: "1rem",
     marginLeft: "5rem",
     "&:hover": {
-      bacgroundColor: "green",
+      bacgroundColor: "black",
     },
   };
   //LOGIN FORM STYLE END\\

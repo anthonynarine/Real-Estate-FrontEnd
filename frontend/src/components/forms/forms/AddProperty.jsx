@@ -498,7 +498,7 @@ function AddProperty() {
         formData.append("picture3", state.picture3Value);
         formData.append("picture4", state.picture4Value);
         formData.append("picture5", state.picture5Value);
-        formData.append("seller", GlobalState.userid);
+        formData.append("seller", GlobalState.userId);
         // SENDING THE userId through FormData() returned a string and not integer
         // to this frild was passed in as a key:value pair BrightnessLow
         // formData.append("seller", GlobalState.userID);
@@ -555,7 +555,7 @@ function AddProperty() {
           margin="normal"
           variant="outlined"
           color="primary"
-          //onClick to link to profile page
+ //onClick to link to profile page
           onClick={() => navigate("/profile")}
         >
           <Typography variant="subtitle1">
@@ -563,7 +563,7 @@ function AddProperty() {
           </Typography>
         </Button>
       );
-      // if user is not logged in
+  // if user is not logged in
     } else if (!GlobalState.userIsLoggedIn) {
       return (
         <Button
@@ -581,6 +581,7 @@ function AddProperty() {
     }
   }
 
+// MAIN FUNC <RETURN>  
   return (
     <Grid
       sx={styling.mainContainermainContainer}
@@ -686,7 +687,7 @@ function AddProperty() {
                 type="number"
                 margin="normal"
                 id="price"
-                //SETTING PRICE TO A FUNCTION
+      //SETTING PRICE TO A FUNCTION
                 label={PriceDisplay()}
                 variant="outlined"
                 fullWidth
@@ -700,11 +701,11 @@ function AddProperty() {
                 }
               />
             </Grid>
-            {/* RENTAL FREQUENCY              */}
+    {/* RENTAL FREQUENCY              */}
             <Grid item xs={6}>
               <TextField
-                //disables the rental frequence field if sale is selected
-                //disabled prop applied to textfiled greys the field out
+    //disables the rental frequence field if sale is selected
+    //disabled prop applied to textfiled greys the field out
                 disabled={state.propertyStatusValue === "Sale" ? true : false}
                 margin="normal"
                 id="rentalFrequency"
@@ -736,8 +737,8 @@ function AddProperty() {
               direction="row-reverse"
               alignItems="center"
             >
-              {/* This ternery condition will check if the listing type is Office and if that's the case
-    it the # of rooms filed willnot be renderd.           */}
+  {/* This ternery condition will check if the listing type is Office and if that's the case
+  it the # of rooms filed willnot be renderd.           */}
               {state.listingTypeValue === "Office" ? (
                 ""
               ) : (
@@ -784,8 +785,8 @@ function AddProperty() {
               </Grid>
             </Grid>
           </Grid>
-          {/* DESCRIPTION              */}
-          {/* CHECK BOX FUNCTIONALITY START             */}
+  {/* DESCRIPTION              */}
+  {/* CHECK BOX FUNCTIONALITY START             */}
           <Grid
             container
             direction="row"
@@ -865,9 +866,9 @@ function AddProperty() {
               </FormGroup>
             </Grid>
           </Grid>
-          {/* CHECK BOX FUNCTIONALITY START             */}
-          {/* AREA SELECTION CONTAINER START */}
-          {/* {zipCodeDisplay polygon functionality to be a future addition} */}
+  {/* CHECK BOX FUNCTIONALITY START             */}
+  {/* AREA SELECTION CONTAINER START */}
+  {/* {zipCodeDisplay polygon functionality to be a future addition} */}
           <Grid
             container
             direction="column"
@@ -898,7 +899,7 @@ function AddProperty() {
               </TextField>
             </Grid>
           </Grid>
-          {/* Map container start */}
+  {/* Map container start */}
           <Grid
             container
             direction="column"
@@ -916,7 +917,7 @@ function AddProperty() {
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <MyMapComponent />
-                {/* {zipCodeDisplay polygon functionality to be a future addition} */}
+   {/* {zipCodeDisplay polygon functionality to be a future addition} */}
                 <Marker
                   draggable
                   eventHandlers={eventHandlers}
@@ -926,7 +927,7 @@ function AddProperty() {
               </MapContainer>
             </Grid>
           </Grid>
-          {/* Map container end */}
+ {/* Map container end */}
           <Grid
             container
             direction="column"
@@ -942,7 +943,7 @@ function AddProperty() {
                 color="primary"
               >
                 Upload images (5 max)
-                {/* self closing input tag for img uplaod */}
+  {/* self closing input tag for img uplaod */}
                 <input
                   onChange={(e) =>
                     dispatch({
@@ -951,7 +952,7 @@ function AddProperty() {
                     })
                   }
                   type="file"
-                  // hides the choose files box
+ // hides the choose files box
                   hidden
                   multiple
                   accept="image/png, image/jif, image/jpeg image/svg"
