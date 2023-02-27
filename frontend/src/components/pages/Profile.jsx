@@ -195,9 +195,9 @@ const Profile = () => {
         <Grid container>
           <Grid item>
 {/* Image currently not being displayed correctly */}
-            profile image <img src="{state.userProfile.profile}" alt="profile p" />
+            profile image ---- <img src="{state.userProfile.profile}" alt="profile img" />
           </Grid>
-          <Grid item>Welcome {GlobalState.userUsername}</Grid>
+          <Grid item>---Welcome ---- {GlobalState.userUsername}</Grid>
         </Grid>
       );
     }
