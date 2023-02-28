@@ -32,19 +32,19 @@ const pStyling = {
   },
 };
 //FORM STYLE END\\
-function ProfileUpdate(props) {
+function ProfileUpdate( {userProfile} ) {
   const navigate = useNavigate();
   const GlobalState = useContext(StateContex);
 
-  console.log("USERPROFILE TEST", props.userPofile)
+  console.log("USERPROFILE as Prop", userProfile)
 
   //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
-    agencyNameValue: "",
-    phoneNumberValue: "",
-    bioValue: "",
+    agencyNameValue: userProfile.agencyName,
+    phoneNumberValue: userProfile.phoneNumber,
+    bioValue: userProfile.bio,
     uploadedPicture: [],
-    profilePictureValue: "",
+    profilePictureValue: userProfile.profilePic,
     sendRequest: 0,
   };
 

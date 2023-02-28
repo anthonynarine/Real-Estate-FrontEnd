@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Grid, Paper, TextField, Typography, Button } from "@mui/material";
+import { Grid, Paper, TextField, Typography, Button, CircularProgress,} from "@mui/material";
 import { React, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import StateContex from "../contex/StateContex";
@@ -51,6 +51,9 @@ function Profile() {
       profilePic: "",
       bio: "",
     },
+//dataIsLoading state will initially be true
+//  then will become false when we get the data 
+    dataIsLoading: true, 
   };
 
   function ReducerFunction(draft, action) {
@@ -61,6 +64,9 @@ function Profile() {
         draft.userProfile.phoneNumber = action.profileObject.phone_number;
         draft.userProfile.profilePic = action.profileObject.profile_picture;
         draft.userProfile.bio = action.profileObject.bio;
+        break;
+      case "loadingDone":
+        draft.dataIsLoading = false
         break;
     }
   }
@@ -82,6 +88,8 @@ function Profile() {
           profileObject: response.data,
           //value being caught
         });
+// dispatch used switching dataIsLoading on and off
+        dispatch( { type: "loadingDone" })
       } catch (error) {
         console.log(error.response);
       }
@@ -126,8 +134,19 @@ function Profile() {
         </Grid>
       );
     }
+  };
+
+//functionality to keep user data in form @ profile page
+  if (state.dataIsLoading === true) {
+    return (
+      <Grid container justifyContent="center" alignItems="center" style={{height: "85vh"}}>
+        <CircularProgress />
+      </Grid>
+    );
+    // to better see this loding animation comment out setDataIsLoading above
   }
 
+//MAIN FUNCTION RETRUN
   return (
     <Grid
       item
