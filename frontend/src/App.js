@@ -14,7 +14,7 @@ import Register from "./components/forms/forms/Register";
 import Profile from "./components/pages/Profile";
 import AddProperty from "./components/forms/forms/AddProperty";
 import Test from "./components/forms/forms/Test";
-// import Agencies from "./components/forms/form-notes/AddProperty";
+import Agencies from "./components/pages/Agencies";
 import Listings from "./components/pages/Listings";
 import Error from "./components/pages/Error";
 
@@ -95,7 +95,7 @@ function App() {
             <Route path="/addproperty" element={<AddProperty />} />
             <Route path="/test" element={<Test />} />
             <Route path="/listings" element={<Listings />} />
-            {/* <Route path="/agencies" element={<Agencies />} /> */}
+            <Route path="/agencies" element={<Agencies />} />
             <Route path="/testing" element={<TestinguseReducer />} />
             {/* ERROR PAGE SHOULD BE LAST ROUTE */}
             <Route path="*" element={<Error />} />

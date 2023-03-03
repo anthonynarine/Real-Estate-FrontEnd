@@ -1,9 +1,11 @@
 import React from 'react'
 
-const Agencies = () => {
+function Agencies(){
+
+
   return (
     <div>
-      
+      Agencies testing page
     </div>
   )
 }

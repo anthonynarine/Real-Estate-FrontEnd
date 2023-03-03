@@ -297,7 +297,7 @@ function Listings() {
 export default Listings;
 
 // .toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-// This code to tell react to add a , to ever 1000th - see above Typrography element.
+// This code will tell react to add a , to ever 1000th - see above Typrography element.
 
 //                                  Clan up function
 // line 16, 29-40 the clean up funtionality will only render data after is has finished loading to avoid errors.
