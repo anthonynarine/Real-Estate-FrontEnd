@@ -105,10 +105,10 @@ function Listings() {
   }
 
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
-  //START STATE MANAGEMENT WITH IMMERREDUCER END \\
+ //START STATE MANAGEMENT WITH IMMERREDUCER END \\
 
-  //   HOOK PROVIDING LEAFLET MAP INSTANCE IN ANY DECEDANT OF MAPCONTAINER (SEE LEAFLET DOCS)
-  //   dispatch added
+ //   HOOK PROVIDING LEAFLET MAP INSTANCE IN ANY DECEDANT OF MAPCONTAINER (SEE LEAFLET DOCS)
+//   dispatch added
   function MyMapComponent() {
     const map = useMap();
     dispatch({ type: "getMap", mapData: map });
@@ -120,14 +120,14 @@ function Listings() {
   const [dataIsLoading, setDataIsLoading] = useState(true);
 
   useEffect(() => {
-    //this will generate a token that can be attached to this request.
+//this will generate a token that can be attached to this request.
     const source = axios.CancelToken.source();
     const getAllListings = async () => {
       try {
         let response = await axios.get("http://localhost:8000/api/listings/", {
           cancelToken: source.token,
         });
-        // console.log("DATA ARRAY:", response.data)
+ // console.log("DATA ARRAY:", response.data)
         setAllListings(response.data);
         setDataIsLoading(false);
       } catch (error) {
@@ -135,11 +135,11 @@ function Listings() {
       }
     };
     getAllListings();
-    //CLEAN UP FUNCTION WITH TOKEN CANCEL START
+ //CLEAN UP FUNCTION WITH TOKEN CANCEL START
     return () => {
       source.cancel();
     };
-    //CLEAN UP FUNCTION WITH TOKEN CANCEL END
+//CLEAN UP FUNCTION WITH TOKEN CANCEL END
   }, []);
 
   if (dataIsLoading === false) {
@@ -159,7 +159,7 @@ function Listings() {
     );
     // to better see this loding animation comment out setDataIsLoading above
   }
-  //DATA FETCHING FROM BACK END WITH CLEAN UP FUNCTIONALITY AND TOKEN GENERATION END.
+//DATA FETCHING FROM BACK END WITH CLEAN UP FUNCTIONALITY AND TOKEN GENERATION END.
 
   return (
     <Grid container sx={cardSytles.container}>
@@ -182,21 +182,21 @@ function Listings() {
                     <Room />
                   </IconButton>
                 }
-                // DISPLAY CARD TITLE
+  // DISPLAY CARD TITLE
                 title={listing.title}
               />
               <CardMedia
-                // DISPLAY CARD IMAGE
+  // DISPLAY CARD IMAGE
                 component="img"
                 image={listing.picture1}
                 alt={listing.title}
               />
               <CardContent>
-                {/* Display Card Body */}
+{/* Display Card Body */}
                 <Typography variant="body2">
                   {listing.description.substring(0, 200)}...
                 </Typography>
-                {/* START CODE BLOCK FOR COMMOA IN  PRICE AND RENTAL VS SALE LOGIC */}
+{/* START CODE BLOCK FOR COMMOA IN  PRICE AND RENTAL VS SALE LOGIC */}
               </CardContent>
               {listing.property_status === "Sale" ? (
                 <Typography sx={cardSytles.price}>
@@ -214,8 +214,7 @@ function Listings() {
                   / {listing.rental_frequency}
                 </Typography>
               )}
-              {/* END CODE BLOCK FOR COMMA IN PRICE AND RENTAL VS SALE LOGIC */}
-
+{/* END CODE BLOCK FOR COMMA IN PRICE AND RENTAL VS SALE LOGIC */}
               <CardActions disableSpacing>
             <IconButton aria-label="add to favorites">
               {listing.seller_agency_name}
@@ -225,11 +224,11 @@ function Listings() {
           );
         })}
       </Grid>
-      {/* END OF LISTING CARD DISPLAY  */}
+{/* END OF LISTING CARD DISPLAY  */}
       <Grid item xs={8} sx={{ marginTop: "0.5rem" }}>
         <AppBar position="sticky">
           <div style={{ height: "100vh" }}>
-            {/* Start - code from react-leaflet docs. */}
+{/* Start - code from react-leaflet docs. */}
             <MapContainer
               center={[40.65311, -73.944022]}
               zoom={12}
