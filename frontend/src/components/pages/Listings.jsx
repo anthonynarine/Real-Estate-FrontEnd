@@ -8,13 +8,33 @@ import { React, useState, useEffect } from "react";
 // import polygonOne from "../shapes/polygon";
 
 //MUI
-import {AppBar,Grid,Typography,Button,Card,CardHeader,CardMedia,CardContent,CircularProgress,IconButton} from "@mui/material";
+import {
+  AppBar,
+  Grid,
+  Typography,
+  Button,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CircularProgress,
+  IconButton,
+  CardActions
+} from "@mui/material";
 //react leaflet (note Popup and Marker is NOTE part of link from site.)
-import {MapContainer,TileLayer,Popup,Marker,Polyline,Polygon,useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Popup,
+  Marker,
+  Polyline,
+  Polygon,
+  useMap,
+} from "react-leaflet";
 import { Icon } from "leaflet";
 
 // MUI icons
-import { Room } from "@mui/icons-material"
+import { Room } from "@mui/icons-material";
 
 //Map Icons
 import houseIconPng from "../assets/mapIcons/house.png";
@@ -54,7 +74,6 @@ const cardSytles = {
 
 //MAP ICONS START
 function Listings() {
-
   const houseIcon = new Icon({
     iconUrl: houseIconPng,
     iconSize: [40, 40],
@@ -73,7 +92,6 @@ function Listings() {
   });
   //MAP ICONS END
 
-  
   const initialState = {
     mapInstance: null,
   };
@@ -84,7 +102,7 @@ function Listings() {
         draft.mapInstance = action.mapData;
         break;
     }
-  };
+  }
 
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
   //START STATE MANAGEMENT WITH IMMERREDUCER END \\
@@ -102,21 +120,23 @@ function Listings() {
   const [dataIsLoading, setDataIsLoading] = useState(true);
 
   useEffect(() => {
-    //this will generate a token that can be attached to this request. 
+    //this will generate a token that can be attached to this request.
     const source = axios.CancelToken.source();
     const getAllListings = async () => {
       try {
-        let response = await axios.get("http://localhost:8000/api/listings/", {cancelToken: source.token});
+        let response = await axios.get("http://localhost:8000/api/listings/", {
+          cancelToken: source.token,
+        });
         // console.log("DATA ARRAY:", response.data)
         setAllListings(response.data);
-        setDataIsLoading(false)
+        setDataIsLoading(false);
       } catch (error) {
         console.log(error.response);
       }
     };
     getAllListings();
     //CLEAN UP FUNCTION WITH TOKEN CANCEL START
-    return() => {
+    return () => {
       source.cancel();
     };
     //CLEAN UP FUNCTION WITH TOKEN CANCEL END
@@ -128,7 +148,12 @@ function Listings() {
 
   if (dataIsLoading === true) {
     return (
-      <Grid container justifyContent="center" alignItems="center" style={{height: "85vh"}}>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        style={{ height: "85vh" }}
+      >
         <CircularProgress />
       </Grid>
     );
@@ -136,7 +161,6 @@ function Listings() {
   }
   //DATA FETCHING FROM BACK END WITH CLEAN UP FUNCTIONALITY AND TOKEN GENERATION END.
 
-  
   return (
     <Grid container sx={cardSytles.container}>
       <Grid item xs={4}>
@@ -146,7 +170,15 @@ function Listings() {
             <Card key={listing.id} sx={cardSytles.card}>
               <CardHeader
                 action={
-                  <IconButton aria-label="settings" onClick={()=>state.mapInstance.flyTo([listing.latitude, listing.longitude],16)} >
+                  <IconButton
+                    aria-label="settings"
+                    onClick={() =>
+                      state.mapInstance.flyTo(
+                        [listing.latitude, listing.longitude],
+                        16
+                      )
+                    }
+                  >
                     <Room />
                   </IconButton>
                 }
@@ -184,14 +216,11 @@ function Listings() {
               )}
               {/* END CODE BLOCK FOR COMMA IN PRICE AND RENTAL VS SALE LOGIC */}
 
-              {/* <CardActions disableSpacing>
+              <CardActions disableSpacing>
             <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
+              {listing.seller_agency_name}
             </IconButton>
-            <IconButton aria-label="share">
-              <ShareIcon />
-            </IconButton>
-          </CardActions> */}
+          </CardActions>
             </Card>
           );
         })}
@@ -237,10 +266,7 @@ function Listings() {
                   <Marker
                     key={listing.id}
                     icon={IconDisplay()}
-                    position={[
-                      listing.latitude,
-                      listing.longitude,
-                    ]}
+                    position={[listing.latitude, listing.longitude]}
                   >
                     <Popup>
                       <Typography varient="h5">{listing.title}</Typography>
@@ -274,9 +300,8 @@ export default Listings;
 // .toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 // This code to tell react to add a , to ever 1000th - see above Typrography element.
 
-
-//                                  Clan up function        
-// line 16, 29-40 the clean up funtionality will only render data after is has finished loading to avoid errors.  
+//                                  Clan up function
+// line 16, 29-40 the clean up funtionality will only render data after is has finished loading to avoid errors.
 // CLEAN UP FUNCTION WILL RUN WHEN THE COMPONENT IS UNMOUNTED CANCELING THE TOKEN WHICH WILL CANCEL THE AXIOS REQUEST. (SEE LECTURE 52)
-// The token is requested on the get request as show above and cancled as shown in the return statement after the function call 
+// The token is requested on the get request as show above and cancled as shown in the return statement after the function call
 // The token is stored in the variable source (see below use effect call)
