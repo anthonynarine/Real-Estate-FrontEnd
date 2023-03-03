@@ -1,3 +1,6 @@
+// This component contains the prifile form along with the user data displayed.
+// It it is the child component of Profile.jsx
+
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Grid, Paper, TextField, Typography, Button } from "@mui/material";
 import { React, useEffect, useContext } from "react";
@@ -16,8 +19,8 @@ const pStyling = {
     padding: "40px 40px",
     width: "50rem",
     marginTop: "15px",
-    borderRadius: 5,
-    // backgroundColor: "#FDFDFD",
+    borderRadius: 2,
+    backgroundColor: "#FDFDFD",
     border: "solid #79B2BE",
   },
   btn: {
@@ -32,11 +35,11 @@ const pStyling = {
   },
 };
 //FORM STYLE END\\
-function ProfileUpdate( {userProfile} ) {
+function ProfileUpdate({ userProfile }) {
   const navigate = useNavigate();
   const GlobalState = useContext(StateContex);
 
-  console.log("USERPROFILE as Prop", userProfile)
+  console.log("USERPROFILE as Prop", userProfile);
 
   //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
@@ -85,31 +88,37 @@ function ProfileUpdate( {userProfile} ) {
   }, [state.uploadedPicture[0]]);
   //useEffect TO CATCH UPLOADED PROFILE PICTURE end//
 
-
   //START OF Patch REQUEST TO UPDATE PROFILE \\
   useEffect(() => {
     if (state.sendRequest) {
       async function UpdateProfile() {
-        //The from data we are passing will be stored in the variable as show
-        //with the function call FormData() see MDN docs
         const formData = new FormData();
-        formData.append("agency_name", state.agencyNameValue);
-        formData.append("phone_number", state.phoneNumberValue);
-        formData.append("bio", state.bioValue);
-        formData.append("profile_picture", state.profilePictureValue);
-        formData.append("seller", GlobalState.userId);
-        // SENDING THE userId through FormData() returned a string and not integer
-        // to this frild was passed in as a key:value pair
-        // formData.append("seller", GlobalState.userID);
-        //since the sellers information is is passed from the parent App.js we need to set
-        //useContext + StateContex and GlobalState
+// if the user profile info is updated but the the profile pic a 400 error will come up
+// the conditional below eliminates this error. 
+        if (
+          typeof state.profilePictureValue === "string" ||
+          state.profilePictureValue === null
+        ) {
+          formData.append("agency_name", state.agencyNameValue);
+          formData.append("phone_number", state.phoneNumberValue);
+          formData.append("bio", state.bioValue);
+          formData.append("seller", GlobalState.userId);
+        } else {
+          formData.append("agency_name", state.agencyNameValue);
+          formData.append("phone_number", state.phoneNumberValue);
+          formData.append("bio", state.bioValue);
+          formData.append("profile_picture", state.profilePictureValue);
+          formData.append("seller", GlobalState.userId);
+        }
         try {
           const response = await axios.patch(
             `http://localhost:8000/api/profiles/${GlobalState.userId}/update/`,
             formData
           );
           console.log(response.data);
-          // navigate("/listings");
+          //navigate(0) will refresh the page to update user profile.
+          // NOTE PAGE CURRENTLY LOGS OUT USER ON REFRESH AND UPDATE THIS NEEDS TO BE FIXED
+          navigate(0);
         } catch (error) {
           console.log(error.response);
         }
@@ -125,6 +134,35 @@ function ProfileUpdate( {userProfile} ) {
     dispatch({ type: "changeSendRequest" });
   }
 
+  //Function to conditionally render name or image based
+  //If user has uploaded a pic or is updating a pic
+  //test by changing profile pic
+  function ProfilePictureDisplay() {
+    if (typeof state.profilePictureValue !== "string") {
+      return (
+        <ul>
+          {state.profilePictureValue ? (
+            <li>{state.profilePictureValue.name}</li>
+          ) : (
+            ""
+          )}
+        </ul>
+      );
+    } else if (typeof state.profilePictureValue === "string") {
+      return (
+        <Grid item container rowSpacing={1}>
+          <Grid item sx={6}>
+            <img
+              style={{ height: "5rem", width: "5rem" }}
+              alt="small profile img"
+              src={userProfile.profilePic}
+            />
+          </Grid>
+        </Grid>
+      );
+    }
+  }
+
   return (
     <Grid
       sx={pStyling.mainContainer}
@@ -134,14 +172,8 @@ function ProfileUpdate( {userProfile} ) {
       justifyContent="flex-start"
       alignItems="center"
     >
-      <Grid
-        item
-        container
-        direction="column"
-        justifyContent="flex-start"
-        alignItems="center"
-      >
-        <Paper sx={pStyling.paperStyle} elevation={20}>
+      <Grid item container direction="column" alignItems="center">
+        <Paper sx={pStyling.paperStyle} elevation={24}>
           <form onSubmit={FormSubmitHandler}>
             <Grid item container direction="column" alignItems="center">
               <Grid item>
@@ -201,29 +233,14 @@ function ProfileUpdate( {userProfile} ) {
                 }
               />
             </Grid>
-            <Grid item container direction="column" alignItems="center">
-              <Grid item>
-                <Button
-                  sx={pStyling.btn}
-                  type="submit"
-                  margin="normal"
-                  variant="contained"
-                  color="success"
-                >
-                  <Typography variant="subtitle1">Update</Typography>
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid item container direction="column" alignItems="center">
-              <Grid item>
-                <ul>
-                  {state.profilePictureValue ? (
-                    <li>{state.profilePictureValue.name}</li>
-                  ) : (
-                    ""
-                  )}
-                </ul>
-              </Grid>
+            <Grid
+              item
+              sx={{ marginTop: "2rem" }}
+              container
+              direction="column"
+              alignItems="center"
+            >
+              <Grid item>{ProfilePictureDisplay()}</Grid>
             </Grid>
             <Grid item container direction="column" alignItems="center">
               <Grid item>
@@ -252,11 +269,24 @@ function ProfileUpdate( {userProfile} ) {
                 </Button>
               </Grid>
             </Grid>
+            <Grid item container direction="column" alignItems="center">
+              <Grid item>
+                <Button
+                  sx={pStyling.btn}
+                  type="submit"
+                  margin="normal"
+                  variant="contained"
+                  color="success"
+                >
+                  <Typography variant="subtitle1">Update</Typography>
+                </Button>
+              </Grid>
+            </Grid>
           </form>
         </Paper>
       </Grid>
     </Grid>
   );
-};
+}
 
 export default ProfileUpdate;

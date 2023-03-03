@@ -6,6 +6,11 @@ import StateContex from "../contex/StateContex";
 import ProfileUpdate from "./ProfileUpdate";
 import { useImmerReducer } from "use-immer";
 import axios from "axios";
+import { Container } from "@mui/system";
+
+
+import defaultProfilePicture from "../assets/defaultProfilePicture.jpg"
+
 
 //FORM STYLE START\\
 const pStyling = {
@@ -14,12 +19,21 @@ const pStyling = {
     width: "40rem",
     marginTop: "30px",
     marginBottom: "20px",
-    borderRadius: 3,
+    borderRadius: 2,
     // backgroundColor: "#f9f9f9",
-    border: "solid #79B2BE ",
+    border: "solid #79B2BE",
+  },
+  paperContainer: {
+    padding: "40px 40px",
+    height: "70rem",
+    marginTop: "30px",
+    marginBottom: "30px",
+    backgroundColor: "#ffffff",
+    border: "solid #79B2BE",
+
   },
   paperStyle: {
-    padding: "40px 40px",
+    padding: "20px 20px",
     width: "50rem",
     marginTop: "15px",
     borderRadius: 5,
@@ -124,7 +138,8 @@ function Profile() {
             {/* Image currently not being displayed correctly */}{" "}
             <img
               style={{ height: "10rem", width: "15" }}
-              src={state.userProfile.profilePic}
+//ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned.              
+              src={state.userProfile.profilePic !== null ? state.userProfile.profilePic : defaultProfilePicture}
               alt="profile p"
             />
           </Grid>
@@ -148,6 +163,9 @@ function Profile() {
 
 //MAIN FUNCTION RETRUN
   return (
+    <Container>
+      <Grid container direction="column" justifyContent="center" alignItems="center">
+        <Paper sx={pStyling.paperContainer} elevation={20}>
     <Grid
       item
       container
@@ -155,7 +173,7 @@ function Profile() {
       justifyContent="center"
       alignItems="center"
     >
-      <Paper sx={pStyling.welcomePaperStyle} elevation={10}>
+      <Paper sx={pStyling.welcomePaperStyle} elevation={24}>
         {WelcomeDisplay()}
       </Paper>
       <Grid
@@ -168,6 +186,9 @@ function Profile() {
       < ProfileUpdate userProfile={state.userProfile} />
       </Grid>
     </Grid>
+    </Paper >
+    </Grid>
+    </Container>
   );
 };
 
