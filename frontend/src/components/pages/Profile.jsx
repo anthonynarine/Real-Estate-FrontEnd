@@ -65,6 +65,7 @@ function Profile() {
       phoneNumber: "",
       profilePic: "",
       sellerListings: [],
+      sellerId: "",
     },
 //dataIsLoading state will initially be true
 //  then will become false when we get the data 
@@ -80,7 +81,8 @@ function Profile() {
         draft.userProfile.phoneNumber = action.profileObject.phone_number;
         draft.userProfile.profilePic = action.profileObject.profile_picture;
         draft.userProfile.bio = action.profileObject.bio;
-        draft.userProfile.sellerListings = action.profileObject.seller_listings
+        draft.userProfile.sellerListings = action.profileObject.seller_listings;
+        draft.userProfile.sellerId = action.profileObject.seller;
         break;
       case "loadingDone":
         draft.dataIsLoading = false
@@ -118,11 +120,13 @@ function Profile() {
     if (state.userProfile.sellerListings.length === 0) {
       return <Button disabled size="small">No Listings</Button>;
     } else if (state.userProfile.sellerListings.length === 1) {
-      return <Button size="small">1 Property listed</Button>;
+      return <Button onClick={()=> navigate(`/agencies/${state.userProfile.sellerId}`)} size="small">1 Property listed</Button>;
     } else {
-      <Button size="small">
+      return(
+      <Button onClick={()=> navigate(`/agencies/${state.userProfile.sellerId}`)}  size="small">
         {state.userProfile.sellerListings.length} Properties
-      </Button>;
+      </Button>
+      );
     }
   }
 

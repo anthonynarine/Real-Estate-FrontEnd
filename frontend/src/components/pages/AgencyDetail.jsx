@@ -1,22 +1,29 @@
 
 //this page will display all the listings of a user.
 // see app.js for path and route syntax and how the users id is used.
+// useParms hook will be used along withe the async function to acces 
+// the user id
 
 
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Grid, Paper, TextField, Typography, Button, CircularProgress,} from "@mui/material";
 import { React, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import StateContex from "../contex/StateContex";
-import ProfileUpdate from "./ProfileUpdate";
 import { useImmerReducer } from "use-immer";
 import axios from "axios";
-import { Container } from "@mui/system";
+
 
 
 function AgencyDetail(){
+
     const navigate = useNavigate();
     const GlobalState = useContext(StateContex);
+
+    const params = useParams();
+
+    console.log("useParams TEST", useParams())
+
   
     //START STATE MANAGEMENT WITH IMMERREDUCER START \\
     const initialState = {
@@ -58,9 +65,9 @@ function AgencyDetail(){
         try {
           // backticks w/ string inperpolation to grab the user's id from GlobalState
           const response = await axios.get(
-            `http://localhost:8000/api/profiles/${GlobalState.userId}/`
+            `http://localhost:8000/api/profiles/${params.id}/`
           );
-          console.log("USERPROFILE:", response.data,);
+          console.log("useParms Hook :", response.data,);
           dispatch({
             type: "catchUserProfileInfo",
             profileObject: response.data,

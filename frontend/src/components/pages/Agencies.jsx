@@ -1,18 +1,9 @@
 // This component will diplay each user  \\
 
-import {
-  Grid,
-  Paper,
-  Typography,
-  Button,
-  CircularProgress,
-  Card,
-  CardActions,
-  CardMedia,
-  CardContent,
+import {Grid,Paper,Typography,Button,CircularProgress,Card,CardActions,CardMedia,CardContent,
 } from "@mui/material";
 import defaultProfilePicture from "../assets/defaultProfilePicture.jpg";
-import { React, useEffect, useContext } from "react";
+import { React, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useImmerReducer } from "use-immer";
 import axios from "axios";
@@ -25,6 +16,8 @@ const agencyStyling = {
 };
 
 function Agencies() {
+
+  const navigate = useNavigate();
   //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
     // As always with get request you will need state for datais loading
@@ -93,14 +86,13 @@ function Agencies() {
       columnSpacing={{ xs: 1, sm: 2, md: 3 }}
     >
       {state.agenciesList.map((agency) => {
-
         function PropertiesDisplay() {
           if (agency.seller_listings.length === 0) {
-            return <Button disabled size="small">No Listing</Button>;
+            return <Button disabled size="small" >No Listing</Button>;
           } else if (agency.seller_listings.length === 1) {
-            return <Button size="small">1 Property listed</Button>;
+            return <Button onClick={()=> navigate(`/agencies/${agency.seller}`)} size="small">1 Property listed</Button>;
           } else {
-            <Button size="small">
+            <Button onClick={()=> navigate(`/agencies/${agency.seller}`)} size="small">
               {agency.seller_listings.length} Properties
             </Button>;
           }
