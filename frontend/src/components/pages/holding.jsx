@@ -1,6 +1,4 @@
-// This component will diplay each user  \\
-
-import {Grid,Paper,TextField,Typography,Button,CircularProgress,Card, CardActions, CardMedia, CardContent} from "@mui/material";
+import { Grid, Paper, TextField, Typography, Button, CircularProgress,} from "@mui/material";
 import { React, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import StateContex from "../contex/StateContex";
@@ -10,12 +8,57 @@ import axios from "axios";
 import { Container } from "@mui/system";
 import { DraftsRounded } from "@mui/icons-material";
 
-function Agencies() {
-  //START STATE MANAGEMENT WITH IMMERREDUCER START \\
-  const initialState = {
-    // As always with get request you will need state for datais loading
+
+
+
+//FORM STYLE START\\
+const agencyStyling = {
+  welcomePaperStyle: {
+    padding: "20px 20px",
+    width: "40rem",
+    marginTop: "30px",
+    marginBottom: "20px",
+    borderRadius: 2,
+    // backgroundColor: "#f9f9f9",
+    border: "solid #79B2BE",
+  },
+  paperContainer: {
+    padding: "40px 40px",
+    height: "70rem",
+    marginTop: "30px",
+    marginBottom: "30px",
+    backgroundColor: "#ffffff",
+    border: "solid #79B2BE",
+
+  },
+  paperStyle: {
+    padding: "20px 20px",
+    width: "50rem",
+    marginTop: "15px",
+    borderRadius: 5,
+    backgroundColor: "#FDFDFD",
+    border: "solid #79B2BE",
+  },
+  btn: {
+    backgroundColor: "#79B2BE",
+    marginTop: "1.75rem",
+    color: "white",
+    fontSize: "1rem",
+    width: "20rem",
+    "&:hover": {
+      bacgroundColor: "purple",
+    },
+  },
+};
+//FORM STYLE END\\
+
+function Agencies(){
+  
+   //START STATE MANAGEMENT WITH IMMERREDUCER START \\
+   const initialState = {
+// As always with get request you will need state for datais loading
     dataIsLoading: true,
-    //an empty array for the agencies that we want to display
+//an empty array for the agencies that we want to display
     agenciesList: [],
   };
 
@@ -23,18 +66,17 @@ function Agencies() {
     // eslint-disable-next-line default-case
     switch (action.type) {
       case "catchAgencies":
-        draft.agenciesList = action.agenciesArray;
+        draft.agenciesList = action.agencyArray;
         break;
       case "loadingDone":
         draft.dataIsLoading = false;
-        break;
+        break;    
     }
   }
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
   //START STATE MANAGEMENT WITH IMMERREDUCER END \\
 
-
-    // REQUEST TO GET ALL PROFILES START//
+  // REQUEST TO GET ALL PROFILES START//
   // useEffect will run once when page loads
   useEffect(() => {
     async function GetAgencies() {
@@ -56,7 +98,8 @@ function Agencies() {
     }
     GetAgencies();
   }, []);
-// REQUEST TO GET ALL PROFILES END//
+// REQUEST TO GET ALL PROFILES end//
+
 
   //functionality to keep user data in form @ profile page
   if (state.dataIsLoading === true) {
@@ -68,34 +111,9 @@ function Agencies() {
     // to better see this loding animation comment out setDataIsLoading above
   }
 
-  return (
-  <Grid item container>
-    <Grid item>{state.agenciesList.map(agency => {
-      if(agency.agency_name && agency.phone_number)
-      return (
-        <Card sx={{ maxWidth: 345 }}>
-        <CardMedia
-          component="img"
-          alt="profile picture"
-          height="140"
-          image={agency.profile_picture}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {agency.agency_name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {agency.bio}
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button size="small">X Properties</Button>
-        </CardActions>
-      </Card>
-      )
-    })}</Grid>
-    </Grid>
-  )
+//MAIN FUNC RETURN
+  return <div>test</div>
+
 }
 
-export default Agencies;
+export default Agencies

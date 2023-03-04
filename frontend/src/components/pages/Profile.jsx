@@ -68,6 +68,7 @@ function Profile() {
 //dataIsLoading state will initially be true
 //  then will become false when we get the data 
     dataIsLoading: true, 
+// datais loading is use with all get requests as always.         
   };
 
   function ReducerFunction(draft, action) {
@@ -138,7 +139,7 @@ function Profile() {
             {/* Image currently not being displayed correctly */}{" "}
             <img
               style={{ height: "10rem", width: "15" }}
-//ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned.              
+//ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. slack://T04T0UTRERE/magic-login/4888690544902-51073be6b17f1a77b5ca38c5dcfc22da92aedb894a272f65133477c0a82823a8             
               src={state.userProfile.profilePic !== null ? state.userProfile.profilePic : defaultProfilePicture}
               alt="profile p"
             />

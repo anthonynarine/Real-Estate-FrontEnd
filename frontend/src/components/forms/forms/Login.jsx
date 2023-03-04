@@ -162,7 +162,7 @@ function Login() {
             emailInfo: response.data.email,
             IdInfo: response.data.id,
           });
-          navigate("/")
+          navigate("/profile")
         } catch (error) {
           console.log(error.response);
         }
