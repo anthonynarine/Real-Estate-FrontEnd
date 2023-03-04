@@ -15,9 +15,9 @@ import Profile from "./components/pages/Profile";
 import AddProperty from "./components/forms/forms/AddProperty";
 import Test from "./components/forms/forms/Test";
 import Agencies from "./components/pages/Agencies";
+import AgencyDetail from "./components/pages/AgencyDetail";
 import Listings from "./components/pages/Listings";
 import Error from "./components/pages/Error";
-
 
 //testing delete when done
 import TestinguseReducer from "./components/testing/userReducerTesting";
@@ -57,14 +57,11 @@ function App() {
       case "logout":
         draft.userIsLoggedIn = false;
         break;
-      
-      
-
-
     }
   };
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
   //START STATE MANAGEMENT WITH IMMERREDUCER END \\
+
 
   //this use effect hook will locally store the the state values listed below as to not lose this info on page refresh. see lecture 65 10:03 on conditional rendering
   useEffect(()=>{
@@ -80,8 +77,8 @@ function App() {
       localStorage.removeItem("theUserId");
       localStorage.removeItem("theUserToken");
     }
-
   }, [state.userIsLoggedIn])
+
 
   return (
     <StateContex.Provider value={state}>
@@ -96,8 +93,10 @@ function App() {
             <Route path="/test" element={<Test />} />
             <Route path="/listings" element={<Listings />} />
             <Route path="/agencies" element={<Agencies />} />
+{/* identifying and rendering a agency based on id.  note the syntax */}
+            <Route path="/agencies/:id" element={<AgencyDetail />} />
             <Route path="/testing" element={<TestinguseReducer />} />
-            {/* ERROR PAGE SHOULD BE LAST ROUTE */}
+{/* ERROR PAGE SHOULD BE LAST ROUTE */}
             <Route path="*" element={<Error />} />
           </Routes>
       </DispatchContex.Provider>

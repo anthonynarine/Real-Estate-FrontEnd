@@ -39,7 +39,7 @@ function ProfileUpdate({ userProfile }) {
   const navigate = useNavigate();
   const GlobalState = useContext(StateContex);
 
-  console.log("USERPROFILE as Prop", userProfile);
+  console.log("USERPROFILE as Prop cp 42", userProfile);
 
   //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
@@ -252,7 +252,7 @@ function ProfileUpdate({ userProfile }) {
                   color="success"
                 >
                   Profile Picture
-                  {/* self closing input tag for img uplaod */}
+    {/* self closing input tag for img uplaod */}
                   <input
                     onChange={(e) =>
                       dispatch({
@@ -261,7 +261,7 @@ function ProfileUpdate({ userProfile }) {
                       })
                     }
                     type="file"
-                    // hides the choose files box \\
+    // hides the choose files box \\
                     hidden
                     multiple
                     accept="image/png, image/jif, image/jpeg image/svg"

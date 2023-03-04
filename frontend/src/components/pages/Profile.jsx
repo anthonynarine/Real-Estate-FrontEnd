@@ -61,9 +61,10 @@ function Profile() {
   const initialState = {
     userProfile: {
       agencyName: "",
+      bio: "",
       phoneNumber: "",
       profilePic: "",
-      bio: "",
+      sellerListings: [],
     },
 //dataIsLoading state will initially be true
 //  then will become false when we get the data 
@@ -79,6 +80,7 @@ function Profile() {
         draft.userProfile.phoneNumber = action.profileObject.phone_number;
         draft.userProfile.profilePic = action.profileObject.profile_picture;
         draft.userProfile.bio = action.profileObject.bio;
+        draft.userProfile.sellerListings = action.profileObject.seller_listings
         break;
       case "loadingDone":
         draft.dataIsLoading = false
@@ -112,7 +114,18 @@ function Profile() {
     GetProfileInfo();
   }, []);
 
- 
+  function PropertiesDisplay() {
+    if (state.userProfile.sellerListings.length === 0) {
+      return <Button disabled size="small">No Listings</Button>;
+    } else if (state.userProfile.sellerListings.length === 1) {
+      return <Button size="small">1 Property listed</Button>;
+    } else {
+      <Button size="small">
+        {state.userProfile.sellerListings.length} Properties
+      </Button>;
+    }
+  }
+
   //FUNCTION WILL RENDER WELCOME MESSAGE AND ASK USER TO FIll OUT PROFILE FORM IF INCOMPLETE
   function WelcomeDisplay() {
     if (
@@ -126,7 +139,7 @@ function Profile() {
           <Typography
             variant="h5"
             sx={{ textAlign: "center", marginTop: ".5rem", color: "#141010" }}
-          >
+          >  
             Welcome {GlobalState.userUsername}
             Please complete the form below to complete your profile.
           </Typography>
@@ -136,7 +149,6 @@ function Profile() {
       return (
         <Grid item container rowSpacing={1} >
           <Grid item xs={6}>
-            {/* Image currently not being displayed correctly */}{" "}
             <img
               style={{ height: "10rem", width: "15" }}
 //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. slack://T04T0UTRERE/magic-login/4888690544902-51073be6b17f1a77b5ca38c5dcfc22da92aedb894a272f65133477c0a82823a8             
@@ -145,7 +157,7 @@ function Profile() {
             />
           </Grid>
           <Grid item xs={6} >
-           <Typography variant="h5" >Aloha {GlobalState.userUsername} you currently have 90 properties</Typography> 
+           <Typography variant="h5" >Aloha {GlobalState.userUsername} you currently have {PropertiesDisplay()}</Typography> 
           </Grid>
         </Grid>
       );
@@ -159,7 +171,7 @@ function Profile() {
         <CircularProgress />
       </Grid>
     );
-    // to better see this loding animation comment out setDataIsLoading above
+ // to better see this loding animation comment out setDataIsLoading above
   }
 
 //MAIN FUNCTION RETRUN
