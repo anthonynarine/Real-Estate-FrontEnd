@@ -1,15 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Grid, Paper, TextField, Typography, Button, CircularProgress,} from "@mui/material";
+import {Grid,Paper,TextField,Typography,Button,CircularProgress,} from "@mui/material";
+import defaultProfilePicture from "../assets/defaultProfilePicture.jpg";
 import { React, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import StateContex from "../contex/StateContex";
+import { useNavigate } from "react-router-dom";
 import ProfileUpdate from "./ProfileUpdate";
 import { useImmerReducer } from "use-immer";
-import axios from "axios";
 import { Container } from "@mui/system";
-
-
-import defaultProfilePicture from "../assets/defaultProfilePicture.jpg"
+import axios from "axios";
 
 
 //FORM STYLE START\\
@@ -30,7 +28,6 @@ const pStyling = {
     marginBottom: "30px",
     backgroundColor: "#ffffff",
     border: "solid #79B2BE",
-
   },
   paperStyle: {
     padding: "20px 20px",
@@ -53,6 +50,8 @@ const pStyling = {
 };
 //FORM STYLE END\\
 
+
+//MAIN FUNCTION \\
 function Profile() {
   const navigate = useNavigate();
   const GlobalState = useContext(StateContex);
@@ -67,10 +66,10 @@ function Profile() {
       sellerListings: [],
       sellerId: "",
     },
-//dataIsLoading state will initially be true
-//  then will become false when we get the data 
-    dataIsLoading: true, 
-// datais loading is use with all get requests as always.         
+    //dataIsLoading state will initially be true
+    //  then will become false when we get the data
+    dataIsLoading: true,
+    // datais loading is use with all get requests as always.
   };
 
   function ReducerFunction(draft, action) {
@@ -85,15 +84,15 @@ function Profile() {
         draft.userProfile.sellerId = action.profileObject.seller;
         break;
       case "loadingDone":
-        draft.dataIsLoading = false
+        draft.dataIsLoading = false;
         break;
     }
   }
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
-  //START STATE MANAGEMENT WITH IMMERREDUCER END \\
+//START STATE MANAGEMENT WITH IMMERREDUCER END \\
 
-  // REQUEST TO GET PROFILE INFO//
-  // useEffect will run once when page loads
+// REQUEST TO GET PROFILE INFO//
+// useEffect will run once when page loads
   useEffect(() => {
     async function GetProfileInfo() {
       try {
@@ -101,14 +100,14 @@ function Profile() {
         const response = await axios.get(
           `http://localhost:8000/api/profiles/${GlobalState.userId}/`
         );
-        console.log("USERPROFILE:", response.data,);
+        console.log("USERPROFILE:", response.data);
         dispatch({
           type: "catchUserProfileInfo",
           profileObject: response.data,
-          //value being caught
+  //value being caught
         });
-// dispatch used switching dataIsLoading on and off
-        dispatch( { type: "loadingDone" })
+  // dispatch used switching dataIsLoading on and off
+        dispatch({ type: "loadingDone" });
       } catch (error) {
         console.log(error.response);
       }
@@ -118,14 +117,28 @@ function Profile() {
 
   function PropertiesDisplay() {
     if (state.userProfile.sellerListings.length === 0) {
-      return <Button disabled size="small">No Listings</Button>;
+      return (
+        <Button disabled size="small">
+          No Listings
+        </Button>
+      );
     } else if (state.userProfile.sellerListings.length === 1) {
-      return <Button onClick={()=> navigate(`/agencies/${state.userProfile.sellerId}`)} size="small">1 Property listed</Button>;
+      return (
+        <Button
+          onClick={() => navigate(`/agencies/${state.userProfile.sellerId}`)}
+          size="small"
+        >
+          1 Property listed
+        </Button>
+      );
     } else {
-      return(
-      <Button onClick={()=> navigate(`/agencies/${state.userProfile.sellerId}`)}  size="small">
-        {state.userProfile.sellerListings.length} Properties
-      </Button>
+      return (
+        <Button
+          onClick={() => navigate(`/agencies/${state.userProfile.sellerId}`)}
+          size="small"
+        >
+          {state.userProfile.sellerListings.length} Properties
+        </Button>
       );
     }
   }
@@ -139,11 +152,18 @@ function Profile() {
       state.userProfile.phoneNumber === ""
     ) {
       return (
-        <Grid item container spacing={1} direction="row" xs={12} justifyContent="center">
+        <Grid
+          item
+          container
+          spacing={1}
+          direction="row"
+          xs={12}
+          justifyContent="center"
+        >
           <Typography
             variant="h5"
             sx={{ textAlign: "center", marginTop: ".5rem", color: "#141010" }}
-          >  
+          >
             Welcome {GlobalState.userUsername}
             Please complete the form below to complete your profile.
           </Typography>
@@ -151,62 +171,78 @@ function Profile() {
       );
     } else {
       return (
-        <Grid item container rowSpacing={1} >
+        <Grid item container rowSpacing={1}>
           <Grid item xs={6}>
             <img
               style={{ height: "10rem", width: "15" }}
-//ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. slack://T04T0UTRERE/magic-login/4888690544902-51073be6b17f1a77b5ca38c5dcfc22da92aedb894a272f65133477c0a82823a8             
-              src={state.userProfile.profilePic !== null ? state.userProfile.profilePic : defaultProfilePicture}
+  //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. slack://T04T0UTRERE/magic-login/4888690544902-51073be6b17f1a77b5ca38c5dcfc22da92aedb894a272f65133477c0a82823a8
+              src={
+                state.userProfile.profilePic !== null
+                  ? state.userProfile.profilePic
+                  : defaultProfilePicture
+              }
               alt="profile p"
             />
           </Grid>
-          <Grid item xs={6} >
-           <Typography variant="h5" >Aloha {GlobalState.userUsername} you currently have {PropertiesDisplay()}</Typography> 
+          <Grid item xs={6}>
+            <Typography variant="h5">
+              Aloha {GlobalState.userUsername} you currently have{" "}
+              {PropertiesDisplay()}
+            </Typography>
           </Grid>
         </Grid>
       );
     }
-  };
+  }
 
-//functionality to keep user data in form @ profile page
+// Loading animation (very reusable)
   if (state.dataIsLoading === true) {
     return (
-      <Grid container justifyContent="center" alignItems="center" style={{height: "85vh"}}>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        style={{ height: "85vh" }}
+      >
         <CircularProgress />
       </Grid>
     );
- // to better see this loding animation comment out setDataIsLoading above
   }
 
-//MAIN FUNCTION RETRUN
+  //MAIN FUNCTION RETRUN
   return (
     <Container>
-      <Grid container direction="column" justifyContent="center" alignItems="center">
-        <Paper sx={pStyling.paperContainer} elevation={20}>
-    <Grid
-      item
-      container
-      direction="row"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Paper sx={pStyling.welcomePaperStyle} elevation={24}>
-        {WelcomeDisplay()}
-      </Paper>
       <Grid
-        item
         container
         direction="column"
-        justifyContent="flex-start"
+        justifyContent="center"
         alignItems="center"
       >
-      < ProfileUpdate userProfile={state.userProfile} />
+        <Paper sx={pStyling.paperContainer} elevation={20}>
+          <Grid
+            item
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Paper sx={pStyling.welcomePaperStyle} elevation={24}>
+              {WelcomeDisplay()}
+            </Paper>
+            <Grid
+              item
+              container
+              direction="column"
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <ProfileUpdate userProfile={state.userProfile} />
+            </Grid>
+          </Grid>
+        </Paper>
       </Grid>
-    </Grid>
-    </Paper >
-    </Grid>
     </Container>
   );
-};
+}
 
 export default Profile;

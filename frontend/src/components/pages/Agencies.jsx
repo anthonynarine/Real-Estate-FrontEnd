@@ -92,12 +92,11 @@ function Agencies() {
           } else if (agency.seller_listings.length === 1) {
             return <Button onClick={()=> navigate(`/agencies/${agency.seller}`)} size="small">1 Property listed</Button>;
           } else {
-            <Button onClick={()=> navigate(`/agencies/${agency.seller}`)} size="small">
+            return <Button onClick={()=> navigate(`/agencies/${agency.seller}`)} size="small">
               {agency.seller_listings.length} Properties
             </Button>;
           }
         }
-
         if (agency.agency_name && agency.phone_number)
           return (
             <Grid key={agency.id} item>

@@ -172,7 +172,6 @@ function AddProperty() {
   //START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
     titleValue: "",
-    // typeOfListingValue: "",
     listingTypeValue: "",
     descriptionValue: "",
     areaValue: "",
@@ -192,13 +191,13 @@ function AddProperty() {
     picture4Value: "",
     picture5Value: "",
     mapInstance: null,
-    //the markerPosition objecet will need to be labeled as show below/
-    //lat for latitude and lng for longitude.THIS IS WHAT LEAFLET EXPECTS
+//the markerPosition objecet will MUST be labeled as show below/
+//lat for latitude and lng for longitude.THIS IS WHAT LEAFLET EXPECTS/REQUIRES
     markerPosition: {
       lat: "40.65311",
       lng: "-73.944022",
     },
-    //used to store uploaded images
+//used to store uploaded images
     uploadedPictures: [],
     sendRequest: 0,
     userProfile: {
@@ -213,7 +212,7 @@ function AddProperty() {
       case "catchTitleChange":
         draft.titleValue = action.titleChosen;
         break;
-      // case "catchTypeOfListingChange":
+// case "catchTypeOfListingChange":
       //   draft.typeOfListingValue = action.typeOfListingChosen;
       //   break;
       case "catchListingTypeChange":
@@ -255,6 +254,7 @@ function AddProperty() {
       case "catchParkingChange":
         draft.parkingValue = action.parkingChosen;
         break;
+// Cases for catching uploaded images        
       case "catchPicture1Change":
         draft.picture1Value = action.picture1Chosen;
         break;
@@ -276,7 +276,7 @@ function AddProperty() {
       case "changeMarkerPosition":
         draft.markerPosition.lat = action.changeLatitude;
         draft.markerPosition.lng = action.changelongitude;
-        //code below will change the lat and lng values when a different borough is selected.
+//code below will change the lat and lng values when a different borough is selected.
         draft.latitudeValue = "";
         draft.longitudeValue = "";
         break;
@@ -370,7 +370,7 @@ function AddProperty() {
   // }, [state.latitudeValue, state.longitudeValue]);
   // will watch for changes in latitude and longitude Values used for testing
 
-  //CATCHING IMAGES UPLOADED. 5 SEPERATE useEffect will be used.
+  //CATCHING IMAGES UPLOADED FROM THE FILELIST. 5 SEPERATE useEffect will be used.
   //YOU NEED TO FIGURE OUT A MORE EFFICIENT WAY TO DO THIS.
   useEffect(() => {
     if (state.uploadedPictures[0]) {
@@ -380,6 +380,7 @@ function AddProperty() {
       });
     }
   }, [state.uploadedPictures[0]]);
+
   useEffect(() => {
     if (state.uploadedPictures[1]) {
       dispatch({
@@ -388,6 +389,7 @@ function AddProperty() {
       });
     }
   }, [state.uploadedPictures[1]]);
+
   useEffect(() => {
     if (state.uploadedPictures[2]) {
       dispatch({
@@ -396,6 +398,7 @@ function AddProperty() {
       });
     }
   }, [state.uploadedPictures[2]]);
+
   useEffect(() => {
     if (state.uploadedPictures[3]) {
       dispatch({
@@ -404,6 +407,7 @@ function AddProperty() {
       });
     }
   }, [state.uploadedPictures[3]]);
+  
   useEffect(() => {
     if (state.uploadedPictures[4]) {
       dispatch({
@@ -687,7 +691,7 @@ function AddProperty() {
                 type="number"
                 margin="normal"
                 id="price"
-      //SETTING PRICE TO A FUNCTION
+//SETTING PRICE TO A FUNCTION
                 label={PriceDisplay()}
                 variant="outlined"
                 fullWidth
@@ -701,11 +705,11 @@ function AddProperty() {
                 }
               />
             </Grid>
-    {/* RENTAL FREQUENCY              */}
+{/* RENTAL FREQUENCY              */}
             <Grid item xs={6}>
               <TextField
-    //disables the rental frequence field if sale is selected
-    //disabled prop applied to textfiled greys the field out
+//disables the rental frequence field if sale is selected
+//disabled prop applied to textfiled greys the field out
                 disabled={state.propertyStatusValue === "Sale" ? true : false}
                 margin="normal"
                 id="rentalFrequency"
@@ -935,6 +939,7 @@ function AddProperty() {
             alignItems="center"
           >
             <Grid item>
+{/* Button to handle image upload            */}
               <Button
                 component="label"
                 sx={styling.submitBtn}
@@ -943,19 +948,19 @@ function AddProperty() {
                 color="primary"
               >
                 Upload images (5 max)
-  {/* self closing input tag for img uplaod */}
+{/* self closing input tag for img uplaod */}
+{/* The hidden property will hide the choose file label on the button comment out to toggle */}
                 <input
+                  type="file"
+                  hidden
+                  multiple
+                  accept="image/png, image/gif, image/jpeg"
                   onChange={(e) =>
                     dispatch({
                       type: "catchUploadedPictures",
                       picturesChosen: e.target.files,
                     })
                   }
-                  type="file"
- // hides the choose files box
-                  hidden
-                  multiple
-                  accept="image/png, image/jif, image/jpeg image/svg"
                 />
               </Button>
             </Grid>
@@ -971,7 +976,7 @@ function AddProperty() {
               {SubmitButtonDisplay()}
             </Grid>
           </Grid>
-          {/* FLY TOO FUNCTIONALITY */}
+ {/* FLY TOO FUNCTIONALITY */}
           {/* <Grid
             container
             direction="column"
@@ -994,7 +999,7 @@ function AddProperty() {
             </Button>
             </Grid>
           </Grid> */}
-          {/* TEST BUTTON START */}
+{/* TEST BUTTON START */}
           <Grid
             container
             direction="column"
@@ -1014,8 +1019,7 @@ function AddProperty() {
               </Button>
             </Grid>
           </Grid>
-          {/* TEST BUTTON END */}
-
+{/* TEST BUTTON END */}
           {/* // NOT ABLE TO GET THIS FUNCTIONALITY TO WORK AS YOU SEE LECTURES 71 // */}
           {/* // NOT ABLE TO GET THIS FUNCTIONALITY TO WORK AS YOU SEE LECTURES 71 // */}
           {/* THIS SHOULD RENDER THE IMAGE NAMES ONCE */}

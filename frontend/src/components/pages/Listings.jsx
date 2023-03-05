@@ -127,7 +127,7 @@ function Listings() {
         let response = await axios.get("http://localhost:8000/api/listings/", {
           cancelToken: source.token,
         });
- // console.log("DATA ARRAY:", response.data)
+        console.log("ALL LISTINGS:", response.data)
         setAllListings(response.data);
         setDataIsLoading(false);
       } catch (error) {
@@ -238,9 +238,7 @@ function Listings() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-
               <MyMapComponent />
-
               {/* NOTES ON POLYLINE BELOW */}
               {/* <Polyline positions={polyOne} weight={10} />
               <Polygon
@@ -250,7 +248,7 @@ function Listings() {
                 fillOpacity={0.9}
                 opacity={0}
               /> */}
-              {/* MAP ICON AND POPUP RENDER START */}
+{/* MAP ICON AND POPUP RENDER START */}
               {allListings.map((listing) => {
                 function IconDisplay() {
                   if (listing.listing_type === "House") {
@@ -259,13 +257,16 @@ function Listings() {
                     return apartmentIcon;
                   } else if (listing.listing_type === "Parking Space") {
                     return parkingIcon;
+                  } else if (listing.listing_type === "Office"){
+                    return officeIcon;
                   }
                 }
                 return (
+// MAP Marker Render                 
                   <Marker
                     key={listing.id}
                     icon={IconDisplay()}
-                    position={[listing.latitude, listing.longitude]}
+                    position={[listing.latitude, listing.longitude,]}
                   >
                     <Popup>
                       <Typography varient="h5">{listing.title}</Typography>
@@ -284,9 +285,9 @@ function Listings() {
                   </Marker>
                 );
               })}
-              {/* MAP ICON AND POPUP RENDER END */}
+  {/* MAP ICON AND POPUP RENDER END */}
             </MapContainer>
-            {/* END code from react-leaflet docs */}
+{/* END code from react-leaflet docs */}
           </div>
         </AppBar>
       </Grid>
