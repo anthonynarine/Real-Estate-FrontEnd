@@ -145,7 +145,7 @@ function AgencyDetail() {
             <Grid item xs={8}>
               <img
                 style={{ height: "10rem", width: "15" }}
-                //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. slack://T04T0UTRERE/magic-login/4888690544902-51073be6b17f1a77b5ca38c5dcfc22da92aedb894a272f65133477c0a82823a8
+                //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. 
                 src={
                   state.userProfile.profilePic !== null
                     ? state.userProfile.profilePic
@@ -181,7 +181,9 @@ function AgencyDetail() {
             </Grid>
           </Grid>
         </Paper>
-        {/* // END OF AENCY PROFILE CARD RENDER */}
+ {/* // END OF AENCY PROFILE CARD RENDER */}
+
+ {/* START OF LISTINGS RENDER */}
       </Grid>
         <Grid item direction="row">
           {state.userProfile.sellerListings.map((listing) => {
@@ -193,6 +195,7 @@ function AgencyDetail() {
                       component="img"
                       alt="listing picture"
                       height="140"
+  // CODE TO RENDER IMAGE CURRENTLY NOT WORING.IMAGE PATH IS FROM DJANGO'S MEDIA FOLDER                    
                       image={
                         listing.picture1
                           // ? listing.picture1
@@ -213,7 +216,7 @@ function AgencyDetail() {
             );
           })}
         </Grid>
-
+ {/* END OF LISTINGS RENDER */}
     </Grid>
   );
 }
