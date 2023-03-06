@@ -147,7 +147,7 @@ function AgencyDetail() {
                 style={{ height: "10rem", width: "15" }}
                 //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. 
                 src={
-                  state.userProfile.profilePic !== null
+                  state.userProfile.sellerListings !== null
                     ? state.userProfile.profilePic
                     : defaultProfilePicture
                 }

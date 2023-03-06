@@ -952,9 +952,9 @@ function AddProperty() {
 {/* The hidden property will hide the choose file label on the button comment out to toggle */}
                 <input
                   type="file"
-                  hidden
                   multiple
                   accept="image/png, image/gif, image/jpeg"
+                  hidden
                   onChange={(e) =>
                     dispatch({
                       type: "catchUploadedPictures",
