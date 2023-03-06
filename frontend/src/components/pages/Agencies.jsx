@@ -76,7 +76,6 @@ function Agencies() {
     );
 // to better see this loding animation comment out setDataIsLoading above
   }
-
   return (
     <Grid
       container

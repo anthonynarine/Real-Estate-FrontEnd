@@ -480,8 +480,8 @@ function AddProperty() {
   useEffect(() => {
     if (state.sendRequest) {
       async function AddProperty() {
-        //The from data we are passing will be stored in the variable as show
-        //with the function call FormData() see MDN docs
+//The from data we are passing will be stored in the variable as show
+//with the function call FormData() see MDN docs
         const formData = new FormData();
         formData.append("title", state.titleValue);
         formData.append("description", state.descriptionValue);
@@ -504,9 +504,10 @@ function AddProperty() {
         formData.append("picture5", state.picture5Value);
         formData.append("seller", GlobalState.userId);
         // SENDING THE userId through FormData() returned a string and not integer
-        // to this frild was passed in as a key:value pair BrightnessLow
+        // These state values are appended to formData instead of passed as key/value pairs to handle the 5 images.
+        // see Register for an example of how data is passed in the body of request instead of using formData.
         // formData.append("seller", GlobalState.userID);
-        //since the sellers information is is passed from the parent App.js we need to set
+        //since the sellers information is passed from the parent App.js we need to set
         //useContext + StateContex and GlobalState
         try {
           const response = await axios.post(

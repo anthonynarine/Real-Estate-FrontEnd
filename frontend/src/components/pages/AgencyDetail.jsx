@@ -101,7 +101,7 @@ function AgencyDetail() {
         );
         console.log("TEST userProfile DATA:", state.userProfile);
         console.log("TEST userProfile.sellerlistings DATA:", state.userProfile.sellerListings);
-        console.log("TESTING useParms Hook :", response.data);
+        console.log(response.data);
         dispatch({
           type: "catchUserProfileInfo",
           profileObject: response.data,
@@ -181,7 +181,7 @@ function AgencyDetail() {
             </Grid>
           </Grid>
         </Paper>
- {/* // END OF AENCY PROFILE CARD RENDER */}
+ {/* // END OF PROFILE CARD RENDER */}
 
  {/* START OF LISTINGS RENDER */}
       </Grid>
@@ -195,11 +195,11 @@ function AgencyDetail() {
                       component="img"
                       alt="listing picture"
                       height="140"
-  // CODE TO RENDER IMAGE CURRENTLY NOT WORING.IMAGE PATH IS FROM DJANGO'S MEDIA FOLDER                    
+  // HAD TO ADD `http://localhost:800 prefix FOR SOME REASON DJANGO DID NOT ADD THIS TO THE LISTING MODEL BUT IT ADDED TO THE PROFILE MODEL                   
                       image={
-                        listing.picture1
-                          // ? listing.picture1
-                          // : defaultProfilePicture
+                        `http://localhost:8000${listing.picture1}`  
+                          ? `http://localhost:8000${listing.picture1}`
+                          : defaultProfilePicture
                       }
                     />
                     <CardContent>
