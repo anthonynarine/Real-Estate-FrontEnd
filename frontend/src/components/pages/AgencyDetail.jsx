@@ -27,25 +27,17 @@ import axios from "axios";
 
 //FORM STYLE START\\
 const ADStyling = {
-  welcomePaperStyle: {
+  profilePaper: {
     padding: "20px 20px",
     width: "33rem",
     marginTop: "50px",
     marginBottom: "20px",
     borderRadius: 2,
     // backgroundColor: "#f9f9f9",
-    border: "solid #79B2BE",
+    border: "solid #9B89A4",
   },
-  paperContainer: {
-    padding: "40px 40px",
-    height: "30rem",
-    marginTop: "30px",
-    marginBottom: "30px",
-    backgroundColor: "#ffffff",
-    border: "solid #79B2BE",
-  },
-  listingsContainer: {
-    marginTop: "2rem",
+  listingPaper: {
+    border: "solid #79B2BE  ",
   },
 };
 
@@ -100,7 +92,10 @@ function AgencyDetail() {
           `http://localhost:8000/api/profiles/${params.id}/`
         );
         console.log("TEST userProfile DATA:", state.userProfile);
-        console.log("TEST userProfile.sellerlistings DATA:", state.userProfile.sellerListings);
+        console.log(
+          "TEST userProfile.sellerlistings DATA:",
+          state.userProfile.sellerListings
+        );
         console.log(response.data);
         dispatch({
           type: "catchUserProfileInfo",
@@ -133,9 +128,14 @@ function AgencyDetail() {
 
   return (
     // START OF PROFILE CARD RENDER
-    <Grid container justifyContent="center" sx={{ border: "solid" }}>
-      <Grid item container justifyContent="center">
-        <Paper sx={ADStyling.welcomePaperStyle} elevation={24}>
+    <Grid container justifyContent="center">
+      <Grid
+        item
+        container
+        justifyContent="center"
+        sx={{ marginBottom: "3rem" }}
+      >
+        <Paper sx={ADStyling.profilePaper} elevation={15}>
           <Grid
             container
             spacing={2}
@@ -145,7 +145,7 @@ function AgencyDetail() {
             <Grid item xs={8}>
               <img
                 style={{ height: "10rem", width: "15" }}
-                //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. 
+                //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned.
                 src={
                   state.userProfile.sellerListings !== null
                     ? state.userProfile.profilePic
@@ -181,42 +181,59 @@ function AgencyDetail() {
             </Grid>
           </Grid>
         </Paper>
- {/* // END OF PROFILE CARD RENDER */}
+        {/* // END OF PROFILE CARD RENDER */}
 
- {/* START OF LISTINGS RENDER */}
+        {/* START OF LISTINGS RENDER */}
       </Grid>
-        <Grid item direction="row">
-          {state.userProfile.sellerListings.map((listing) => {
-            return (
-              <Grid key={listing.id} item>
-                <Paper elevation={24}>
-                  <Card sx={{ maxWidth: 350, height: 350 }}>
-                    <CardMedia
-                      component="img"
-                      alt="listing picture"
-                      height="140"
-  // HAD TO ADD `http://localhost:800 prefix FOR SOME REASON DJANGO DID NOT ADD THIS TO THE LISTING MODEL BUT IT ADDED TO THE PROFILE MODEL                   
-                      image={
-                        `http://localhost:8000${listing.picture1}`  
-                          ? `http://localhost:8000${listing.picture1}`
-                          : defaultProfilePicture
-                      }
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        {listing.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {listing.description.substring(0,100)}
-                        </Typography>                    
-                    </CardContent>
-                  </Card>
-                </Paper>
-              </Grid>
-            );
-          })}
-        </Grid>
- {/* END OF LISTINGS RENDER */}
+      <Grid
+        sx={{ marginBottom: "rem" }}
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+        justifyContent="space-evenly"
+      >
+        {state.userProfile.sellerListings.map((listing) => {
+          return (
+            <Grid item key={listing.id}>
+              <Paper sx={ADStyling.listingPaper} elevation={24}>
+                <Card sx={{ maxWidth: 350, height: 350 }}>
+                  <CardMedia
+                    component="img"
+                    alt="listing picture"
+                    height="140"
+                    // HAD TO ADD `http://localhost:800 prefix this is just how Django works with nested serializer fields.
+                    // It since the listing model is nested on the profile model the profile model will have the full path
+                    //while the nested picture(1-5) are nested and therefore will not have the full path. (see post or payload)
+                    image={
+                      `http://localhost:8000${listing.picture1}`
+                        ? `http://localhost:8000${listing.picture1}`
+                        : defaultProfilePicture
+                    }
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {listing.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {listing.description.substring(0, 150)}...
+                    </Typography>
+                  </CardContent>
+{/* ternary operator to handle if listing.property_status === sale we the price just the price  */}
+{/* if that's not the case we want the price and (it will be for rent if not sale) and rental rental_frequency */}
+                  <CardActions>
+                    {listing.propery_status === "Sale"
+                      ? `${listing.listing_type}: $${listing.price.toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} }`
+                      : `${listing.listing_type}: $${listing.price.toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/${listing.rental_frequency}`}
+                  </CardActions>
+                </Card>
+              </Paper>
+            </Grid>
+          );
+        })}
+      </Grid>
+      {/* END OF LISTINGS RENDER */}
     </Grid>
   );
 }

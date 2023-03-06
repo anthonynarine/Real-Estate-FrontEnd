@@ -1,29 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { React, useEffect } from "react";
-import { useImmerReducer } from "use-immer";
 import { Routes, Route } from "react-router-dom";
+import { useImmerReducer } from "use-immer";
+import { React, useEffect } from "react";
 
 //UI components
 import NavBar from "./components/ui/NavBar";
-import "./App.css";
+// import "./App.css";
 
 //pages
-import Home from "./components/pages/Home";
-import Login from "./components/forms/forms/Login"
-import Register from "./components/forms/forms/Register";
-import Profile from "./components/pages/Profile";
 import AddProperty from "./components/forms/forms/AddProperty";
-import Test from "./components/forms/forms/Test";
-import Agencies from "./components/pages/Agencies";
 import AgencyDetail from "./components/pages/AgencyDetail";
+import Register from "./components/forms/forms/Register";
+import Agencies from "./components/pages/Agencies";
 import Listings from "./components/pages/Listings";
+import Login from "./components/forms/forms/Login"
+import Profile from "./components/pages/Profile";
+import Test from "./components/forms/forms/Test";
 import Error from "./components/pages/Error";
+import Home from "./components/pages/Home";
 
 //testing delete when done
 import TestinguseReducer from "./components/testing/userReducerTesting";
 
 // Context
 import DispatchContex from "./components/contex/DispatchContex";
+import ListingDetail from "./components/pages/ListingDetial";
 import StateContex from "./components/contex/StateContex";
 
 
@@ -92,6 +93,7 @@ function App() {
             <Route path="/addproperty" element={<AddProperty />} />
             <Route path="/test" element={<Test />} />
             <Route path="/listings" element={<Listings />} />
+            <Route path="/listings/:id" element={<ListingDetail />} />
             <Route path="/agencies" element={<Agencies />} />
 {/* identifying and rendering a agency based on id.  note the syntax */}
             <Route path="/agencies/:id" element={<AgencyDetail />} />

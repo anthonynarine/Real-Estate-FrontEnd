@@ -1,6 +1,7 @@
 /* eslint-disable default-case */
 import axios from "axios";
 import { useImmerReducer } from "use-immer";
+import { useNavigate } from "react-router-dom";
 import { React, useState, useEffect } from "react";
 
 //shapes
@@ -8,39 +9,20 @@ import { React, useState, useEffect } from "react";
 // import polygonOne from "../shapes/polygon";
 
 //MUI
-import {
-  AppBar,
-  Grid,
-  Typography,
-  Button,
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CircularProgress,
-  IconButton,
-  CardActions
+import {AppBar,Grid,Typography,Button,Card,CardHeader,CardMedia,CardContent,  CircularProgress,IconButton,CardActions
 } from "@mui/material";
 //react leaflet (note Popup and Marker is NOTE part of link from site.)
-import {
-  MapContainer,
-  TileLayer,
-  Popup,
-  Marker,
-  Polyline,
-  Polygon,
-  useMap,
-} from "react-leaflet";
+import {MapContainer,TileLayer,Popup, Marker,Polyline, Polygon,useMap,} from "react-leaflet";
 import { Icon } from "leaflet";
 
 // MUI icons
 import { Room } from "@mui/icons-material";
 
 //Map Icons
-import houseIconPng from "../assets/mapIcons/house.png";
 import apartmentIconPng from "../assets/mapIcons/apartment.png";
-import officeIconPng from "../assets/mapIcons/office.png";
 import parkingIconPng from "../assets/mapIcons/parking.png";
+import officeIconPng from "../assets/mapIcons/office.png";
+import houseIconPng from "../assets/mapIcons/house.png";
 
 // SYTLING FUNCTIONALITY START
 const cardSytles = {
@@ -74,6 +56,9 @@ const cardSytles = {
 
 //MAP ICONS START
 function Listings() {
+
+  const navigate = useNavigate();
+
   const houseIcon = new Icon({
     iconUrl: houseIconPng,
     iconSize: [40, 40],
@@ -102,12 +87,12 @@ function Listings() {
         draft.mapInstance = action.mapData;
         break;
     }
-  }
+  };
 
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
  //START STATE MANAGEMENT WITH IMMERREDUCER END \\
 
- //   HOOK PROVIDING LEAFLET MAP INSTANCE IN ANY DECEDANT OF MAPCONTAINER (SEE LEAFLET DOCS)
+//   HOOK PROVIDING LEAFLET MAP INSTANCE IN ANY DECEDANT OF MAPCONTAINER (SEE LEAFLET DOCS)
 //   dispatch added
   function MyMapComponent() {
     const map = useMap();
@@ -135,7 +120,7 @@ function Listings() {
       }
     };
     getAllListings();
- //CLEAN UP FUNCTION WITH TOKEN CANCEL START
+//CLEAN UP FUNCTION WITH TOKEN CANCEL START
     return () => {
       source.cancel();
     };
@@ -164,14 +149,14 @@ function Listings() {
   return (
     <Grid container sx={cardSytles.container}>
       <Grid item xs={4}>
-        {/* START OF LISTING CARD DISPLAY */}
+{/* START OF LISTING CARD DISPLAY */}
         {allListings.map((listing) => {
           return (
             <Card key={listing.id} sx={cardSytles.card}>
               <CardHeader
                 action={
                   <IconButton
-                    aria-label="settings"
+                    aria-label="settings"                  
                     onClick={() =>
                       state.mapInstance.flyTo(
                         [listing.latitude, listing.longitude],
@@ -182,21 +167,25 @@ function Listings() {
                     <Room />
                   </IconButton>
                 }
-  // DISPLAY CARD TITLE
+// DISPLAY CARD TITLE
                 title={listing.title}
               />
               <CardMedia
-  // DISPLAY CARD IMAGE
+// DISPLAY CARD IMAGE
                 component="img"
                 image={listing.picture1}
                 alt={listing.title}
+// onClick even to navitage to ListingDetail page                  
+                onClick={() =>navigate(`/listings/${listing.id}`)}
+//cursor: "pointer"  this will pair with the above onClick to navigate to ListingDetail page                
+                sx={{ cursor: "pointer" }}
               />
               <CardContent>
 {/* Display Card Body */}
                 <Typography variant="body2">
                   {listing.description.substring(0, 200)}...
                 </Typography>
-{/* START CODE BLOCK FOR COMMOA IN  PRICE AND RENTAL VS SALE LOGIC */}
+{/* START CODE BLOCK FOR COMMOA IN  PRICE AND RENTAL VS SALE Ternary operator LOGIC */}
               </CardContent>
               {listing.property_status === "Sale" ? (
                 <Typography sx={cardSytles.price}>
@@ -271,7 +260,7 @@ function Listings() {
                     <Popup>
                       <Typography varient="h5">{listing.title}</Typography>
                       <img
-                        style={{ height: "10rem", width: "14rem" }}
+                        style={{ height: "10rem", width: "15rem", marginLeft: "1.75rem" }}
                         src={listing.picture1}
                         alt="listing interior"
                       />
