@@ -205,7 +205,7 @@ function Listings() {
               )}
 {/* END CODE BLOCK FOR COMMA IN PRICE AND RENTAL VS SALE LOGIC */}
               <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
+            <IconButton aria-label="add to favorites" onClick={() =>navigate(`/listings/${listing.id}`)}>
               {listing.seller_agency_name}
             </IconButton>
           </CardActions>

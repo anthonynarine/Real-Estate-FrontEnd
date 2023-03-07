@@ -4,19 +4,7 @@
 // the user id
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Grid,
-  Paper,
-  TextField,
-  Typography,
-  Button,
-  CircularProgress,
-  IconButton,
-  Card,
-  CardMedia,
-  CardActions,
-  CardContent,
-} from "@mui/material";
+import {Grid,Paper,TextField,Typography,Button,CircularProgress,IconButton,Card,CardMedia,CardActions,CardContent,} from "@mui/material";
 import defaultProfilePicture from "../assets/defaultProfilePicture.jpg";
 import { Call } from "@mui/icons-material";
 import { React, useEffect, useContext } from "react";
@@ -49,7 +37,7 @@ function AgencyDetail() {
 
   console.log("useParams TEST", useParams());
 
-  //START STATE MANAGEMENT WITH IMMERREDUCER START \\
+//START STATE MANAGEMENT WITH IMMERREDUCER START \\
   const initialState = {
     userProfile: {
       agencyName: "",
@@ -58,14 +46,14 @@ function AgencyDetail() {
       profilePic: "",
       sellerListings: [],
     },
-    //dataIsLoading state will initially be true
-    //  then will become false when we get the data
+//dataIsLoading state will initially be true
+//  then will become false when we get the data
     dataIsLoading: true,
-    // datais loading is use with all get requests as always.
+// datais loading is use with all get requests as always.
   };
 
   function ReducerFunction(draft, action) {
-    // eslint-disable-next-line default-case
+// eslint-disable-next-line default-case
     switch (action.type) {
       case "catchUserProfileInfo":
         draft.userProfile.agencyName = action.profileObject.agency_name;
@@ -80,14 +68,14 @@ function AgencyDetail() {
     }
   }
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
-  //START STATE MANAGEMENT WITH IMMERREDUCER END \\
+//START STATE MANAGEMENT WITH IMMERREDUCER END \\
 
-  // REQUEST TO GET PROFILE INFO//
-  // useEffect will run once when page loads
+// REQUEST TO GET PROFILE INFO//
+// useEffect will run once when page loads
   useEffect(() => {
     async function GetProfileInfo() {
       try {
-        // backticks w/ string inperpolation to grab the user's id from GlobalState
+// backticks w/ string inperpolation to grab the user's id from GlobalState
         const response = await axios.get(
           `http://localhost:8000/api/profiles/${params.id}/`
         );
@@ -102,7 +90,7 @@ function AgencyDetail() {
           profileObject: response.data,
           //value being caught
         });
-        // dispatch used switching dataIsLoading on and off
+// dispatch used switching dataIsLoading on and off
         dispatch({ type: "loadingDone" });
       } catch (error) {
         console.log(error.response);
@@ -111,8 +99,8 @@ function AgencyDetail() {
     GetProfileInfo();
   }, []);
 
-  // Loading animation (very reusable)
-  //Used with async/ await get requests.
+// Loading animation (very reusable)
+//Used with async/ await get requests.
   if (state.dataIsLoading === true) {
     return (
       <Grid
@@ -127,7 +115,7 @@ function AgencyDetail() {
   }
 
   return (
-    // START OF PROFILE CARD RENDER
+// START OF PROFILE CARD RENDER
     <Grid container justifyContent="center">
       <Grid
         item
@@ -145,7 +133,7 @@ function AgencyDetail() {
             <Grid item xs={8}>
               <img
                 style={{ height: "10rem", width: "15" }}
-                //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned.
+//ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned.
                 src={
                   state.userProfile.sellerListings !== null
                     ? state.userProfile.profilePic
@@ -181,9 +169,9 @@ function AgencyDetail() {
             </Grid>
           </Grid>
         </Paper>
-        {/* // END OF PROFILE CARD RENDER */}
+{/* // END OF PROFILE CARD RENDER */}
 
-        {/* START OF LISTINGS RENDER */}
+{/* START OF LISTINGS RENDER */}
       </Grid>
       <Grid
         sx={{ marginBottom: "rem" }}
@@ -201,9 +189,9 @@ function AgencyDetail() {
                     component="img"
                     alt="listing picture"
                     height="140"
-                    // HAD TO ADD `http://localhost:800 prefix this is just how Django works with nested serializer fields.
-                    // It since the listing model is nested on the profile model the profile model will have the full path
-                    //while the nested picture(1-5) are nested and therefore will not have the full path. (see post or payload)
+// HAD TO ADD `http://localhost:800 prefix this is just how Django works with nested serializer fields.
+// It since the listing model is nested on the profile model the profile model will have the full path
+//while the nested picture(1-5) are nested and therefore will not have the full path. (see post or payload)
                     image={
                       `http://localhost:8000${listing.picture1}`
                         ? `http://localhost:8000${listing.picture1}`
@@ -216,16 +204,19 @@ function AgencyDetail() {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {listing.description.substring(0, 150)}...
+                      {console.log(listing.propery_status)}
                     </Typography>
                   </CardContent>
 {/* ternary operator to handle if listing.property_status === sale we the price just the price  */}
 {/* if that's not the case we want the price and (it will be for rent if not sale) and rental rental_frequency */}
                   <CardActions>
-                    {listing.propery_status === "Sale"
-                      ? `${listing.listing_type}: $${listing.price.toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} }`
-                      : `${listing.listing_type}: $${listing.price.toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/${listing.rental_frequency}`}
+                    {listing.property_status === "Sale"
+                      ? `${listing.listing_type}: $${listing.price}`
+                      : `${listing.listing_type}: $${listing.price
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/${
+                          listing.rental_frequency
+                        }`}
                   </CardActions>
                 </Card>
               </Paper>
@@ -233,7 +224,7 @@ function AgencyDetail() {
           );
         })}
       </Grid>
-      {/* END OF LISTINGS RENDER */}
+{/* END OF LISTINGS RENDER */}
     </Grid>
   );
 }
