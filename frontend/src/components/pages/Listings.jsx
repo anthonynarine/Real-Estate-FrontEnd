@@ -267,7 +267,7 @@ function Listings() {
                       <Typography varient="body1">
                         {listing.description.substring(0, 150)}...
                       </Typography>
-                      <Button variant="contained" fullWidth>
+                      <Button onClick={()=>navigate(`/listings/${listing.id}`)} variant="contained" fullWidth >
                         Details{" "}
                       </Button>
                     </Popup>

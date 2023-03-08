@@ -5,7 +5,7 @@ import { React, useEffect } from "react";
 
 //UI components
 import NavBar from "./components/ui/NavBar";
-// import "./App.css";
+import "./App.css";
 
 //pages
 import AddProperty from "./components/forms/forms/AddProperty";
@@ -91,7 +91,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/addproperty" element={<AddProperty />} />
-            <Route path="/test" element={<Test />} />
+            {/* <Route path="/test" element={<Test />} /> */}
             <Route path="/listings" element={<Listings />} />
             <Route path="/listings/:id" element={<ListingDetail />} />
             <Route path="/agencies" element={<Agencies />} />
