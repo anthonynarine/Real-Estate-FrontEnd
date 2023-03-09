@@ -24,20 +24,22 @@ import {
 } from "@mui/icons-material";
 import { React, useEffect, useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Call, Room } from "@mui/icons-material";
 import StateContex from "../contex/StateContex";
 import { useImmerReducer } from "use-immer";
 import axios from "axios";
 
 //FORM STYLE START\\
 const LDStyling = {
-  profilePaper: {
-    padding: "20px 20px",
-    width: "33rem",
-    marginTop: "50px",
-    marginBottom: "20px",
+  mainPaper: {
+    padding: "5px 5px",
+    paddingTop: "5px",
+    marginTop: "2rem",
+    marginBottom: "5rem",
+
     borderRadius: 2,
     // backgroundColor: "#f9f9f9",
-    border: "solid #9B89A4",
+    // border: "solid #9B89A4",
   },
   mainContainer: {
     marginTop: "1rem",
@@ -160,7 +162,7 @@ function ListingDetail() {
       return setCurrentPicture(currentPicture - 1);
     }
   }
-
+  
   // Loading animation (very reusable)
   //Used with async/ await get requests.
   if (state.dataIsLoading === true) {
@@ -174,90 +176,130 @@ function ListingDetail() {
         <CircularProgress />
       </Grid>
     );
-  }
+  };
+
+// This code is to display the date without the suffix from the date as sent from the be (2023-03-05)
+  const date =new Date(state.listingInfo.date_posted)
+  const formttedDate = `Posted: ${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+
 
   return (
+    <Paper sx={LDStyling.mainPaper} >
     <Grid container sx={LDStyling.mainContainer}>
-      <Grid item>
-        {/* see notes on MUI BreadCrumb component below         */}
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link
-            sx={{ cursor: "pointer" }}
-            underline="hover"
-            color="inherit"
-            onClick={() => navigate("/listings")}
+
+        <Grid item>
+          {/* see notes on MUI BreadCrumb component below         */}
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link
+              sx={{ cursor: "pointer",  }}
+              underline="hover"
+              color="inherit"
+              onClick={() => navigate("/listings")}
+            >
+              <Typography variant="subtitle1" sx={{fontWeight: "bold", color: "#00BCBC"}} >Listings</Typography>
+            </Link>
+            <Typography color="text.primary">
+              {state.listingInfo.title}
+            </Typography>
+          </Breadcrumbs>
+        </Grid>
+        {/* // image slider render */}
+        {/* Ternary operator to render image slider only if there are uploaded images.       */}
+        {listingPictures.length > 0 ? (
+          <Grid
+            container
+            direction="row-reverse"
+            justifyContent="center"
+            sx={{ marginRight: "1rem" }}
+            alignItems="stretch"
           >
-            Listings
-          </Link>
-          <Typography color="text.primary">
-            {state.listingInfo.title}
-          </Typography>
-        </Breadcrumbs>
-      </Grid>
-      {/* // image slider render */}
-      {/* Ternary operator to render image slider only if there are uploaded images.       */}
-      {listingPictures.length > 0 ? (
-        <Grid
-          container
-          direction="row-reverse"
-          justifyContent="space-between"
-          sx={{ border: "solid", marginRight: "2rem" }}
-          alignItems="stretch"
-        >
-          <Grid item container sx={LDStyling.sliderContainer} xs={8}>
-            <Grid item container justifyContent="center">
-              {listingPictures.map((picture, index) => {
-                return (
-                  // Render this on a card on refactor
-                  <Grid item key={index}>
-                    {index === currentPicture ? (
-                      <img
-                        src={picture}
-                        alt="listing img"
-                        style={{
-                          width: "45rem",
-                          height: "35rem",
-                          borderRadius: "2rem",
-                        }}
-                      />
-                    ) : (
-                      ""
-                    )}
-                  </Grid>
-                );
-              })}
+            <Grid item container sx={LDStyling.sliderContainer} xs={8}>
+              <Grid item container justifyContent="center">
+                {listingPictures.map((picture, index) => {
+                  return (
+                    // Render this on a card on refactor
+                    <Grid item key={index}>
+                      {index === currentPicture ? (
+                        <img
+                          src={picture}
+                          alt="listing img"
+                          style={{
+                            width: "45rem",
+                            height: "35rem",
+                            // borderRadius: "2rem",
+                            paddingBottom: "none",
+                          }}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </Grid>
+                  );
+                })}
+              </Grid>
+              <ArrowCircleLeftOutlined
+                onClick={PreviousPicture}
+                sx={LDStyling.leftArrow}
+              />
+              <ArrowCircleRightOutlined
+                onClick={NextPicture}
+                sx={LDStyling.rightArrow}
+              />
+              {/* Testing index changes for next and previous functionality */}
+              {/* {currentPicture} */}
             </Grid>
-            <ArrowCircleLeftOutlined
-              onClick={PreviousPicture}
-              sx={LDStyling.leftArrow}
-            />
-            <ArrowCircleRightOutlined
-              onClick={NextPicture}
-              sx={LDStyling.rightArrow}
-            />
-            {/* Testing index changes for next and previous functionality */}
-            {/* {currentPicture} */}
           </Grid>
+        ) : (
+          ""
+        )}
+        <Grid item container>
           <Grid
             item
-            alignItems="top"
-            sx={{ marginTop: "1rem", border: "solid" }}
+            container
+            xs={7}
+            direction="column"
           >
-            <Grid item>
-              <Typography>{state.listingInfo.title}</Typography>
+            <Grid item sx={{ marginTop: "1.5rem" }}>
+              <Typography variant="h5">{state.listingInfo.title}</Typography>
             </Grid>
             <Grid item>
-              <Typography>{state.listingInfo.area}</Typography>
+              <Room  sx={{color:"#00BCBC"}}/>{" "}
+              <Typography variant="h6">
+                {state.listingInfo.area}, {state.listingInfo.state}
+              </Typography>
             </Grid>
             <Grid item>
-              <Typography>{state.listingInfo.date_posted}</Typography>
+              <Typography variant="subtitle1">
+                {formttedDate}
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              container
+              xs={5}
+              justifyContent="center"
+              sx={{ marginLeft: "4rem" }}
+            >
+{/* Ternary operator to render a listing for sale or a listing for
+ rent based on the Sale filed. */}
+              <Typography variant="h6" sx={{fontWeight: "bold", color: "#00A86B", marginLeft: "2.5rem"}} >
+                {state.listingInfo.listing_type} |{" "}
+                {state.listingInfo.property_status === "Sale"
+                  ? `$${state.listingInfo.price
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                  : `${state.listingInfo.price
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}/${
+                      state.listingInfo.rental_frequency
+                    }`}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
-      ) : (
-        ""
-      )}
+      {/* </Paper> */}
     </Grid>
+    </Paper>
   );
 }
 

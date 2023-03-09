@@ -41,7 +41,7 @@ const cardSytles = {
   },
   price: {
     position: "absolute",
-    backgroundColor: "green",
+    backgroundColor: "#00A86B",
     zIndex: "1000",
     color: "white",
     top: "100px",
@@ -120,11 +120,11 @@ function Listings() {
       }
     };
     getAllListings();
-//CLEAN UP FUNCTION WITH TOKEN CANCEL START
+//CLEAN UP FUNCTION START
     return () => {
       source.cancel();
     };
-//CLEAN UP FUNCTION WITH TOKEN CANCEL END
+//CLEAN UP FUNCTION END
   }, []);
 
   if (dataIsLoading === false) {

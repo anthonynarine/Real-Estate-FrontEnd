@@ -107,6 +107,7 @@ function Agencies() {
                     height="140"
 // if agency.profile_picture exist we want to return it if that's not the case we return defaultProfilePicture
                     image={
+                      
                       agency.profile_picture
                         ? agency.profile_picture
                         : defaultProfilePicture
