@@ -1,5 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {Grid,Paper,TextField,Typography,Button,CircularProgress,} from "@mui/material";
+import {
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import defaultProfilePicture from "../assets/defaultProfilePicture.jpg";
 import { React, useEffect, useContext } from "react";
 import StateContex from "../contex/StateContex";
@@ -8,7 +15,6 @@ import ProfileUpdate from "./ProfileUpdate";
 import { useImmerReducer } from "use-immer";
 import { Container } from "@mui/system";
 import axios from "axios";
-
 
 //FORM STYLE START\\
 const pStyling = {
@@ -19,7 +25,7 @@ const pStyling = {
     marginBottom: "20px",
     borderRadius: 2,
     // backgroundColor: "#f9f9f9",
-    border: "solid #79B2BE",
+    border: "solid  #8E3179",
   },
   paperContainer: {
     padding: "40px 40px",
@@ -27,7 +33,7 @@ const pStyling = {
     marginTop: "30px",
     marginBottom: "30px",
     backgroundColor: "#ffffff",
-    border: "solid #79B2BE",
+    border: "solid   #8E3179",
   },
   paperStyle: {
     padding: "20px 20px",
@@ -35,10 +41,10 @@ const pStyling = {
     marginTop: "15px",
     borderRadius: 5,
     backgroundColor: "#FDFDFD",
-    border: "solid #79B2BE",
+    border: "solid #8E3179",
   },
   btn: {
-    backgroundColor: "#79B2BE",
+    backgroundColor: "#8E3179",
     marginTop: "1.75rem",
     color: "white",
     fontSize: "1rem",
@@ -49,7 +55,6 @@ const pStyling = {
   },
 };
 //FORM STYLE END\\
-
 
 //MAIN FUNCTION \\
 function Profile() {
@@ -89,10 +94,10 @@ function Profile() {
     }
   }
   const [state, dispatch] = useImmerReducer(ReducerFunction, initialState);
-//START STATE MANAGEMENT WITH IMMERREDUCER END \\
+  //START STATE MANAGEMENT WITH IMMERREDUCER END \\
 
-// REQUEST TO GET PROFILE INFO//
-// useEffect will run once when page loads
+  // REQUEST TO GET PROFILE INFO//
+  // useEffect will run once when page loads
   useEffect(() => {
     async function GetProfileInfo() {
       try {
@@ -104,9 +109,9 @@ function Profile() {
         dispatch({
           type: "catchUserProfileInfo",
           profileObject: response.data,
-  //value being caught
+          //value being caught
         });
-  // dispatch used switching dataIsLoading on and off
+        // dispatch used switching dataIsLoading on and off
         dispatch({ type: "loadingDone" });
       } catch (error) {
         console.log(error.response);
@@ -174,8 +179,19 @@ function Profile() {
         <Grid item container rowSpacing={1}>
           <Grid item xs={6}>
             <img
-              style={{ height: "10rem", width: "15" }}
-  //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. slack://T04T0UTRERE/magic-login/4888690544902-51073be6b17f1a77b5ca38c5dcfc22da92aedb894a272f65133477c0a82823a8
+              style={{
+  //This color is called Rebecca purple https://www.color-name.com/trending-purple-colors
+                border: "solid #663399",
+                // borderWidth: "3px",
+                // borderTopLeftRadius: "5px",
+                // borderTopRightRadius: "50%",
+                // borderBottomRightRadius: "5px",
+                borderBottomLefttRadius: "50%",
+                height: "200px",
+                width: "200px",
+                borderRadius: "50%",
+              }}
+              //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. slack://T04T0UTRERE/magic-login/4888690544902-51073be6b17f1a77b5ca38c5dcfc22da92aedb894a272f65133477c0a82823a8
               src={
                 state.userProfile.profilePic !== null
                   ? state.userProfile.profilePic
@@ -186,7 +202,7 @@ function Profile() {
           </Grid>
           <Grid item xs={6}>
             <Typography variant="h5">
-              Aloha {GlobalState.userUsername} you currently have{" "}
+              Welcome {GlobalState.userUsername} you currently have{" "}
               {PropertiesDisplay()}
             </Typography>
           </Grid>
@@ -195,7 +211,7 @@ function Profile() {
     }
   }
 
-// Loading animation (very reusable)
+  // Loading animation (very reusable)
   if (state.dataIsLoading === true) {
     return (
       <Grid

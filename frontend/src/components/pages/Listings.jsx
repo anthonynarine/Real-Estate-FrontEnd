@@ -24,6 +24,8 @@ import parkingIconPng from "../assets/mapIcons/parking.png";
 import officeIconPng from "../assets/mapIcons/office.png";
 import houseIconPng from "../assets/mapIcons/house.png";
 
+
+
 // SYTLING FUNCTIONALITY START
 const cardSytles = {
   card: {

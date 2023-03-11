@@ -21,16 +21,17 @@ const pStyling = {
     marginTop: "15px",
     borderRadius: 2,
     backgroundColor: "#FDFDFD",
-    border: "solid #79B2BE",
+    border: "solid #8E3179",
   },
   btn: {
-    backgroundColor: "#79B2BE",
+    backgroundColor: "#8E3179",
     marginTop: "1.75rem",
     color: "white",
     fontSize: "1rem",
     width: "20rem",
     "&:hover": {
-      bacgroundColor: "purple",
+      bacgroundColor: "#8E3179",
+      color: "#9A8DA7"
     },
   },
 };
@@ -93,8 +94,8 @@ function ProfileUpdate({ userProfile }) {
     if (state.sendRequest) {
       async function UpdateProfile() {
         const formData = new FormData();
-// if the user profile info is updated but the the profile pic a 400 error will come up
-// the conditional below eliminates this error. 
+        // if the user profile info is updated but the the profile pic a 400 error will come up
+        // the conditional below eliminates this error.
         if (
           typeof state.profilePictureValue === "string" ||
           state.profilePictureValue === null
@@ -153,7 +154,17 @@ function ProfileUpdate({ userProfile }) {
         <Grid item container rowSpacing={1}>
           <Grid item sx={6}>
             <img
-              style={{ height: "5rem", width: "5rem" }}
+              style={{
+      //This color is called Rebecca purple https://www.color-name.com/trending-purple-colors
+                border: "solid #663399",
+                // borderTopLeftRadius: "1px",
+                borderTopRightRadius: "50%",
+                // borderBottomRightRadius: "5px",
+                // borderBottomLefttRadius: "50%",
+                height: "5rem",
+                width: "5rem",
+                borderRadius: "50%",
+              }}
               alt="small profile img"
               src={userProfile.profilePic}
             />
@@ -252,7 +263,7 @@ function ProfileUpdate({ userProfile }) {
                   color="success"
                 >
                   Profile Picture
-    {/* self closing input tag for img uplaod */}
+                  {/* self closing input tag for img uplaod */}
                   <input
                     onChange={(e) =>
                       dispatch({
@@ -261,7 +272,7 @@ function ProfileUpdate({ userProfile }) {
                       })
                     }
                     type="file"
-    // hides the choose files box \\
+                    // hides the choose files box \\
                     hidden
                     multiple
                     accept="image/png, image/jif, image/jpeg image/svg"
