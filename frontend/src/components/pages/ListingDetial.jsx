@@ -1,31 +1,23 @@
 import {
   Grid,
   Paper,
-  TextField,
   Typography,
   Button,
   CircularProgress,
-  IconButton,
-  Card,
-  CardMedia,
-  CardActions,
-  CardContent,
   Breadcrumbs,
   Link,
-  Container,
-  // Icon,
+  Dialog,
 } from "@mui/material";
-import defaultProfilePicture from "../assets/defaultProfilePicture.jpg";
-// REACT LEAFLET \\
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+
 import {
   ArrowCircleLeftOutlined,
   ArrowCircleRightOutlined,
   CheckBox,
 } from "@mui/icons-material";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { React, useEffect, useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Call, Room } from "@mui/icons-material";
+import { Room } from "@mui/icons-material";
 import StateContex from "../contex/StateContex";
 import { useImmerReducer } from "use-immer";
 import axios from "axios";
@@ -138,9 +130,6 @@ const LDStyling = {
     },
   },
 };
-
-
-
 
 function ListingDetail() {
   const navigate = useNavigate();
@@ -270,6 +259,43 @@ function ListingDetail() {
     }
   }
 
+
+  // This code is to display the date without the suffix from the date as sent from the be (2023-03-05)
+  const date = new Date(state.listingInfo.date_posted);
+  const formttedDate = `Posted: ${
+    date.getMonth() + 1
+  }/${date.getDate()}/${date.getFullYear()}`;
+
+
+  //form update state and handlers //
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // Async/ Await delete request using axios start\\
+  async function handleDelete() {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this listing?"
+    );
+    if (confirmDelete) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/api/listings/${params.id}/delete/`
+        );
+        console.log(response.data);
+        navigate("/listings");
+      } catch (error) {
+        console.log(error.response.data);
+      }
+    }
+  }
+  // Async/ Await delete request using axios end\\
+
   // Loading animation (very reusable)
   //Used with async/ await get requests.
   if (state.dataIsLoading === true) {
@@ -285,11 +311,9 @@ function ListingDetail() {
     );
   }
 
-  // This code is to display the date without the suffix from the date as sent from the be (2023-03-05)
-  const date = new Date(state.listingInfo.date_posted);
-  const formttedDate = `Posted: ${
-    date.getMonth() + 1
-  }/${date.getDate()}/${date.getFullYear()}`;
+
+
+  // Main return
   return (
     <Grid container justifyContent="center">
       <Paper sx={LDStyling.mainPaper} elevation={24}>
@@ -406,7 +430,7 @@ function ListingDetail() {
               <Grid
                 item
                 direction="column"
-                justifyContent="flex-end"
+                justifyContent="space-evenly"
                 container
                 xs={5}
                 // sx={{border: "solid"}}
@@ -442,14 +466,25 @@ function ListingDetail() {
                 <Typography variant="subtitle1">
                   Contact {state.sellerProfileInfo.phone_number}
                 </Typography>
-                <Grid item container justifyContent="space-" xs={4}>
-                  <Button varient="contained" sx={LDStyling.updateBtn}>
-                    update
-                  </Button>
-                  <Button varient="contained" sx={LDStyling.deleteBtn}>
-                    delete
-                  </Button>
-                </Grid>
+                {GlobalState.userId == state.listingInfo.seller ? (
+                  <Grid item container justifyContent="space-" xs={4}>
+                    <Button onClick={handleClickOpen} varient="contained" sx={LDStyling.updateBtn}>
+                      update
+                    </Button>
+                    <Button
+                      onClick={handleDelete}
+                      varient="contained"
+                      sx={LDStyling.deleteBtn}
+                    >
+                      delete
+                    </Button>
+                    <Dialog open={open} onClose={handleClose}>
+                      THIS IS THE DIALOG BOX
+                    </Dialog>
+                  </Grid>
+                ) : (
+                  ""
+                )}
               </Grid>
             </Grid>
           </Paper>
@@ -544,7 +579,6 @@ function ListingDetail() {
               </Grid>
             </Grid>
           </Paper>
-
           {/* PROFILE CARD */}
           {/* <Grid container justifyContent="center">
             <Paper sx={LDStyling.profileCard}>
