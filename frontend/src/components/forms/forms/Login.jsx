@@ -46,6 +46,7 @@ function Login() {
     color: "white",
     width: "15rem",
     fontSize: "1rem",
+    martinTop: "16px",
     marginLeft: "5rem",
     "&:hover": {
       bacgroundColor: "black",
@@ -156,6 +157,7 @@ function Login() {
           );
           console.log(response);
           //these cases must be added to our Reducer function in app.js in order to be used here
+          //once GlobalDispatch is called the user will be signed in
           GlobalDispatch({
             type: "userSignsIn",
             usernameInfo: response.data.username,

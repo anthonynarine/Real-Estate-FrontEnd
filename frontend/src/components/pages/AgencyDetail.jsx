@@ -7,7 +7,7 @@
 import {Grid,Paper,TextField,Typography,Button,CircularProgress,IconButton,Card,CardMedia,CardActions,CardContent,} from "@mui/material";
 import defaultProfilePicture from "../assets/defaultProfilePicture.jpg";
 import { useNavigate, useParams } from "react-router-dom";
-import { Call, Room } from "@mui/icons-material";
+import { BorderBottom, Call, Room } from "@mui/icons-material";
 import { React, useEffect, useContext } from "react";
 import StateContex from "../contex/StateContex";
 import { useImmerReducer } from "use-immer";
@@ -22,10 +22,11 @@ const ADStyling = {
     marginBottom: "20px",
     borderRadius: 2,
     // backgroundColor: "#f9f9f9",
-    border: "solid #9B89A4",
+    border: "solid #367588",
   },
   listingPaper: {
-    border: "solid #79B2BE  ",
+    // border: "solid #367588",
+    borderRadius:"20%"
   },
 };
 

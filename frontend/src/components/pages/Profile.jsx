@@ -25,7 +25,7 @@ const pStyling = {
     marginBottom: "20px",
     borderRadius: 2,
     // backgroundColor: "#f9f9f9",
-    border: "solid  #8E3179",
+    border: "solid  #6C3082",
   },
   paperContainer: {
     padding: "40px 40px",
@@ -33,7 +33,7 @@ const pStyling = {
     marginTop: "30px",
     marginBottom: "30px",
     backgroundColor: "#ffffff",
-    border: "solid   #8E3179",
+    border: "solid   #6C3082",
   },
   paperStyle: {
     padding: "20px 20px",
@@ -41,10 +41,10 @@ const pStyling = {
     marginTop: "15px",
     borderRadius: 5,
     backgroundColor: "#FDFDFD",
-    border: "solid #8E3179",
+    border: "solid #6C3082",
   },
   btn: {
-    backgroundColor: "#8E3179",
+    backgroundColor: "#6C3082",
     marginTop: "1.75rem",
     color: "white",
     fontSize: "1rem",
@@ -184,12 +184,12 @@ function Profile() {
                 border: "solid #663399",
                 // borderWidth: "3px",
                 // borderTopLeftRadius: "5px",
-                // borderTopRightRadius: "50%",
+                // borderTopRightRadius: "5%",
                 // borderBottomRightRadius: "5px",
-                borderBottomLefttRadius: "50%",
+                borderBottomLefttRadius: "20%",
                 height: "200px",
                 width: "200px",
-                borderRadius: "50%",
+                // borderRadius: "50%",
               }}
               //ternary condition to check if a user has uploaded a pic if not then the default pic will be assigned. slack://T04T0UTRERE/magic-login/4888690544902-51073be6b17f1a77b5ca38c5dcfc22da92aedb894a272f65133477c0a82823a8
               src={

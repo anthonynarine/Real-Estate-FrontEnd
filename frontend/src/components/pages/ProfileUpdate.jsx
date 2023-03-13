@@ -21,10 +21,10 @@ const pStyling = {
     marginTop: "15px",
     borderRadius: 2,
     backgroundColor: "#FDFDFD",
-    border: "solid #8E3179",
+    border: "solid #6C3082",
   },
   btn: {
-    backgroundColor: "#8E3179",
+    backgroundColor: "#6C3082",
     marginTop: "1.75rem",
     color: "white",
     fontSize: "1rem",
@@ -156,11 +156,11 @@ function ProfileUpdate({ userProfile }) {
             <img
               style={{
       //This color is called Rebecca purple https://www.color-name.com/trending-purple-colors
-                border: "solid #663399",
+                border: "solid #6C3082",
                 // borderTopLeftRadius: "1px",
-                borderTopRightRadius: "50%",
+                borderTopRightRadius: "10%",
                 // borderBottomRightRadius: "5px",
-                // borderBottomLefttRadius: "50%",
+                borderBottomLefttRadius: "20%",
                 height: "5rem",
                 width: "5rem",
                 borderRadius: "50%",

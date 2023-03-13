@@ -212,9 +212,6 @@ function AddProperty() {
       case "catchTitleChange":
         draft.titleValue = action.titleChosen;
         break;
-// case "catchTypeOfListingChange":
-      //   draft.typeOfListingValue = action.typeOfListingChosen;
-      //   break;
       case "catchListingTypeChange":
         draft.listingTypeValue = action.listingTypeChosen;
         break;
@@ -303,6 +300,27 @@ function AddProperty() {
     return null;
   }
 
+    //DRAGABLE MARKER FUNCTIONALITY\\
+    const markerRef = useRef(null);
+    const eventHandlers = useMemo(
+      () => ({
+        dragend() {
+          const marker = markerRef.current;
+          console.log(marker.getLatLng());
+          dispatch({
+            type: "catchLatitudeChange",
+            latitudeChosen: marker.getLatLng().lat,
+          });
+          dispatch({
+            type: "catchLongitudeChange",
+            longitudeChosen: marker.getLatLng().lng,
+          });
+        },
+      }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      []
+    );
+
   // USE EFFECT TO CHANGE THE MAP VIEW DEPENDING ON CHOSEN BOROUGH
   useEffect(() => {
     if (state.areaValue === "Queens") {
@@ -345,26 +363,7 @@ function AddProperty() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.areaValue]);
 
-  //DRAGABLE MARKER FUNCTIONALITY\\
-  const markerRef = useRef(null);
-  const eventHandlers = useMemo(
-    () => ({
-      dragend() {
-        const marker = markerRef.current;
-        console.log(marker.getLatLng());
-        dispatch({
-          type: "catchLatitudeChange",
-          latitudeChosen: marker.getLatLng().lat,
-        });
-        dispatch({
-          type: "catchLongitudeChange",
-          longitudeChosen: marker.getLatLng().lng,
-        });
-      },
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+
   // useEffect(() => {
   //   console.log(state.latitudeValue, state.longitudeValue);
   // }, [state.latitudeValue, state.longitudeValue]);
@@ -377,8 +376,10 @@ function AddProperty() {
       dispatch({
         type: "catchPicture1change",
         picture1Chosen: state.uploadedPictures[0],
+      
       });
     }
+    console.log("pic1",state.uploadedPictures[0])
   }, [state.uploadedPictures[0]]);
 
   useEffect(() => {
@@ -417,6 +418,14 @@ function AddProperty() {
     }
   }, [state.uploadedPictures[4]]);
   //Image upload set of useEffect end//
+
+    //FORM SUBMIT HANDLE FUNCTIONALITY START\\
+    function FormSubmitHandler(event) {
+      event.preventDefault();
+      console.log("The form has been submitted");
+      dispatch({ type: "changeSendRequest" });
+      //onSubmit sendRequst changes to the opposite of what it courrently is
+    }
 
   // Function will display price per period seleced called as props in Price Texfield //
   function PriceDisplay() {
@@ -468,13 +477,7 @@ function AddProperty() {
     GetProfileInfo();
   }, []);
 
-  //FORM SUBMIT HANDLE FUNCTIONALITY START\\
-  function FormSubmitHandler(event) {
-    event.preventDefault();
-    console.log("The form has been submitted");
-    dispatch({ type: "changeSendRequest" });
-    //onSubmit sendRequst changes to the opposite of what it courrently is
-  }
+
 
   //START OF POST REQUEST TO ADD A LISTING \\
   useEffect(() => {
@@ -564,7 +567,7 @@ function AddProperty() {
           onClick={() => navigate("/profile")}
         >
           <Typography variant="subtitle1">
-            Complete your profile to add your listing
+            Complete your profile to add a listing
           </Typography>
         </Button>
       );
@@ -808,6 +811,7 @@ function AddProperty() {
                         dispatch({
                           type: "catchFurnishedChange",
                           furnishedChosen: e.target.checked,
+  //for checkbox we target checked not value
                         })
                       }
                     />
@@ -871,7 +875,7 @@ function AddProperty() {
               </FormGroup>
             </Grid>
           </Grid>
-  {/* CHECK BOX FUNCTIONALITY START             */}
+  {/* CHECK BOX FUNCTIONALITY End             */}
   {/* AREA SELECTION CONTAINER START */}
   {/* {zipCodeDisplay polygon functionality to be a future addition} */}
           <Grid
@@ -916,12 +920,14 @@ function AddProperty() {
                 center={[40.65311, -73.944022]}
                 zoom={14}
                 scrollWheelZoom={true}
+                style={{height:"50vh"}}
               >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <MyMapComponent />
+
    {/* {zipCodeDisplay polygon functionality to be a future addition} */}
                 <Marker
                   draggable
@@ -954,7 +960,7 @@ function AddProperty() {
                 <input
                   type="file"
                   multiple
-                  accept="image/png, image/gif, image/jpeg"
+                  accept="image/png, image/gif, image/jpeg, image/svg" 
                   hidden
                   onChange={(e) =>
                     dispatch({
@@ -1044,3 +1050,18 @@ function AddProperty() {
 }
 
 export default AddProperty;
+
+
+
+// Django
+// Add media file/set media locations to settings.py
+// Add media locations to urls.py
+// Create ImageField on model
+// Add parsers to Viewset
+// Add ImageField to Serializer
+
+// React
+// Receive state data from form
+// Convert data into FormData
+// Create an Axios call with correct headers
+// Receive any errors to display on form

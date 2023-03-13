@@ -1,3 +1,5 @@
+import ListingUpdate from "./ListingUpdate";
+
 import {
   Grid,
   Paper,
@@ -35,10 +37,10 @@ const LDStyling = {
     paddingTop: "5px",
     marginTop: "2rem",
     marginBottom: "25rem",
-    width: "90%",
+    width: "80%",
     borderRadius: 2,
     backgroundColor: "#f9f9f9",
-    border: "solid #9B89A4",
+    border: "solid #6C3082",
   },
   mainContainer: {
     marginTop: "1rem",
@@ -86,17 +88,16 @@ const LDStyling = {
     border: "solid #708090",
   },
   mapGrid: {
-    marginLeft: "30px",
-    width: "60rem",
+    marginLeft: "20px",
+    width: "65rem",
     paddingBottom: "20px",
     martinTop: "25px",
     // border: "solid"
   },
   mapPaper: {
-    border: "solid #AAD3DF",
+    border: "solid #6C3082",
     width: "100%",
-
-    marginRight: "10%",
+    marginRigh: "",
     marginBottom: "10%",
     padding: "9px",
     paddingTop: "33px",
@@ -104,7 +105,7 @@ const LDStyling = {
     backgroundColor: "#AAD3DF",
   },
   updateBtn: {
-    backgroundColor: "#FCC200",
+    backgroundColor: "#8A2232",
     color: "black",
     width: "6rem",
     fontSize: "13px",
@@ -113,20 +114,20 @@ const LDStyling = {
     marginRight: ".5rem",
     borderRadius: "8px",
     "&:hover": {
-      backgroundColor: "#FF7722",
+      backgroundColor: "#1B7931",
       color: "white",
     },
   },
   deleteBtn: {
     backgroundColor: "#8A2232",
-    color: "white",
+    color: "black",
     width: "6rem",
     fontSize: "13px",
     marginTop: "1rem",
     borderRadius: "8px",
     "&:hover": {
-      backgroundColor: "#FCC200",
-      color: "black",
+      backgroundColor: "#1B7931",
+      color: "white",
     },
   },
 };
@@ -259,13 +260,11 @@ function ListingDetail() {
     }
   }
 
-
   // This code is to display the date without the suffix from the date as sent from the be (2023-03-05)
   const date = new Date(state.listingInfo.date_posted);
   const formttedDate = `Posted: ${
     date.getMonth() + 1
   }/${date.getDate()}/${date.getFullYear()}`;
-
 
   //form update state and handlers //
   const [open, setOpen] = useState(false);
@@ -311,13 +310,11 @@ function ListingDetail() {
     );
   }
 
-
-
   // Main return
   return (
     <Grid container justifyContent="center">
       <Paper sx={LDStyling.mainPaper} elevation={24}>
-        <Grid container sx={LDStyling.mainContainer}>
+        <Grid container sx={LDStyling.mainContainer} justifyContent="center">
           <Grid item>
             {/* see notes on MUI BreadCrumb component below         */}
             <Breadcrumbs aria-label="breadcrumb">
@@ -350,7 +347,7 @@ function ListingDetail() {
               alignItems="stretch"
             >
               <Grid item container sx={LDStyling.sliderContainer} xs={8}>
-                <Grid item container justifyContent="center">
+                <Grid item container justifyContent="center" sx={{marginBottom: '2rem'}}>
                   {listingPictures.map((picture, index) => {
                     return (
                       // Render this on a card on refactor
@@ -362,7 +359,7 @@ function ListingDetail() {
                             style={{
                               width: "50rem",
                               height: "35rem",
-                              border: "solid #B1B6B7 ",
+                              border: "solid #6C3082 ",
                               borderRadius: "2%",
                               paddingBottom: "none",
                             }}
@@ -390,15 +387,17 @@ function ListingDetail() {
             ""
           )}
           <Paper
+          elevation={24}
             sx={{
-              width: "100%",
-              marginRight: "5%",
+              width: "80rem",
+              marginRight:"3.5rem",
+              marginLeft:"3.5rem",
               marginBottom: "2rem",
               marginTop: "rem",
               paddingBottom: ".5rem",
               paddingLeft: "1.5rem",
               backgroundColor: "#AAD3DF",
-              border: "solid #9B89A4",
+              border: "solid #6C3082",
             }}
             justifyContent="space-evenly"
           >
@@ -468,7 +467,11 @@ function ListingDetail() {
                 </Typography>
                 {GlobalState.userId == state.listingInfo.seller ? (
                   <Grid item container justifyContent="space-" xs={4}>
-                    <Button onClick={handleClickOpen} varient="contained" sx={LDStyling.updateBtn}>
+                    <Button
+                      onClick={handleClickOpen}
+                      varient="contained"
+                      sx={LDStyling.updateBtn}
+                    >
                       update
                     </Button>
                     <Button
@@ -478,8 +481,14 @@ function ListingDetail() {
                     >
                       delete
                     </Button>
-                    <Dialog open={open} onClose={handleClose}>
-                      THIS IS THE DIALOG BOX
+                    {/* MUI DIALOG POPUP                 */}
+                    <Dialog open={open} onClose={handleClose} maxWidth>
+          {/* // listingInfo data will be passed to ListingUpadae via prop named listingData */}
+                      <ListingUpdate
+                        listingData={state.listingInfo}
+                        closeDialog={handleClose}
+          // handle close passed as props to close update form 
+                      />
                     </Dialog>
                   </Grid>
                 ) : (
@@ -490,14 +499,16 @@ function ListingDetail() {
           </Paper>
           {/* Checkbox fields start */}
           <Paper
+          elevation={24}
             sx={{
-              width: "100%",
-              marginRight: "5%",
+              width: "80rem",
+              marginRight:"3.5rem",
+              marginLeft:"3.5rem",
               marginBottom: "2rem",
               paddingBottom: "1rem",
               paddingTop: "1rem",
               backgroundColor: "#AAD3DF",
-              border: "solid #9B89A4",
+              border: "solid #6C3082",
             }}
           >
             <Grid item alignItems="center" container justifyContent="center">
@@ -546,14 +557,17 @@ function ListingDetail() {
           </Paper>
           {/* Description field */}
           <Paper
+          elevation={24}
             sx={{
-              width: "100%",
-              marginRight: "5%",
+              width: "80rem",
               paddingBottom: "1rem",
+              marginRight:"3.5rem",
+              marginLeft:"3.5rem",
               // paddingTop: "1rem",
               backgroundColor: "#AAD3DF",
-              border: "solid #9B89A4",
+              border: "solid #6C3082",
               marginBotton: "2rem",
+              position:"sticky"
             }}
           >
             <Grid
@@ -659,7 +673,6 @@ function ListingDetail() {
           </Grid>  */}
           {/* // END OF PROFILE CARD RENDER */}
 
-          <Grid item container justifyContent="center">
             <Grid item sx={{ marginTop: "2rem" }}>
               {/* Map container start */}
               <Grid
@@ -671,6 +684,7 @@ function ListingDetail() {
                 <Paper sx={LDStyling.mapPaper} elevation={24}>
                   <Grid sx={LDStyling.mapGrid} item display="flex">
                     <MapContainer
+                    style={{height:"60vh", width: "120%"}}
                       center={[
                         // center on marker position on render
                         state.listingInfo.latitude,
@@ -723,7 +737,7 @@ function ListingDetail() {
               </Grid>
               {/* Map container end */}
             </Grid>
-          </Grid>
+
         </Grid>
       </Paper>
     </Grid>
